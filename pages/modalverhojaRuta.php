@@ -114,7 +114,7 @@
                                    </div>
                               </div>
                               <div id="accion_modal_v" role="tabpanel" class="tab-pane" style="padding:0;margin:0">
-                                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:30px;margin:0" id="seccion_action">
+                                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:30px;margin:0" id="seccion_accion">
                                    </div>
                               </div>
                               <div id="archivo_modal_v" role="tabpanel" class="tab-pane" style="padding:0;margin:0">
@@ -126,9 +126,13 @@
                     </div>
                </div>
                <div class="modal-footer" style="border-left:10px solid  #84da92;margin-top: 0px;padding:10px 0 10px 0">
-					<div class="col-md-12">
-						<h4  class="vobservacion" style="font-weight:700;color:#14c373;margin:0;text-align:left">REFERENCIA<span style="font-size:0.8em;font-style: italic;color:#777575;margin-left:15px"></span></h4>
-					</div>
+                    <div class="col-md-10">
+                         <h4  class="vobservacion" style="font-weight:700;color:#14c373;margin:0;text-align:left">REFERENCIA<span style="font-size:0.8em;font-style: italic;color:#777575;margin-left:15px"></span></h4>
+                    </div>
+                    <div class="col-md-2">
+                         <button class="btn btn-sm" id="btnnovalidado" style="margin:0px;border:1px solid #d52e2e;color:#d52e2e;background:#fff" type="button" onclick="validateAjax()">SIN RECEPCIONAR <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+					<button class="btn btn-sm" id="btnvalidado" style="margin:0px;border:1px solid #02bd47;color:#02bd47;background:#fff">RECEPCIONADO <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                    </div>
 	      	</div>
           </div>
      </div>

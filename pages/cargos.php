@@ -92,7 +92,7 @@
                 <!-- /.box-body -->
 
                 <div class="box-footer">
-                  <button type="submit" class="btn btn-primary" name="btn_reg_cargo" id="boton7" onclick="edit_cargo()">Guardar datos</button>
+                  <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="edit_cargo()">Guardar datos</button>
                 </div>
               </form>
             </div>

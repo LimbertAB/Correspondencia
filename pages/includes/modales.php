@@ -199,11 +199,11 @@
                 <input type="hidden"  name="ca" value="1">
               <div class="form-group" id="ok_cargo">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="text" class="form-control" autofocus="" id="nombre" name="nombre">
+                <input type="text" class="form-control" autofocus="" name="nombre">
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword1">Descripcion</label>
-                <textarea class="form-control" rows="5" name="descrip" id="descrip"></textarea>
+                <textarea class="form-control" rows="5" name="descrip"></textarea>
                 </div>
               <div class="col-md-6" id="ok_funcion">
                 <label for="exampleInputPassword1" >Privilegios</label><br>
@@ -213,7 +213,7 @@
                   $pos=0;
                   while ($datos=pg_fetch_array($ejecute)) {
                     ?>
-                      <input type="checkbox"  name="funcion[]" id="funcion" value="<?php echo $datos['id'] ?>" >
+                      <input type="checkbox"  name="funcion[]" value="<?php echo $datos['id'] ?>" >
                       <i><?php echo $datos['nombre'] ?></i><br>
                     <?php
                     $pos++;
@@ -222,12 +222,11 @@
                   
                 </label>
               </div>
-
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" id="boton7" onclick="reg_cargo()">Registrar</button>
+        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="reg_cargo()">Registrar</button>
       </div>
       </form>
     </div>
@@ -250,17 +249,17 @@
                 <input type="hidden"  name="dest" value="1">
               <div class="form-group" id="ok_cargo3">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="text" class="form-control" autofocus="" id="nombre" name="nombre">
+                <input type="text" class="form-control" autofocus="" name="nombre">
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword1">Descripcion</label>
-                <textarea class="form-control" rows="5" name="descrip" id="descrip"></textarea>
+                <textarea class="form-control" rows="5" name="descrip"></textarea>
                 </div>
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" id="boton7" onclick="reg_destino()">Registrar</button>
+        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="reg_destino()">Registrar</button>
       </div>
       </form>
     </div>
@@ -283,13 +282,13 @@
                 <input type="hidden"  name="tip" value="1">
               <div class="form-group" id="ok_cargo4">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="text" class="form-control" autofocus="" id="nombre" name="nombre">
+                <input type="text" class="form-control" autofocus="" name="nombre">
               </div>
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" id="boton7" onclick="reg_tipo()">Registrar</button>
+        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="reg_tipo()">Registrar</button>
       </div>
       </form>
     </div>
@@ -312,13 +311,13 @@
                 <input type="hidden"  name="adj" value="1">
               <div class="form-group" id="ok_cargo5">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="text" class="form-control" autofocus="" id="nombre" name="nombre">
+                <input type="text" class="form-control" autofocus="" name="nombre">
               </div>
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" id="boton7" onclick="reg_adjunto()">Registrar</button>
+        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="reg_adjunto()">Registrar</button>
       </div>
       </form>
     </div>
@@ -341,13 +340,13 @@
                 <input type="hidden"  name="acc" value="1">
               <div class="form-group" id="ok_cargo6">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="text" class="form-control" autofocus="" id="nombre" name="nombre">
+                <input type="text" class="form-control" autofocus="" name="nombre">
               </div>
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" id="boton7" onclick="reg_acciones()">Registrar</button>
+        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="reg_acciones()">Registrar</button>
       </div>
       </form>
     </div>
@@ -370,7 +369,7 @@
                 <input type="hidden"  name="rem" value="1">
               <div class="form-group" id="ok_cargo7">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="text" class="form-control" autofocus="" id="nombre" name="nombre">
+                <input type="text" class="form-control" autofocus="" name="nombre">
               </div>
               <div class="form-group" id="ok_cargo8">
                 <label for="exampleInputEmail1">Apellidos</label>
@@ -388,7 +387,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" id="boton7" onclick="reg_remitente()">Registrar</button>
+        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="reg_remitente()">Registrar</button>
       </div>
       </form>
     </div>
@@ -483,7 +482,7 @@
                   <div class="form-group has-feedback has-error fila4" style="padding:5px">
                     <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO</label>
                     <div class="col-sm-9">
-                      <input name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files);" class="form-control" validate="true" toggle=".fila4">
+                      <input name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila4');" class="form-control" validate="true" toggle=".fila4">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                     </div>
                   </div>
@@ -556,7 +555,7 @@
                   <div class="form-group" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LAS ACCIONES</label>
                     <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
-                      <select id="selectdestinos" name="destino[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
+                      <select id="selectaccion" name="accion[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="15" data-selected-text-format="count > 2">
                         <?php $ejecute=pg_query("SELECT * FROM acciones");
                           while ($datos=pg_fetch_array($ejecute)) {
                             ?>
@@ -576,6 +575,192 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="btnregistrar_hoja" disabled>Registrar Hoja de Ruta</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--hoja update-->
+<div class="modal fade" id="updatehoja_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="form_updatehoja" name="form_updatehoja" method="POST" class="form-horizontal" enctype="multipart/form-data">
+        <div class="modal-header" style="background:#481848">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" style="color:#fff;font-weight:700">REGISTRO DE HOJA DE RUTA</h4>
+        </div>
+        <div class="box box-primary" style="border-top-width: 0px;margin-bottom: 0px;">
+          <div class="modal-body" style="background:#fff;padding:0">
+            <ul role="tablist" style="padding:0px;background:#e0e0e0" class="nav nav-tabs nav-justified" id="myTab">
+              <li  role="presentation" class="active"><a style="padding:0 15px 0 15px;color:#803b7f" href="#general_modal_u" aria-controls="general_modal_u" role="tab" data-toggle="tab">GENERAL<h5 class="badge" style="background:red#313131;margin-left:10px">3</h5></a></li>
+              <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#documento_modal_u" aria-controls="documento_modal_u" role="tab" data-toggle="tab">DOCUMENTO<h5 class="badge" style="background:red#313131;margin-left:10px">2</h5></a></li>
+              <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal_u" aria-controls="destino_modal_u" role="tab" data-toggle="tab">DESTINOS<h5 class="badge" style="background:red#313131;margin-left:10px">2</h5></a></li>
+            </ul>
+            <div class="row">
+              <div class="tab-content" style="margin:20px 30px 10px 30px">
+                <div id="general_modal_u" role="tabpanel" class="tab-pane active">
+                  <div class="box-body">
+                    <div class="form-group has-feedback has-success">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">FECHA</label>
+                      <div class="col-sm-9" >
+                        <div class='input-group date' id='datetimepicker1_u'>
+                          <input name="fecha" readonly type='text' class="form-control" value="<?php echo date('Y-m-d h:i:s')?>"  validate="true"/>
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PRIORIDAD</label>
+                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px">
+                        <select id="selectprioridad_u" name="prioridad" class="form-control selectpicker show-tick">
+                          <option value="baja">Baja</option>
+                          <option value="media">Media</option>
+                          <option value="alta">Alta</option>
+                        </select>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-sort-by-attributes"></span></span>
+                      </div>
+                    </div>
+                    <div class="form-group" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REMITENTE</label>
+                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
+                        <select id="selectremitente_u" name="remitente" class="form-control selectpicker show-tick" data-live-search="true">
+                          <?php $ejecute=pg_query("SELECT * FROM remitentes");
+                            while ($datos=pg_fetch_array($ejecute)) {
+                              ?>
+                              <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['cedula'];?>"><?php echo strtoupper($datos['nombres'])." ".strtoupper($datos['apellidos'])?></option>
+                              <?php
+                            }                
+                            ?>
+                        </select>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                      </div>
+                    </div>
+                    <div class="form-group has-feedback  has-success fila1_u" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROCEDENCIA</label>
+                      <div class="col-sm-9">
+                        <input type="text" name="procedencia" id="inputprocedencia_u" class="form-control" validate="false" toggle=".fila1_u">
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                    <div class="form-group has-feedback has-success fila2_u" style="padding:5px">
+                      <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CITE</label>
+                      <div class="col-sm-9">
+                        <input type="text" name="cite" id="inputcite_u" class="form-control" validate="false" toggle=".fila2_u">
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                        <em style="color:#cf6666;display:none" id="error_update">El numero de CITE ya esta en uso!</em>
+                      </div>
+                    </div>
+                    <div class="form-group has-feedback has-success fila3_u" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REFERENCIA</label>
+                      <div class="col-sm-9">
+                        <textarea name="referencia" rows="3" id="inputreferencia_u" cols="80" maxlength="250" style="resize: none;" class="form-control"  validate=false toggle=".fila3_u"></textarea>
+                        <span class="glyphicon glyphicon-ok form-control-feedback" style="margin:25px 8px 0 0" aria-hidden=true></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="documento_modal_u" role="tabpanel" class="tab-pane">
+                  <div class="box-body">
+                    <div class="form-group has-feedback has-error fila4_u" style="padding:5px">
+                      <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO</label>
+                      <div class="col-sm-9">
+                        <input id="inputfile_u" name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila4_u');" class="form-control" validate="false" toggle=".fila4_u">
+                        <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                    <div class="form-group has-feedback  has-success fila5_u" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">NUMERO DE HOJAS</label>
+                      <div class="col-sm-9" >  
+                        <input type="number" name="num_hojas" id="inputhoja_u" class="form-control" validate="false" toggle=".fila5_u">
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                    <div class="form-group" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">TIPO DE DOCUMENTO</label>
+                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px">
+                        <select id="selecttipo_u" name="tipo" class="form-control selectpicker show-tick" data-live-search="true">
+                          <?php $ejecute=pg_query("SELECT * FROM tipos");
+                            while ($datos=pg_fetch_assoc($ejecute)) {
+                              ?>
+                              <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
+                              <?php
+                            }                
+                            ?>
+                        </select>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
+                      </div>
+                    </div>
+                    <div class="form-group" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">TIPO DE ADJUNTO</label>
+                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px">
+                        <select id="selectadjunto_u" name="adjunto" class="form-control selectpicker show-tick" data-live-search="true">
+                          <?php $ejecute=pg_query("SELECT * FROM adjuntos");
+                            while ($datos=pg_fetch_assoc($ejecute)) {
+                              ?>
+                              <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
+                              <?php
+                            }                
+                            ?>
+                        </select>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-folder-open"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="destino_modal_u" role="tabpanel" class="tab-pane">
+                  <div class="box-body">
+                    <div class="form-group has-feedback  has-success fila6_u" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DIAS DE PLAZO</label>
+                      <div class="col-sm-9">
+                        <input type="number" name="plazo" id="inputplazo_u" class="form-control" validate="false" toggle=".fila6_u">
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                    <div class="alert alert-warning alert-dismissible col-md-12" role="alert" style="background-color:#f3e47f !important">
+                      <h5 style="color:#000"><strong>INFORMACION: </strong>Se enviara la hoja de ruta a todos los destinos que sean seleccionados en el siguiente Formulario</h5>
+                    </div>
+                    <div class="form-group" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LOS DESTINOS</label>
+                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
+                        <select id="selectdestinos_u" name="destino[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
+                          <?php $ejecute=pg_query("SELECT * FROM destinos");
+                            while ($datos=pg_fetch_array($ejecute)) {
+                              ?>
+                              <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
+                              <?php
+                            }                
+                            ?>
+                        </select>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
+                      </div>
+                    </div>
+                    <div class="form-group" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LAS ACCIONES</label>
+                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
+                        <select id="selectaccion_u" name="accion[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="15" data-selected-text-format="count > 2">
+                          <?php $ejecute=pg_query("SELECT * FROM acciones");
+                            while ($datos=pg_fetch_array($ejecute)) {
+                              ?>
+                              <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
+                              <?php
+                            }                
+                            ?>
+                        </select>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="btnupdate_hoja" disabled>Modificar Hoja de Ruta</button>
       </div>
       </form>
     </div>

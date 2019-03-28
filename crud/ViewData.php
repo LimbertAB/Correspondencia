@@ -16,5 +16,12 @@ function verHoja($id){
     $listPOO= new ListPOO; $result=$listPOO->verhoja($id);
     echo json_encode($result);
 }
-
+function Notificacion($id){
+    $listPOO= new ListPOO; $result=$listPOO->notificacion();
+    echo json_encode($result);
+}
+function recepcionar($id){
+    $listPOO= new ListPOO; $result=$listPOO->recepcionar($id);
+    echo json_encode($result);
+}
 ?>
