@@ -65,7 +65,7 @@
         endDate  : moment()
       },
       function (start, end) {
-        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        $('#daterange-btn span').html(start.format('D MMMM, YYYY') + ' - ' + end.format('D MMMM, YYYY'))
       }
     )
 

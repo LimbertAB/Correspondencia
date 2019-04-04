@@ -1,10 +1,10 @@
-<?php 
+<?php
 session_start();
 include("../db/conexion.php");
 $enlace=conectar();
-if(!isset($_SESSION['nombres'])) 
+if(!isset($_SESSION['nombres']))
 {
-  header('Location: ../index.php'); 
+  header('Location: ../index.php');
   exit();
 }else{
   $USER_ID=$_SESSION['id_usu'];
@@ -62,7 +62,7 @@ if(!isset($_SESSION['nombres']))
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>CORRESPONDENCIA</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>CORRESPONDENCIA</span> 
+      <span class="logo-lg"><b>CORRESPONDENCIA</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -72,10 +72,10 @@ if(!isset($_SESSION['nombres']))
       </a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          
+
           <!-- Notifications: style can be found in dropdown.less -->
           <li class="dropdown notifications-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a href="hojas.php?estado=proceso">
               <i class="fa fa-bell-o"></i>
               <span class="label label-danger" id="cantobject"></span>
             </a>
@@ -95,7 +95,7 @@ if(!isset($_SESSION['nombres']))
                   Administrador
                 </p>
               </li>
-              </li> 
+              </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
@@ -107,14 +107,13 @@ if(!isset($_SESSION['nombres']))
               </li>
             </ul>
           </li>
-          
+
         </ul>
       </div>
     </nav>
   </header>
 <script>
   $(document).ready(function(){
-    console.log("hola de js");
     $.ajax({
       url: '../crud/ViewData.php/Notificacion/all',type: "get",success: function(res){
         var data = JSON.parse(res);

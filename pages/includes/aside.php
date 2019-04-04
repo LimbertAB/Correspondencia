@@ -141,18 +141,7 @@ foreach ($funciones as $key => $value){
             <?php
             }
         } ?>
-        <?php foreach ($funciones as $key => $value) {
-            if ($value==11) {
-            ?>
-              <li>
-                <a href="#">
-                  <i class="fa fa-file-pdf-o"></i>
-                  <span>Reportes</span>
-                </a>
-              </li>
-            <?php
-            }
-        } ?>
+        
       </ul>
     </section>
     <!-- /.sidebar -->

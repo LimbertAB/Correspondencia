@@ -61,6 +61,30 @@
 	                       	</center>
                          </div>
                     </div>
+                    <div class="row" style="margin:0px;background:#3b4579;" id="row_admin">
+                        <div class="col-md-12" style="padding:5px 0 5px 0;">
+                           <div class="col-md-6">
+                              <div class="col-md-3 col-sm-3 col-xs-3">
+                                   <img src="../pages/images/creado.png" width="65px">
+                              </div>
+                              <div class="col-md-9 col-sm-9 col-xs-9" style="padding:0">
+                                   <h4 style="font-weight:800;margin:6px 0 0 0;color:#a36aef">CREADO</h4>
+                                   <h5 style="margin:0;font-style: bold;color:#fff">Usuario: <small class="vnombrer" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                                   <h5 style="margin:0;font-style: bold;color:#fff">Fecha: <small class="vcir" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                              </div>
+                           </div>
+                           <div class="col-md-6">
+                              <div class="col-md-3 col-sm-3 col-xs-3">
+                                   <img src="../pages/images/modificado.png" width="65px">
+                              </div>
+                              <div class="col-md-9 col-sm-9 col-xs-9" style="padding:0">
+                                   <h4 style="font-weight:800;margin:6px 0 0 0;color:#a36aef">MODIFICADO</h4>
+                                   <h5 style="margin:0;font-style: bold;color:#fff">Usuario: <small class="vnombreu" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                                   <h5 style="margin:0;font-style: bold;color:#fff">Fecha: <small class="vfechau" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                              </div>
+                           </div>
+                        </div>
+                    </div>
                     <ul role="tablist" style="padding:0px;" class="nav nav-tabs nav-justified" id="myTab">
                          <li  role="presentation" class="active"><a style="padding:0 15px 0 15px" href="#general_modal_v" aria-controls="general_modal_v" role="tab" data-toggle="tab">GENERAL<h5 class="badge" style="background:#e8be47;margin-left:10px"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></h5></a></li>
                          <li role="presentation"><a style="padding:0 15px 0 15px" href="#destino_moda_v" aria-controls="destino_moda_v" role="tab" data-toggle="tab">DESTINOS<h5 class="badge" style="background:#e8be47;margin-left:10px"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></h5></a></li>

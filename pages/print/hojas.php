@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<?php ob_start();$resp=$result;$destinos=$result['destino'];$months=["Enero","Febrero","Marzo", "Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];?>
+<?php ob_start();$months=["Enero","Febrero","Marzo", "Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];?>
 <!DOCTYPE html>
 	<html>
 	<head>
-		<title>Hoja de Ruta <?php echo $resp['id']?></title>
+		<title>Hojas de Ruta</title>
 		<style type="text/css">
 			body{
 				font-family: serif;
@@ -21,6 +21,7 @@
 		</style>
  	</head>
  	<body><br>
+		<?php for ($x=0; $x < count($result['hoja']); $x++): $row_accion=$result['hoja'][$x]['acciones'];$destinos=$result['hoja'][$x]['destinos'];$resp=$result['hoja'][$x];?>
 			<table class="table-hover" width="100%" border="1">
 				<tr>
 					<th  rowspan="4" width="20%">
@@ -40,7 +41,7 @@
 				<tr>
 					<td >PROCEDENCIA</td>
 					<td colspan="3"><?php echo $resp['procedencia'] ?></td>
-						<th style="background:#ececec">CITE</th>
+					<th style="background:#ececec">CITE</th>
 				</tr>
 				<tr>
 					<td >REMITENTE</td>
@@ -50,7 +51,7 @@
 				<tr>
 					<td >PLAZO DE RESPUESTA</td>
 					<td colspan="3"><?php echo $resp['plazo']." Dias"?></td>
-						<th style="background:#ececec">FECHA Y HORA</th>
+					<th style="background:#ececec">FECHA Y HORA</th>
 				</tr>
 				<tr>
 					<td >ADJUNTOS</td>
@@ -72,43 +73,36 @@
 					<td colspan="4"><?php echo $resp['referencia'] ?></td>
 				</tr>
 				<tr>
-					<td  rowspan="2">AREA DE DESTINO</td>
-					<td width="40%" rowspan="2">
-							<?php $aux=0;
-						while ($aux<count($destinos)) {
-								echo $aux==count($destinos)-1?$destinos[$aux]['nombre']:$destinos[$aux]['nombre']." - ";
-								$aux++;
-						}
-						?>
-					</td>
-					<td width="10%">NOMBRE</td>
+					<td rowspan="2">AREA DE DESTINO</td>
+					<td rowspan="2"><?php $aux=0;while ($aux<count($destinos)){echo $aux==count($destinos)-1 ? $destinos[$aux]['nombre']:$destinos[$aux]['nombre']." - ";$aux++;}?></td>
+					<td>NOMBRE</td>
 					<td colspan="2"></td>
 				</tr>
 				<tr>
 					<td >CARGO</td>
-					<td colspan="2"></td>
+					<td  colspan="2"></td>
 				</tr>
 				<tr>
 					<td >GESTOR VC</td>
 					<td  colspan="4"><?php echo $resp['usuario'] ?></td>
 				</tr>
 			</table>
-		<?php for ($i=0; $i < count($destinos); $i++): $row_accion=$result['accion']; ?>
-			<table width="100%" border="1">
-        <tr>
-					<td colspan="2">ACCION</td>
-					<td >Destinatario</td>
-					<td colspan="3"><?php echo $destinos[$i]['nombre']?></td>
-        </tr>
-        <tr>
-					<td width="30%"><?php echo $row_accion[0]['nombre']?></td>
-					<td width="2%"><?php echo $row_accion[0]['estado']==1 ? "x":"";?></td>
-					<td width="15%">Plazo respuesta</td>
-					<td width="20%"></td>
-					<td colspan="2" width="33%" style="padding-right:30px" rowspan="<?php echo count($row_accion) ?>">
-						<br><br><br><br><br><br><br><br>
-						<br><br><br><br>
-						<table border="1" width="10%" align="right">
+			<?php for ($i=0; $i < count($destinos); $i++): ?>
+				<table width="100%" border="1">
+	        		<tr>
+						<td colspan="2">ACCION</td>
+						<td >Destinatario</td>
+						<td colspan="3"><?php echo $destinos[$i]['nombre']?></td>
+	        		</tr>
+	        		<tr>
+						<td width="30%"><?php echo $row_accion[0]['nombre']?></td>
+						<td width="2%"><?php echo $row_accion[0]['estado']==1 ? "x":"";?></td>
+						<td width="15%">Plazo respuesta</td>
+						<td width="20%"><?php echo $resp['plazo']." Dias"?></td>
+						<td colspan="2" width="33%" style="padding-right:30px" rowspan="<?php echo count($row_accion) ?>">
+							<br><br><br><br><br><br><br><br>
+							<br><br><br><br>
+							<table border="1" width="10%" align="right">
 								<tr>
 										<td colspan="2" align="center" class="firma">...................................................................................<br>Firma y sello</td>
 								</tr>
@@ -120,33 +114,34 @@
 									<td><?php echo $destinos[$i]['fecha']==null?"en espera":date('Y-m-d', strtotime($destinos[$i]['fecha']))?></td>
 									<td><?php echo $destinos[$i]['fecha']==null?"en espera":date('h:i:s', strtotime($destinos[$i]['fecha']))?></td>
 								</tr>
-						</table>
-						<br><br><br>
-          </td>
-        </tr>
-        <tr>
-					<td><?php echo $row_accion[1]['nombre']?></td>
-					<td><?php echo $row_accion[1]['estado']==1 ? "x":"";?></td>
-					<td colspan="2" rowspan="<?php echo count($row_accion)-1 ?>"></td>
-        </tr>
-        <?php for ($j=2; $j < count($row_accion); $j++):?>
-          <tr>
-						<td><?php echo $row_accion[$j]['nombre']?></td>
-						<?php if($row_accion[$j]['estado']==1):
-							echo '<td>x</td>';
-						else:
-							echo '<td></td>';
-						endif;
-
-				endfor;?>
-				<tr>
-					<td>Cordinar con:</td>
-					<td colspan="3"></td>
-					<td >Con copia a:</td>
-					<td width="140px"></td>
-				</tr>
-    	</table>
+							</table>
+							<br><br><br>
+	          		</td>
+	        		</tr>
+	        		<tr>
+						<td><?php echo $row_accion[1]['nombre']?></td>
+						<td><?php echo $row_accion[1]['estado']==1 ? "x":"";?></td>
+						<td colspan="2" rowspan="<?php echo count($row_accion)-1 ?>"></td>
+	        		</tr>
+        			<?php for ($j=2; $j < count($row_accion); $j++):?>
+          			<tr>
+							<td><?php echo $row_accion[$j]['nombre']?></td>
+							<?php if($row_accion[$j]['estado']==1):
+								echo '<td>x</td>';
+							else:
+								echo '<td></td>';
+							endif;
+						echo "</tr>";
+					endfor;?>
+					<tr>
+						<td>Cordinar con:</td>
+						<td colspan="3"><?php echo $destinos[$i]['usuario']?></td>
+						<td >Con copia a:</td>
+						<td width="140px"></td>
+					</tr>
+    			</table>
+			<?php endfor;?>
+			<?php if ($x < count($result['hoja'])-1) {echo "<div style='page-break-after: always;'></div>";}?>
 		<?php endfor;?>
-
  </body>
  </html>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include("../db/conexion.php");
 $enlace=conectar();
@@ -22,7 +22,6 @@ function CreateUser(){
         echo "duplicado";
     }
 }
-
 function updateUser(){
     if($_POST['password']!=""){
         pg_query("UPDATE usuarios SET password='".$_POST['password']."'WHERE id=".$_POST['id']."");
@@ -38,10 +37,10 @@ function updateUser(){
             Retorno($sql);
         }else{
             echo "duplicado";
-            
+
         }
     }
-    
+
 }
 function Retorno($sql){
     $PGSTAT = pg_result_status($sql);
@@ -76,9 +75,9 @@ function createHoja(){
         move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
         $ui=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
 		$id=$ui['id'];
-        
+
 		$destino=$_POST['destino'];$affects=0;
-		for ($i=0; $i <count($destino) ; $i++) { 
+		for ($i=0; $i <count($destino) ; $i++) {
 			$sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values($id,$destino[$i],'en proceso')");
             $PGSTAT = pg_result_status($sql);
             if($PGSTAT == 1){
@@ -87,7 +86,7 @@ function createHoja(){
         }
         if($affects==count($destino)){
             $accion=$_POST['accion'];$affects=0;
-            for ($i=0; $i <count($accion) ; $i++) { 
+            for ($i=0; $i <count($accion) ; $i++) {
                 $sql = pg_query("INSERT INTO hoja_accion (id_hoja,accion_id) values($id,$accion[$i])");
                 $PGSTAT = pg_result_status($sql);
                 if($PGSTAT == 1){
@@ -102,7 +101,7 @@ function createHoja(){
 function updateHoja(){
     $id=$_POST['id_hoja'];
     $name="FILE".date("Ymdhis").".pdf";
-    if($_FILES['archivo']['error'] == 0) { 
+    if($_FILES['archivo']['error'] == 0) {
         $sql=pg_query("UPDATE hojas SET archivo='{$name}'WHERE id={$id}");
         $PGSTAT = pg_result_status($sql);
         if($PGSTAT == 1){
@@ -116,7 +115,7 @@ function updateHoja(){
 	$plazo=$_POST['plazo'];$cite=$_POST['cite'];
     $fecha=$_POST['fecha'];$prioridad=$_POST['prioridad'];
     $user=$_SESSION['id_usu'];$fecha_update=date("Y-m-d h:i:s");
-	
+
     $sql=pg_query("UPDATE hojas SET procedencia='{$procedencia}',remitente_id={$remitente},adjunto_id={$adjunto},
         num_hojas={$num_hojas},tipo_id={$tipo},referencia='{$referencia}',fecha='{$fecha}',plazo={$plazo},
         cite='{$cite}',prioridad='{$prioridad}',update_user={$user},fecha_update='{$fecha_update}' WHERE id={$id}");
