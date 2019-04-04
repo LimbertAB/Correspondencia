@@ -28,7 +28,8 @@ class ListPOO{
       $cadena="";if(isset($_GET['inicio']) && (isset($_GET['fin']))){if(($_GET['inicio']!="") && ($_GET['fin']!="")){$cadena="AND h.fecha BETWEEN '".$_GET['inicio']."' AND '".$_GET['fin']."'";}}
 
       if($this->USER_PERMISO==1){
-         $sql=pg_query("SELECT h.*,CONCAT(r.nombres, ' ',r.apellidos) as  remitente, a.nombre as adjunto, t.nombre as tipo,(h.plazo-DATE_PART('day','{$FECHA_ACTUAL}' - h.fecha)) as diferencia,CONCAT(u.nombres, ' ',u.apellidos) as  usuario
+         $sql=pg_query("SELECT h.*,CONCAT(r.nombres, ' ',r.apellidos) as  remitente, a.nombre as adjunto, t.nombre as tipo,(h.plazo-(CAST(MAX('{$FECHA_ACTUAL}') AS date) - CAST(MIN(h.fecha) AS date)))as diferencia,
+         CONCAT(u.nombres, ' ',u.apellidos) as  usuario
          FROM hojas as h
          JOIN remitentes as r ON r.id = h.remitente_id
          JOIN adjuntos as a ON a.id = h.adjunto_id
@@ -37,9 +38,10 @@ class ListPOO{
          WHERE CAST(h.id AS TEXT) LIKE '{$id}' AND CAST(h.remitente_id AS TEXT) LIKE '{$remitente}' AND
          CAST(h.tipo_id AS TEXT) LIKE '{$tipo}' AND CAST(h.adjunto_id AS TEXT) LIKE '{$adjunto}' AND CAST(h.num_hojas AS TEXT) LIKE '{$hojas}' AND
          CAST(UPPER(h.procedencia) AS TEXT) LIKE '%{$procedencia}%' AND CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%'AND CAST(UPPER(h.referencia) AS TEXT) LIKE '%{$referencia}%'
-         {$cadena}");$estados="";
+         {$cadena} GROUP BY h.id,r.nombres,r.apellidos,a.nombre,t.nombre,u.nombres,u.apellidos");$estados="";
       }else{
-         $sql=pg_query("SELECT h.*,CONCAT(r.nombres, ' ',r.apellidos) as  remitente, a.nombre as adjunto, t.nombre as tipo,(h.plazo-DATE_PART('day','{$FECHA_ACTUAL}' - h.fecha)) as diferencia,CONCAT(u.nombres, ' ',u.apellidos) as  usuario
+         $sql=pg_query("SELECT h.*,CONCAT(r.nombres, ' ',r.apellidos) as  remitente, a.nombre as adjunto, t.nombre as tipo,(h.plazo-(CAST(MAX('{$FECHA_ACTUAL}') AS date) - CAST(MIN(h.fecha) AS date)))as diferencia,
+         CONCAT(u.nombres, ' ',u.apellidos) as  usuario
          FROM hoja_destino as hd
          JOIN hojas as h ON hd.hoja_id = h.id
          JOIN remitentes as r ON r.id = h.remitente_id
@@ -48,7 +50,8 @@ class ListPOO{
          JOIN usuarios as u ON u.id = h.usuario_id
          WHERE hd.destino_id={$this->USER_DESTINO} AND CAST(h.id AS TEXT) LIKE '{$id}' AND CAST(h.remitente_id AS TEXT) LIKE '{$remitente}' AND
          CAST(h.tipo_id AS TEXT) LIKE '{$tipo}' AND CAST(h.adjunto_id AS TEXT) LIKE '{$adjunto}' AND CAST(h.num_hojas AS TEXT) LIKE '{$hojas}' AND
-         CAST(UPPER(h.procedencia) AS TEXT) LIKE '%{$procedencia}%' AND CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%'AND CAST(UPPER(h.referencia) AS TEXT) LIKE '%{$referencia}%' {$cadena}");
+         CAST(UPPER(h.procedencia) AS TEXT) LIKE '%{$procedencia}%' AND CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%'AND CAST(UPPER(h.referencia) AS TEXT) LIKE '%{$referencia}%' {$cadena}
+         GROUP BY h.id,r.nombres,r.apellidos,a.nombre,t.nombre,u.nombres,u.apellidos");
          $estados="";$estados=$this->USER_CONSULTA;
       }
       $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
@@ -100,16 +103,17 @@ class ListPOO{
       }
       return ["hoja"=>$hojastotal,"inicio"=>isset($_GET['inicio'])?$_GET['inicio']:"","fin"=>isset($_GET['fin'])?$_GET['fin']:"",
          "id"=>$_GET['id'] ?? "","remitente"=>$_GET['remitente']??"","tipo"=>$_GET['tipo']??"","adjunto"=>$_GET['adjunto']??"",
-         "num_hojas"=>$_GET['hojas']??"","cite"=>$cite,"procedencia"=>$procedencia,"referencia"=>$referencia,"estado"=>$_GET['estado']];
+         "num_hojas"=>$_GET['hojas']??"","cite"=>$cite,"procedencia"=>$procedencia,"referencia"=>$referencia,"estado"=>$estado];
    }
+   //(h.plazo-DATE_PART('day','{$FECHA_ACTUAL}' - h.fecha)) as diferencia  postgresql 10 funcionando diferencia
    function verhoja($id){
       $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
       $sql=pg_fetch_assoc(pg_query("SELECT h.*,CONCAT(r.nombres, ' ',r.apellidos) as  remitente,CONCAT(u.nombres, ' ',u.apellidos) as  usuario,u.cedula,a.nombre as adjunto,
-      t.nombre as tipo,CONCAT(us.nombres, ' ',us.apellidos) as modificado,(h.plazo-DATE_PART('day','{$FECHA_ACTUAL}' - h.fecha)) as diferencia
+      t.nombre as tipo,CONCAT(us.nombres, ' ',us.apellidos) as modificado,(h.plazo-(CAST(MAX('{$FECHA_ACTUAL}') AS date) - CAST(MIN(h.fecha) AS date)))as diferencia
          FROM hojas as h
          JOIN remitentes as r ON r.id = h.remitente_id JOIN usuarios as u ON u.id = h.usuario_id JOIN adjuntos as a ON a.id = h.adjunto_id JOIN tipos as t ON t.id = h.tipo_id
          LEFT JOIN usuarios as us ON us.id = h.update_user
-         WHERE h.id='{$id}'"));
+         WHERE h.id='{$id}' GROUP BY h.id,r.nombres,r.apellidos,u.nombres,u.apellidos,u.cedula,a.nombre,t.nombre,us.nombres,us.apellidos"));
       $acciones = array();$destinos = array();
       $destinos=$this->get_destino($id);$acciones=$this->get_accion($id);
       $sql["destino"]=$destinos;$sql["accion"]=$acciones;$sql["permiso"]=$this->USER_CONSULTA;
@@ -134,7 +138,7 @@ class ListPOO{
    }
    function recepcionar($id){
       $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
-      $sql=pg_fetch_assoc(pg_query("SELECT (plazo-DATE_PART('day','{$FECHA_ACTUAL}' - fecha)) as diferencia FROM hojas WHERE id='{$id}'"));
+      $sql=pg_fetch_assoc(pg_query("SELECT (plazo-(CAST(MAX('{$FECHA_ACTUAL}') AS date) - CAST(MIN(fecha) AS date)))as diferencia FROM hojas WHERE id='{$id}' GROUP BY plazo"));
       if(intval($sql['diferencia'])>=0){
          $fecha=date('Y-m-d h:i:s');$usuario=$this->USER_ID;$destino=$this->USER_DESTINO;
          $sql=pg_query("UPDATE hoja_destino SET estado='revisado',fecha='{$fecha}',
@@ -148,7 +152,6 @@ class ListPOO{
       }else{
          return false;
       }
-
    }
    function imprimir_hojas($id){
         //SELECT * FROM hojas WHERE CAST(remitente_id AS CHAR) LIKE '%%'
@@ -187,5 +190,8 @@ class ListPOO{
       $sql3=pg_query("SELECT a.*, (SELECT COUNT(*) FROM hoja_accion as ha WHERE ha.accion_id= a.id AND ha.id_hoja='{$id}') AS estado FROM acciones as a");
       $acciones = array();while ($rows =  pg_fetch_assoc($sql3)) {$acciones[] = $rows;}
       return $acciones;
+   }
+   function get_hoja($id){
+
    }
 }

@@ -158,7 +158,7 @@
 									<td><h5><?php echo strtolower($datos[$i]['remitente'])?></h5></td>
 									<td><h5><?php echo strtolower($datos[$i]['procedencia'])?></h5></td>
 									<td><h5><?php echo strtolower($datos[$i]['referencia'])?></h5></td>
-									<td><h5><?php $mensage=$datos[$i]['diferencia']>=0? ($datos[$i]['diferencia']+1)." <small>dia restante</small>": " Plazo terminado";echo $mensage; ?></h5></td>
+									<td><h5><?php $mensage=$datos[$i]['diferencia']>0? $datos[$i]['diferencia']." <small>dias restantes</small>":$mensage=$datos[$i]['diferencia']==0 ? "<small style='font-size:1em;color:#ed2e2e'>Ultimo dia</small>":" Plazo terminado";echo $mensage; ?></h5></td>
 									<td <?php echo $datos[$i]['color'];?>><h5><?php echo $datos[$i]['mensaje'];?></h5></td>
 									<td  style="text-align:center"><h5><?php echo date('Y-m-d', strtotime($datos[$i]['fecha']))?></h5></td>
 									<td style="vertical-align:middle;text-align:center">
@@ -217,7 +217,7 @@
 </style>
 <?php include 'modalverhojaRuta.php'; ?>
 <script>
-	 var prioridad_u,remitente_u,tipo_u,adjunto_u,destino_u=[],accion_u=[],Get_ID=0,estado_destino=false,estado_accion=false;
+	var prioridad_u,remitente_u,tipo_u,adjunto_u,destino_u=[],accion_u=[],Get_ID=0,estado_destino=false,estado_accion=false;
 	$(document).ready(function(){
 		$('[data-toggle="tooltip"]').tooltip()
 		var seltipo=getUrlParameter('tipo')==undefined?"":getUrlParameter('tipo');
@@ -333,7 +333,6 @@
 						var fecha=arraydestino[i].fecha;
 						var status= "Recepcionado";
 					}
-
 					$('#seccion_destino').append('<div class="col-sm-12 col-md-6 col-xs-12" style="background-color:#fff;background-clip:content-box;padding:15px"><div class="col-md-9 col-sm-9 col-xs-9" style="padding:0 0px 0 15px"><h3 style="color:#a2a2a2;font-weight:700;margin:15px 0 2px 0"><small class="badge" style="background:#f3c51d;margin-right:10px;color:#fff;font-size:1.2em">'+((i)+1)+'</small>'+arraydestino[i].nombre.toUpperCase()+'</h3><div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="margin:20px 0 0 20px;padding:0"><div class="col-md-2 col-sm-2 col-xs-2" style="margin:0;padding:0"><img src="../pages/images/businessman.png"></div><div class="col-md-10 col-sm-10 col-xs-10" style="margin:0px;padding:0"><h4 style="font-weight:800;margin:0px;color:#0bc3d6">RECEPCIONADO POR</h4><h5 style="margin:0;font-style: italic">'+usuario+'</h5></div></div><div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="margin:20px 0 0 20px;padding:0"><div class="col-md-2 col-sm-2 col-xs-2" style="margin:0;padding:0"><img src="../pages/images/calendario.png"></div><div class="col-md-10 col-sm-10 col-xs-10" style="margin:0px;padding:0"><h4 style="font-weight:800;margin:0px;color:#0bc3d6">FECHA</h4><h5 style="margin:0;font-style: italic">'+fecha+'</h5></div></div><div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="margin:20px 0 0 20px;padding:0"><div class="col-md-2 col-sm-2 col-xs-2" style="margin:0;padding:0"><img src="../pages/images/'+check+'.png"></div><div class="col-md-10 col-sm-10 col-xs-10" style="margin:0px;padding:0"><h4 style="font-weight:800;margin:0px;color:#0bc3d6">ESTADO</h4><h5 style="margin:0;font-style: italic">'+status+'</h5></div></div></div><div class="col-md-3 col-sm-3 col-xs-3" style="padding:0"><img src="../pages/images/personajuridica.png" style="margin:0;width: 100% !important;float:right"></div></div>');
 			 	}
 				$('.vnombre').text(hoja.remitente.toLowerCase());
@@ -358,7 +357,7 @@
 					$('.vcir').text(hoja.cedula);
 				}else{
 					$('#row_admin').hide();
-					if (arraydestino.length>0 && parseInt(hoja.diferencia)>=0) {
+					if (arraydestino.length>0 && parseInt(hoja.diferencia)>=0 && arraydestino[0].usuario_id == null) {
 						console.log("aqui"+parseInt(hoja.diferencia));
 					  	$('#btnvalidado').hide();$('#btnnovalidado').show();
 					}else{
