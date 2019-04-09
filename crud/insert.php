@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include("../db/conexion.php");
 $enlace=conectar();
@@ -26,14 +26,14 @@ if (!empty($_POST['ca'])) {
 			//obtengo el ultimo registro insertado
 			$ui=pg_query("SELECT max(id) as id FROM cargos");
 			$ultimoid=pg_fetch_array($ui);
-			for ($i=0; $i <count($funcion) ; $i++) { 
+			for ($i=0; $i <count($funcion) ; $i++) {
 				$sql_funcion_cargo = "INSERT INTO funcion_cargo (funcion_id,cargo_id) values($funcion[$i],$ultimoid[id])";
 				pg_query($sql_funcion_cargo);
 			}
 			$resp=0;
 		}
 	}
-	
+
 }
 //insertar destino
 elseif (!empty($_POST['dest'])) {
@@ -108,31 +108,20 @@ elseif (!empty($_POST['acc'])) {
 		$resp=0;
 	}
 }
-//insertar remitente
-elseif (!empty($_POST['rem'])) {
+//insertar procedencia
+elseif (!empty($_POST['proc'])) {
 	$nombre=$_POST['nombre'];
-	$apellidos=$_POST['apellidos'];
-	$cedula=$_POST['cedula'];
-	$telefono=$_POST['telefono'];
-	$ejecute=pg_query("SELECT * FROM remitentes where cedula='$cedula'");
-	$cont=pg_num_rows($ejecute);
-	$datos=pg_fetch_array($ejecute);
-	if ($cont>0) {
-		$resp=2;
-	}
-	elseif ($nombre=="") {
+	if ($nombre=="") {
 		$resp=1;
-	}
-	elseif ($apellidos=="") {
-		$resp=3;
-	}
-	elseif ($cedula=="") {
-		$resp=4;
-	}
-	else{
-		$sql = "INSERT INTO remitentes (nombres,apellidos,cedula,telefono) values('".$nombre."','".$apellidos."','".$cedula."','".$telefono."')";
-		pg_query($sql);
-		$resp=0;
+	}else{
+		$sql=pg_query("SELECT * FROM procedencia WHERE UPPER(nombre) = UPPER('{$nombre}')");
+		if (pg_num_rows($sql)==0) {
+			$sql = "INSERT INTO procedencia (nombre,estado) values('{$nombre}',1)";
+			pg_query($sql);
+			$resp=0;
+		}else{
+			$resp=1;
+		}
 	}
 }
 
@@ -157,7 +146,7 @@ elseif (!empty($_POST['des_accion'])) {
 		//eliminamos toda la tabla hoja_accion segun el id
 		pg_query("DELETE FROM hoja_accion where hoja_id=$id_hd");
 		//inserto en la tabla hoja_accion
-		for ($i=0; $i <count($accion) ; $i++) { 
+		for ($i=0; $i <count($accion) ; $i++) {
 			$sql = "INSERT INTO hoja_accion (hoja_id,accion_id) values($id_hd,$accion[$i])";
 			pg_query($sql);
 		}

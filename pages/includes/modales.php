@@ -47,7 +47,7 @@
                       while ($datos=pg_fetch_array($ejecute)) { ?>
                         <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
                       <?php
-                        }                  
+                        }
                       ?>
                   </select>
                   <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
@@ -57,7 +57,7 @@
                 <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DESTINO</label>
                 <div class='input-group'>
                   <select id="selectdestino" name="id_destino" class="form-control selectpicker show-tick" data-live-search="true">
-                    <?php 
+                    <?php
                       $ejecute=pg_query("SELECT * FROM destinos");
                       while ($datos=pg_fetch_array($ejecute)) {
                         ?>
@@ -110,7 +110,7 @@
               <br><p class="uestado" style="line-height: .95em !important;text-transform: lowercase;color:#cde9e5">Activo</p>
             </center>
           </div>
-         
+
           <div class="col-md-8">
             <center><h3 style="margin-top:5px;color: #1cd2dc;font-weight: 700;">MODIFICAR USUARIO</h3></center>
             <form autocomplete="off">
@@ -150,7 +150,7 @@
                     while ($datos=pg_fetch_array($ejecute)) { ?>
                       <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
                     <?php
-                      }                  
+                      }
                     ?>
 								</select>
 								<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
@@ -160,7 +160,7 @@
                 <label style="color:#3fd2e0;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DESTINOS</label>
                 <div class='input-group'>
                   <select id="selectdestino_u" class="form-control selectpicker show-tick" data-live-search="true">
-                    <?php 
+                    <?php
                       $ejecute=pg_query("SELECT * FROM destinos");
                       while ($datos=pg_fetch_array($ejecute)) {
                         ?>
@@ -208,7 +208,7 @@
               <div class="col-md-6" id="ok_funcion">
                 <label for="exampleInputPassword1" >Privilegios</label><br>
                 <label>
-                  <?php 
+                  <?php
                   $ejecute=pg_query("SELECT * FROM funciones");
                   $pos=0;
                   while ($datos=pg_fetch_array($ejecute)) {
@@ -219,7 +219,7 @@
                     $pos++;
                   }
                    ?>
-                  
+
                 </label>
               </div>
             </div>
@@ -352,42 +352,31 @@
     </div>
   </div>
 </div>
-<!--remitentes registro-->
-<div class="modal fade" id="modal_remitente">
+<!--procedencia registro-->
+<div class="modal fade" id="modal_procedencia">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form name="destino" onsubmit="return false" action="return false" id="frmaremitente">
+      <form name="destino" onsubmit="return false" action="return false" id="formprocedencia">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" align="center">Registro de remitente</h4>
+          <h4 class="modal-title" align="center">Registro de Procedencias</h4>
         </div>
       <div class="box box-primary">
         <div class="modal-body">
             <div class="box-body">
-                <input type="hidden"  name="rem" value="1">
-              <div class="form-group" id="ok_cargo7">
+                <input type="hidden"  name="proc" value="1">
+              <div class="form-group has-error">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="text" class="form-control" autofocus="" name="nombre">
-              </div>
-              <div class="form-group" id="ok_cargo8">
-                <label for="exampleInputEmail1">Apellidos</label>
-                <input type="text" class="form-control"  id="apellidos" name="apellidos">
-              </div>
-              <div class="form-group" id="ok_cargo9">
-                <label for="exampleInputEmail1">Cedula de identidad</label>
-                <input type="text" class="form-control"  id="cedula" name="cedula">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Numero Celular o telefono</label>
-                <input type="number" class="form-control"  id="telefono" name="telefono">
+                <input type="text" class="form-control" autofocus="" name="nombre" placeholder="Ejemplo: Banco Union">
+                <em style="color:#cf6666;display:none" id="error_registro_p">El nombre de la procedencia no esta disponible!</em>
               </div>
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="btn_reg_cargo" onclick="reg_remitente()">Registrar</button>
+        <button type="submit" class="btn btn-primary" onclick="reg_procedencia()">Registrar</button>
       </div>
       </form>
     </div>
@@ -417,10 +406,10 @@
                 <div class="box-body">
                   <input type="hidden"  name="hoj" value="1">
                   <div class="form-group has-feedback has-success">
-                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">FECHA</label>
+                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">FECHA CITE</label>
                     <div class="col-sm-9" >
                       <div class='input-group date' id='datetimepicker1'>
-                        <input name="fecha" readonly type='text' class="form-control" value="<?php echo date('Y-m-d h:i:s')?>"  validate="true"/>
+                        <input name="fecha" readonly type='text' class="form-control" value="<?php echo date('Y-m-d')?>"  validate="true"/>
                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -439,39 +428,46 @@
                     </div>
                   </div>
                   <div class="form-group" style="padding:5px">
-                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REMITENTE</label>
+                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROCEDENCIA</label>
                     <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
-                      <select id="selectremitente" name="remitente" class="form-control selectpicker show-tick" data-live-search="true">
-                        <?php $ejecute=pg_query("SELECT * FROM remitentes");
+                      <select id="selectprocedencia" name="procedencia" class="form-control selectpicker show-tick" data-live-search="true">
+                        <?php $ejecute=pg_query("SELECT * FROM procedencia");
                           while ($datos=pg_fetch_array($ejecute)) {
                             ?>
-                            <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['cedula'];?>"><?php echo strtoupper($datos['nombres'])." ".strtoupper($datos['apellidos'])?></option>
+                            <option value="<?php echo $datos['id'] ?>"><?php echo strtoupper($datos['nombre'])?></option>
                             <?php
-                          }                
+                          }
                           ?>
                       </select>
-                      <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
                     </div>
                   </div>
                   <div class="form-group has-feedback  has-error fila1" style="padding:5px">
-                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROCEDENCIA</label>
+                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REMITENTE</label>
                     <div class="col-sm-9">
-                      <input type="text" name="procedencia" id="inputprocedencia" class="form-control" validate="true" toggle=".fila1" placeholder="Ejemplo: Banco Central de Bolivia">
+                      <input type="text" name="remitente" id="inputremitente" class="form-control" validate="true" toggle=".fila1" placeholder="Ejemplo: juanito paredes">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                     </div>
                   </div>
-                  <div class="form-group has-feedback has-error fila2" style="padding:5px">
+                  <div class="form-group has-feedback  has-error fila2" style="padding:5px">
+                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CARGO REMITENTE</label>
+                    <div class="col-sm-9">
+                      <input type="text" name="cargo_remitente" id="inputcargoremitente" class="form-control" validate="true" toggle=".fila2" placeholder="Ejemplo: encargado de almacenes">
+                      <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                  <div class="form-group has-feedback has-error fila3" style="padding:5px">
                     <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CITE</label>
                     <div class="col-sm-9">
-                      <input type="text" name="cite" id="inputcite" class="form-control" validate="true" toggle=".fila2" placeholder="Ejemplo: MNG878">
+                      <input type="text" name="cite" id="inputcite" class="form-control" validate="true" toggle=".fila3" placeholder="Ejemplo: MNG878">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                       <em style="color:#cf6666;display:none" id="error_registro">El numero de CITE ya esta en uso!</em>
                     </div>
                   </div>
-                  <div class="form-group has-feedback has-error fila3" style="padding:5px">
+                  <div class="form-group has-feedback has-error fila4" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REFERENCIA</label>
                     <div class="col-sm-9">
-                      <textarea name="referencia" rows="3" id="inputreferencia" cols="80" placeholder="Ejemplo: Este archivo de de suma importancia, el cual debera ser revisado detalladamente" maxlength="250" style="resize: none;" class="form-control"  validate=true toggle=".fila3"></textarea>
+                      <textarea name="referencia" rows="3" id="inputreferencia" cols="80" placeholder="Ejemplo: Este archivo de de suma importancia, el cual debera ser revisado detalladamente" maxlength="250" style="resize: none;" class="form-control"  validate=true toggle=".fila4"></textarea>
                       <span class="glyphicon glyphicon-remove form-control-feedback" style="margin:25px 8px 0 0" aria-hidden=true></span>
                     </div>
                   </div>
@@ -479,17 +475,17 @@
               </div>
               <div id="documento_modal" role="tabpanel" class="tab-pane">
                 <div class="box-body">
-                  <div class="form-group has-feedback has-error fila4" style="padding:5px">
-                    <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO</label>
+                  <div class="form-group has-feedback has-error fila5" style="padding:5px">
+                    <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO (<2MB)</label>
                     <div class="col-sm-9">
-                      <input name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila4');" class="form-control" validate="true" toggle=".fila4">
+                      <input name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila5');" class="form-control" validate="true" toggle=".fila5">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                     </div>
                   </div>
-                  <div class="form-group has-feedback  has-error fila5" style="padding:5px">
+                  <div class="form-group has-feedback  has-error fila6" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">NUMERO DE HOJAS</label>
-                    <div class="col-sm-9" >  
-                      <input type="number" name="num_hojas" id="inputhoja" class="form-control" validate="true" toggle=".fila5" placeholder="Ejemplo: 10 hojas">
+                    <div class="col-sm-9" >
+                      <input type="number" name="num_hojas" id="inputhoja" class="form-control" validate="true" toggle=".fila6" placeholder="Ejemplo: 10 hojas">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                     </div>
                   </div>
@@ -502,7 +498,7 @@
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                             <?php
-                          }                
+                          }
                           ?>
                       </select>
                       <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
@@ -517,7 +513,7 @@
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                             <?php
-                          }                
+                          }
                           ?>
                       </select>
                       <span class="input-group-addon"><span class="glyphicon glyphicon-folder-open"></span></span>
@@ -527,10 +523,10 @@
               </div>
               <div id="destino_modal" role="tabpanel" class="tab-pane">
                 <div class="box-body">
-                  <div class="form-group has-feedback  has-error fila6" style="padding:5px">
+                  <div class="form-group has-feedback  has-error fila7" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DIAS DE PLAZO</label>
                     <div class="col-sm-9">
-                      <input type="number" name="plazo" id="inputplazo" class="form-control" validate="true" toggle=".fila6" placeholder="Ejemplo: 5 dias">
+                      <input type="number" name="plazo" id="inputplazo" class="form-control" validate="true" toggle=".fila7" placeholder="Ejemplo: 5 dias">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                     </div>
                   </div>
@@ -546,7 +542,7 @@
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                             <?php
-                          }                
+                          }
                           ?>
                       </select>
                       <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
@@ -561,7 +557,7 @@
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                             <?php
-                          }                
+                          }
                           ?>
                       </select>
                       <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
@@ -589,7 +585,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" style="color:#fff;font-weight:700">REGISTRO DE HOJA DE RUTA</h4>
+          <h4 class="modal-title" style="color:#fff;font-weight:700">MODIFICAR HOJA DE RUTA</h4>
         </div>
         <div class="box box-primary" style="border-top-width: 0px;margin-bottom: 0px;">
           <div class="modal-body" style="background:#fff;padding:0">
@@ -603,10 +599,10 @@
                 <div id="general_modal_u" role="tabpanel" class="tab-pane active">
                   <div class="box-body">
                     <div class="form-group has-feedback has-success">
-                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">FECHA</label>
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">FECHA CITE</label>
                       <div class="col-sm-9" >
                         <div class='input-group date' id='datetimepicker1_u'>
-                          <input name="fecha" readonly type='text' class="form-control" value="<?php echo date('Y-m-d h:i:s')?>"  validate="true"/>
+                          <input name="fecha_cite" readonly type='text' class="form-control" validate="false"/>
                           <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                           </span>
@@ -625,57 +621,64 @@
                       </div>
                     </div>
                     <div class="form-group" style="padding:5px">
-                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REMITENTE</label>
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROCEDENCIA</label>
                       <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
-                        <select id="selectremitente_u" name="remitente" class="form-control selectpicker show-tick" data-live-search="true">
-                          <?php $ejecute=pg_query("SELECT * FROM remitentes");
+                        <select id="selectprocedencia_u" name="procedencia" class="form-control selectpicker show-tick" data-live-search="true">
+                          <?php $ejecute=pg_query("SELECT * FROM procedencia WHERE estado=1");
                             while ($datos=pg_fetch_array($ejecute)) {
                               ?>
-                              <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['cedula'];?>"><?php echo strtoupper($datos['nombres'])." ".strtoupper($datos['apellidos'])?></option>
+                              <option value="<?php echo $datos['id'] ?>"><?php echo strtoupper($datos['nombre'])?></option>
                               <?php
-                            }                
+                            }
                             ?>
                         </select>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                       </div>
                     </div>
-                    <div class="form-group has-feedback  has-success fila1_u" style="padding:5px">
-                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROCEDENCIA</label>
+                     <div class="form-group has-feedback  has-success fila1_u" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REMITENTE</label>
                       <div class="col-sm-9">
-                        <input type="text" name="procedencia" id="inputprocedencia_u" class="form-control" validate="false" toggle=".fila1_u">
+                        <input type="text" name="remitente" id="inputremitente_u" class="form-control" validate="false" toggle=".fila1_u">
                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                       </div>
-                    </div>
-                    <div class="form-group has-feedback has-success fila2_u" style="padding:5px">
+                     </div>
+                     <div class="form-group has-feedback  has-success fila2_u" style="padding:5px">
+                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CARGO REMITENTE</label>
+                       <div class="col-sm-9">
+                         <input type="text" name="cargo_remitente" id="inputcargoremitente_u" class="form-control" validate="false" toggle=".fila2_u">
+                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                       </div>
+                     </div>
+                     <div class="form-group has-feedback has-success fila3_u" style="padding:5px">
                       <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CITE</label>
                       <div class="col-sm-9">
-                        <input type="text" name="cite" id="inputcite_u" class="form-control" validate="false" toggle=".fila2_u">
+                        <input type="text" name="cite" id="inputcite_u" class="form-control" validate="false" toggle=".fila3_u">
                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                         <em style="color:#cf6666;display:none" id="error_update">El numero de CITE ya esta en uso!</em>
                       </div>
-                    </div>
-                    <div class="form-group has-feedback has-success fila3_u" style="padding:5px">
+                     </div>
+                     <div class="form-group has-feedback has-success fila4_u" style="padding:5px">
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">REFERENCIA</label>
                       <div class="col-sm-9">
-                        <textarea name="referencia" rows="3" id="inputreferencia_u" cols="80" maxlength="250" style="resize: none;" class="form-control"  validate=false toggle=".fila3_u"></textarea>
+                        <textarea name="referencia" rows="3" id="inputreferencia_u" cols="80" maxlength="250" style="resize: none;" class="form-control"  validate=false toggle=".fila4_u"></textarea>
                         <span class="glyphicon glyphicon-ok form-control-feedback" style="margin:25px 8px 0 0" aria-hidden=true></span>
                       </div>
-                    </div>
+                     </div>
                   </div>
                 </div>
                 <div id="documento_modal_u" role="tabpanel" class="tab-pane">
                   <div class="box-body">
-                    <div class="form-group has-feedback has-error fila4_u" style="padding:5px">
-                      <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO</label>
+                    <div class="form-group has-feedback has-error fila5_u" style="padding:5px">
+                      <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO (<2MB)</label>
                       <div class="col-sm-9">
-                        <input id="inputfile_u" name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila4_u');" class="form-control" validate="false" toggle=".fila4_u">
+                        <input id="inputfile_u" name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila5_u');" class="form-control" validate="false" toggle=".fila5_u">
                         <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                       </div>
                     </div>
-                    <div class="form-group has-feedback  has-success fila5_u" style="padding:5px">
+                    <div class="form-group has-feedback  has-success fila6_u" style="padding:5px">
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">NUMERO DE HOJAS</label>
-                      <div class="col-sm-9" >  
-                        <input type="number" name="num_hojas" id="inputhoja_u" class="form-control" validate="false" toggle=".fila5_u">
+                      <div class="col-sm-9" >
+                        <input type="number" name="num_hojas" id="inputhoja_u" class="form-control" validate="false" toggle=".fila6_u">
                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                       </div>
                     </div>
@@ -688,7 +691,7 @@
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                               <?php
-                            }                
+                            }
                             ?>
                         </select>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
@@ -703,7 +706,7 @@
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                               <?php
-                            }                
+                            }
                             ?>
                         </select>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-folder-open"></span></span>
@@ -713,10 +716,10 @@
                 </div>
                 <div id="destino_modal_u" role="tabpanel" class="tab-pane">
                   <div class="box-body">
-                    <div class="form-group has-feedback  has-success fila6_u" style="padding:5px">
+                    <div class="form-group has-feedback  has-success fila7_u" style="padding:5px">
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DIAS DE PLAZO</label>
                       <div class="col-sm-9">
-                        <input type="number" name="plazo" id="inputplazo_u" class="form-control" validate="false" toggle=".fila6_u">
+                        <input type="number" name="plazo" id="inputplazo_u" class="form-control" validate="false" toggle=".fila7_u">
                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                       </div>
                     </div>
@@ -732,7 +735,7 @@
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                               <?php
-                            }                
+                            }
                             ?>
                         </select>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
@@ -747,7 +750,7 @@
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
                               <?php
-                            }                
+                            }
                             ?>
                         </select>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>

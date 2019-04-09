@@ -12,8 +12,12 @@ class Createpdf{
       $this->$functionName($urlParams[5]);
 
    }
-   public function loadPDF($empty){
-      $listPOO= new ListPOO; $result=$listPOO->listHojaRuta(1);
+   public function printreportePDF($empty){
+      $listPOO= new ListPOO; $result=$listPOO->listHojaRuta();
+      $this->GeneraPDF($result,'reporte','Reporte de Hojas de Ruta','landscape');
+   }
+   public function printmireportePDF($empty){
+      $listPOO= new ListPOO; $result=$listPOO->listmiHojaRuta();
       $this->GeneraPDF($result,'reporte','Reporte de Hojas de Ruta','landscape');
    }
    public function PrintHoja($id){
@@ -22,6 +26,10 @@ class Createpdf{
    }
    public function PrintHojas($id){
       $listPOO= new ListPOO; $result=$listPOO->listHojaRuta();
+      $this->GeneraPDF($result,'hojas','Hojas de Ruta','portrait');
+   }
+   public function PrintmisHojas($id){
+      $listPOO= new ListPOO; $result=$listPOO->listmiHojaRuta();
       $this->GeneraPDF($result,'hojas','Hojas de Ruta','portrait');
    }
    function GeneraPDF($result,$view,$title,$paper){

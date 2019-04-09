@@ -75,7 +75,7 @@ if(!isset($_SESSION['nombres']))
 
           <!-- Notifications: style can be found in dropdown.less -->
           <li class="dropdown notifications-menu">
-            <a href="hojas.php?estado=proceso">
+            <a href="mishojas.php?seleccionado=proceso">
               <i class="fa fa-bell-o"></i>
               <span class="label label-danger" id="cantobject"></span>
             </a>

@@ -49,24 +49,24 @@
 					<td style="text-align:center"><?php echo "$resp[cite]"; ?></td>
 				</tr>
 				<tr>
-					<td >PLAZO DE RESPUESTA</td>
-					<td colspan="3"><?php echo $resp['plazo']." Dias"?></td>
-					<th style="background:#ececec">FECHA Y HORA</th>
+					<td>CARGO REMITENTE</td>
+					<td colspan="3"><?php echo $resp['cargo_remitente']?></td>
+					<th style="background:#ececec">FECHA CITE</th>
 				</tr>
 				<tr>
-					<td >ADJUNTOS</td>
+					<td>ADJUNTOS</td>
 					<td colspan="3"><?php echo $resp['adjunto'] ?></td>
-					<td style="text-align:center"> <?php echo "$resp[fecha]"; ?></td>
+					<td style="text-align:center"> <?php echo "$resp[fecha_cite]"; ?></td>
 				</tr>
 				<tr>
 					<td >N° DE HOJAS</td>
 					<td colspan="3"><?php echo $resp['num_hojas'] ?></td>
-					<th style="background:#ececec">PRIORIDAD</th>
+					<th style="background:#ececec">FECHA REGISTRO</th>
 				</tr>
 				<tr>
 					<td >TIPO DE DOCUMENTOS</td>
 					<td colspan="3"><?php echo $resp['tipo'] ?></td>
-					<td style="text-align:center"> <?php echo "$resp[prioridad]"; ?></td>
+					<td style="text-align:center"> <?php echo "$resp[fecha]";?></td>
 				</tr>
 				<tr>
 					<td >REFERENCIA</td>

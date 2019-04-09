@@ -1,57 +1,52 @@
 <?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>  
+<?php include("includes/aside.php"); ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="fab" data-target="#modal_usuario" data-toggle="modal"> + </div>
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-        Tabla de usuarios
-      </h1>
-      
-      
-        <!-- /.modal -->
+      <h1>Tabla de usuarios</h1>
     </section>
     <!-- Main content -->
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
-          
+
           <div class="box">
             <!-- /.box-header -->
             <div class="box-body">
               <table style="font-style: oblique;" id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                  <th width="13%">Acciones</th>
                   <th>Nombres</th>
                   <th>Apellidos</th>
                   <th>Cedula</th>
                   <th>Usuario</th>
                   <th>Cargos</th>
+                  <th width="10%">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-              <?php 
+              <?php
                 $ejecute=pg_query("SELECT u.*,c.nombre as cargo,d.nombre as destino FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino");
                 while ($datos=pg_fetch_assoc($ejecute)) {
                   ?>
                   <tr>
-                    <td>
-                      <button class="btn btn-info btn-xs" onclick="verUsuario(<?php echo $datos['id'];?>)" data-toggle="modal" data-target="#updateusuarioModal">Ver</button>
-                    </td>
                     <td><?php echo $datos['nombres'] ?></td>
                     <td><?php echo $datos['apellidos'] ?></td>
                     <td><?php echo $datos['cedula'] ?></td>
                     <td><?php echo $datos['usuario'] ?></td>
                     <td><?php echo $datos['cargo'] ?></td>
+                    <td>
+                      <button class="btn btn-info btn-xs" onclick="verUsuario(<?php echo $datos['id'];?>)" data-toggle="modal" data-target="#updateusuarioModal">Ver</button>
+                    </td>
                   </tr>
                   <?php
                   }
                   ?>
-              
-                
+
+
               </table>
             </div>
             <!-- /.box-body -->
@@ -65,9 +60,9 @@
     <?php 	include 'includes/modales.php'; ?>
     <!-- /.content -->
   </div>
-  
+
   <!-- /.content-wrapper -->
-  
+
   <script>
   var id_cargos_u=0,id_destinos_u=0,id_usuario=0;
     $(document).ready(function(){
@@ -127,17 +122,17 @@
           $('#selectcargo_u').selectpicker('val', '');
           $('#selectdestino_u').selectpicker('val', '');
           $("#selectcargo_u,#selectdestino_u").selectpicker('refresh');
-          
+
           var data = JSON.parse(obj);id_usuario=data.id;
           $('.unombre h5').html(data.nombres+"<br>"+data.apellidos);$('.unombre p').text(data.cedula);$('.ulogin').text(data.usuario);
           $('.ucargo').text(data.cargos);$('.udestino').text(data.destinos);
-         
+
           $('#inputnombre_u').val(data.nombres.toLowerCase());$('#inputnombre_u').attr('placeholder',data.nombres.toLowerCase());
           $('#inputapellido_u').val(data.apellidos.toLowerCase());$('#inputapellido_u').attr('placeholder',data.apellidos.toLowerCase());
           $('#inputusuario_u').val(data.usuario.toLowerCase());$('#inputusuario_u').attr('placeholder',data.usuario.toLowerCase());
           $('#inputci_u').val(data.cedula);$('#inputci_u').attr('placeholder',data.cedula);
           $('#inputpassword_u').val("");$('#inputpassword_u').removeClass('has-success').addClass('has-error');
-          
+
           var i=0;id_cargos_u=data.id_cargo;id_destinos_u=data.id_destino;
           $('#selectcargo_u').selectpicker('val', id_cargos_u);
           $('#selectdestino_u').selectpicker('val', id_destinos_u);$("#selectcargo_u,#selectcargo_u").selectpicker('refresh');
@@ -167,17 +162,17 @@
 				}else{$("#buttonupdate").attr('disabled', true);}
 			}
 		}
- 
-    
+
+
   </script>
-  
+
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.4.0
     </div>
     <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
     reserved.
-    
+
 <!-- Control de configuracion de pie de de js pagina -->
 <?php include('includes/pie.php'); ?>
   </footer>
@@ -188,5 +183,3 @@
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- Control de modalaesggg -->
-
-

@@ -1,90 +1,110 @@
+<style>
+   #verhojarutaModal .estilo{
+
+      line-height: .95em !important;text-transform: lowercase;color:#828282;margin:1px;font-weight: 200;font-size: 1.2em;
+   }
+   #verhojarutaModal .estilo0{
+      line-height: .95em !important;color:#fff;margin:1px;font-weight: 700;font-size: 1.3em;
+   }
+   .row.row-eq-height {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+   }
+</style>
 <div class="modal fade bs-example-modal-lg" id="verhojarutaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
      <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
                <div class="modal-body" style="padding:0;z-index:20">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="right: 5px;z-index:100;position:absolute"><span aria-hidden="true">&times;</span></button>
-                    <div class="row" style="margin:0px;background:#171717;padding:0 10px 0 0;">
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
+                     <div class="row" style="margin:0px;background:#08c;">
+                       <h3 style="margin:10px;text-align:center;color:#fff;font-weight:800">INFORMACION DE LA HOJA DE RUTA</h3>
+                     </div>
+                     <div class="row" style="margin:0px;background:#3b4579;" id="row_admin">
+                       <div class="col-md-12" style="padding:5px 0 5px 0;">
+                          <div class="col-md-6 col-sm-12 col-xs-12">
+                             <div class="col-md-3 col-sm-3 col-xs-3">
+                                  <img src="../pages/images/creado.png" width="65px">
+                             </div>
+                             <div class="col-md-9 col-sm-9 col-xs-9" style="padding:0">
+                                  <h4 style="font-weight:800;margin:6px 0 0 0;color:#a36aef">CREADO</h4>
+                                  <h5 style="margin:0;font-style: bold;color:#fff">Usuario: <small class="vnombrer" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                                  <h5 style="margin:0;font-style: bold;color:#fff">Fecha: <small class="vcir" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                             </div>
+                          </div>
+                          <div class="col-md-6 col-sm-12 col-xs-12">
+                             <div class="col-md-3 col-sm-3 col-xs-3">
+                                  <img src="../pages/images/modificado.png" width="65px">
+                             </div>
+                             <div class="col-md-9 col-sm-9 col-xs-9" style="padding:0">
+                                  <h4 style="font-weight:800;margin:6px 0 0 0;color:#a36aef">MODIFICADO</h4>
+                                  <h5 style="margin:0;font-style: bold;color:#fff">Usuario: <small class="vnombreu" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                                  <h5 style="margin:0;font-style: bold;color:#fff">Fecha: <small class="vfechau" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
+                             </div>
+                          </div>
+                       </div>
+                     </div>
+                     <div class="row row-eq-height" style="margin:0px;background:#171717;padding:0 10px 0 0;">
+                         <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
                               <center>
 	                           	<img src="../pages/images/manager.png"  style="padding:15px 0 5px 0;margin:0">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">REMITENTE</p>
-	                           	<p class="vnombre" style="line-height: .95em !important;color:#828282;margin:1px;font-weight: 200"></p>
+                                   <br><p class="estilo0">REMITENTE</p>
+	                           	<p class="vnombre estilo"></p>
 	                       	</center>
                          </div>
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
+                         <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
                               <center>
 	                           	<img src="../pages/images/home.png"  style="padding:15px 0 5px 0;margin-top:0px">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">PROCEDENCIA</p>
-	                           	<p class="vprocedencia" style="line-height: .95em !important;color:#828282;margin:1px;font-weight: 200"></p>
+                                   <br><p class="estilo0">PROCEDENCIA</p>
+	                           	<p class="vprocedencia estilo"></p>
 	                       	</center>
                          </div>
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
+                         <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
                               <center>
 	                           	<img src="../pages/images/document.png"  style="padding:17px 0 5px 0;margin-top:0px;">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">Nº CITE</p>
-                                   <p class="vcite" style="line-height: .95em !important;text-transform: lowercase;color:#828282;margin:1px;font-weight: 200"></p>
+                                   <br><p class="estilo0">Nº CITE</p>
+                                   <p class="vcite estilo"></p>
                               </center>
                          </div>
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
+                         <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
                               <center>
 	                           	<img src="../pages/images/identification.png"  style="padding:15px 0 5px 0;margin-top:0px">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">Nº TRAMITE</p>
-                                   <p class="vtramite" style="line-height: .95em !important;text-transform: lowercase;color:#828282;margin:1px;font-weight: 200"></p>
-	                       	</center>
-                         </div>
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
-                              <center>
-	                           	<img src="../pages/images/numbered.png"  style="padding:17px 0 5px 0;margin:0">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">PRIORIDAD</p>
-	                           	<p class="vprioridad" style="line-height: .95em !important;text-transform: lowercase;color:#828282;margin:1px;font-weight: 200"></p>
-	                       	</center>
-                         </div>
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
-                              <center>
-	                           	<img src="../pages/images/hourglass.png"  style="padding:15px 0 5px 0;margin-top:0px">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">PLAZO</p>
-	                           	<p class="vplazo" style="line-height: .95em !important;text-transform: lowercase;color:#828282;margin:1px;font-weight: 200"></p>
-	                       	</center>
-                         </div>
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
-                              <center>
-	                           	<img src="../pages/images/elaborado.png"  style="padding:15px 0 5px 0;margin-top:0px">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">FECHA</p>
-	                           	<p class="vfecha" style="line-height: .95em !important;color:#828282;margin:1px;font-weight: 200"></p>
-	                       	</center>
-                         </div>
-                         <div class="col-md-4 col-lg-3 col-sm-6 col-xs-12" style="margin:0px;padding:0 0 15px 0;">
-                              <center>
-	                           	<img src="../pages/images/status.png"  style="padding:15px 0 5px 0;margin-top:0px">
-                                   <br><p style="line-height: .95em !important;color:#fff;margin:1px;font-weight: 600">ESTADO</p>
-	                           	<p class="vestado" style="line-height: .95em !important;color:#828282;margin:1px;font-weight: 200"></p>
+                                   <br><p class="estilo0">Nº TRAMITE</p>
+                                   <p class="vtramite estilo"></p>
 	                       	</center>
                          </div>
                     </div>
-                    <div class="row" style="margin:0px;background:#3b4579;" id="row_admin">
-                        <div class="col-md-12" style="padding:5px 0 5px 0;">
-                           <div class="col-md-6">
-                              <div class="col-md-3 col-sm-3 col-xs-3">
-                                   <img src="../pages/images/creado.png" width="65px">
-                              </div>
-                              <div class="col-md-9 col-sm-9 col-xs-9" style="padding:0">
-                                   <h4 style="font-weight:800;margin:6px 0 0 0;color:#a36aef">CREADO</h4>
-                                   <h5 style="margin:0;font-style: bold;color:#fff">Usuario: <small class="vnombrer" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
-                                   <h5 style="margin:0;font-style: bold;color:#fff">Fecha: <small class="vcir" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
-                              </div>
-                           </div>
-                           <div class="col-md-6">
-                              <div class="col-md-3 col-sm-3 col-xs-3">
-                                   <img src="../pages/images/modificado.png" width="65px">
-                              </div>
-                              <div class="col-md-9 col-sm-9 col-xs-9" style="padding:0">
-                                   <h4 style="font-weight:800;margin:6px 0 0 0;color:#a36aef">MODIFICADO</h4>
-                                   <h5 style="margin:0;font-style: bold;color:#fff">Usuario: <small class="vnombreu" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
-                                   <h5 style="margin:0;font-style: bold;color:#fff">Fecha: <small class="vfechau" style="margin:0;font-style: italic;color:#d1b7f3;font-size:.9em;"></small></h5>
-                              </div>
-                           </div>
+                    <div class="row row-eq-height" style="margin:0px;background:#171717;padding:0 10px 0 0;">
+                        <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
+                             <center>
+                                <img src="../pages/images/numbered.png"  style="padding:17px 0 5px 0;margin:0">
+                                  <br><p class="estilo0">PRIORIDAD</p>
+                                <p class="vprioridad estilo"></p>
+                          </center>
                         </div>
-                    </div>
+                        <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
+                             <center>
+                                <img src="../pages/images/hourglass.png"  style="padding:15px 0 5px 0;margin-top:0px">
+                                  <br><p class="estilo0">PLAZO</p>
+                                <p class="vplazo estilo"></p>
+                          </center>
+                        </div>
+                        <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
+                             <center>
+                                <img src="../pages/images/elaborado.png"  style="padding:15px 0 5px 0;margin-top:0px">
+                                  <br><p class="estilo0">FECHA CITE</p>
+                                <p class="vfecha estilo"></p>
+                          </center>
+                        </div>
+                        <div class="col-md-4" style="margin:0px;padding:0 0 15px 0;">
+                             <center>
+                                <img src="../pages/images/status.png"  style="padding:15px 0 5px 0;margin-top:0px">
+                                  <br><p class="estilo0">ESTADO</p>
+                                <p class="vestado estilo"></p>
+                          </center>
+                        </div>
+                   </div>
                     <ul role="tablist" style="padding:0px;" class="nav nav-tabs nav-justified" id="myTab">
                          <li  role="presentation" class="active"><a style="padding:0 15px 0 15px" href="#general_modal_v" aria-controls="general_modal_v" role="tab" data-toggle="tab">GENERAL<h5 class="badge" style="background:#e8be47;margin-left:10px"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></h5></a></li>
                          <li role="presentation"><a style="padding:0 15px 0 15px" href="#destino_moda_v" aria-controls="destino_moda_v" role="tab" data-toggle="tab">DESTINOS<h5 class="badge" style="background:#e8be47;margin-left:10px"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></h5></a></li>

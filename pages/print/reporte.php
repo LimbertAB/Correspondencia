@@ -79,7 +79,7 @@
                          <td width="10%">TIPO</td>
                          <td width="10%">HOJAS</td>
                          <td width="15%">REFERENCIAS</td>
-                         <td width="10%">FECHA</td>
+                         <td width="10%">FECHA CITE</td>
                          <td style="padding:3px" width="10%">ESTADO</td>
                     </tr>
                </thead>
@@ -92,8 +92,9 @@
                               <td><h5><?php echo strtolower($resultado[$i]['adjunto'])?></h5></td>
                               <td><h5><?php echo $resultado[$i]['num_hojas'] ?> <small><?php echo strtolower($resultado[$i]['tipo'])?></small></h5></td>
                               <td style="line-height: 1em;"><h5><?php echo strtolower($resultado[$i]['referencia'])?></td>
-                              <td style="line-height: 1em;"><h5><?php echo $resultado[$i]['fecha'];?></h5></td>
-                              <td <?php echo $resultado[$i]['estado']==$resultado[$i]['total']?"bgcolor='#67FF99'" : "bgcolor='#f59a9a'";?> style="line-height: 1em;"><h5> <?php echo $resultado[$i]['estado']==$resultado[$i]['total']?"Completado" : "Sin Completar";?></h5></td>
+                              <td style="line-height: 1em;"><h5><?php echo $resultado[$i]['fecha_cite'];?></h5></td>
+                              <td <?php echo $resultado[$i]['color'];?>><h5><?php echo $resultado[$i]['mensaje'];?></h5></td>
+
                          </tr>
                     <?php } ?>
                </tbody>

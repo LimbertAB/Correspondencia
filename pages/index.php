@@ -1,7 +1,8 @@
 <?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>  
+<?php include("includes/aside.php"); ?>
 
   <!-- Content Wrapper. Contains page content -->
+
   <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
@@ -10,7 +11,7 @@
         <div class="col-md-12">
           <div class="box box-solid">
             <div class="box-header with-border"  style="text-align: center;">
-              
+
               <h3 class="box-title" >Bienvenido al Sistema de Correspondencia de la Casa de la Moneda</h3>
             </div>
             <!-- /.box-header -->
@@ -21,22 +22,21 @@
                   <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
                   <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
                 </ol>
-                <div class="carousel-inner">
+                <div class="carousel-inner" style="height:80vh">
                   <div class="item active">
-                    <img src="../dist/img/2.jpg" alt="Primera slide" >
-
+                    <img src="../dist/img/2.jpg" alt="Primera slide" style="background-position: center center;background-repeat: no-repeat;background-size: cover;background-attachment: fixed;">
                     <div class="carousel-caption">
                       Primera Diapositiva
                     </div>
                   </div>
                   <div class="item">
-                    <img src="../dist/img/1.jpg" alt="Segunda Diapositiva">
+                    <img src="../dist/img/1.jpg" alt="Segunda Diapositiva" style="background-position: center center;background-repeat: no-repeat;background-size: cover;background-attachment: fixed;">
                     <div class="carousel-caption">
                       Segunda Diapositiva
                     </div>
                   </div>
                   <div class="item">
-                    <img src="../dist/img/3.jpg" alt="Tercera Diapositiva">
+                    <img src="../dist/img/3.jpg" alt="Tercera Diapositiva" style="background-position: center center;background-repeat: no-repeat;background-size: cover;background-attachment: fixed;">
 
                     <div class="carousel-caption">
                       Tercera Slide
@@ -64,7 +64,7 @@
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0.0.
     </div>
-    <strong> &copy; 2018 
+    <strong> &copy; 2018
   </footer>
 
   <!-- Control de configuracion de pagina -->

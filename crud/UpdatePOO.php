@@ -51,29 +51,30 @@ function Retorno($sql){
     }
 }
 function createHoja(){
-    $procedencia=$_POST['procedencia'];
+   $procedencia=$_POST['procedencia'];
 	$remitente=$_POST['remitente'];
+   $cargo_remitente=$_POST['cargo_remitente'];
 	$adjunto=$_POST['adjunto'];
 	$num_hojas=$_POST['num_hojas'];
 	$tipo=$_POST['tipo'];
 	$plazo=$_POST['plazo'];
-    $cite=$_POST['cite'];
-    $fecha=$_POST['fecha'];
-    $prioridad=$_POST['prioridad'];
-    $referencia=$_POST['referencia'];
+   $cite=$_POST['cite'];
+   $fecha_cite=$_POST['fecha'];
+   $prioridad=$_POST['prioridad'];
+   $referencia=$_POST['referencia'];
 	$user=$_SESSION['id_usu'];
-    //obtengo el ultimo id de hoja
-    $ultimoid=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
-    $ultimo=$ultimoid['id']+1;
+   $fecha=date('Y-m-d h:i:s');
+   //obtengo el ultimo id de hoja
+   $ultimoid=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
+   $ultimo=$ultimoid['id']+1;$tramite="CNM-".$ultimo."/".date("Y");
 
-	$tramite="CNM-".$ultimo."/".date("Y");
 	$name="FILE".date("Ymdhis").".pdf";
-	$ruta="../dist/archivos/".$name;
-    $sql = pg_query("INSERT INTO hojas (procedencia,remitente_id,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,plazo,cite,tramite,archivo,prioridad,estado) values('{$procedencia}','{$remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$plazo}','{$cite}','{$tramite}','{$name}','{$prioridad}',1)");
-    $PGSTAT = pg_result_status($sql);
-    if($PGSTAT == 1){
-        move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
-        $ui=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
+   $sql = pg_query("INSERT INTO hojas (procedencia_id,remitente,cargo_remitente,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,fecha_cite,plazo,cite,tramite,archivo,prioridad,estado) values('{$procedencia}','{$remitente}','{$cargo_remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$fecha_cite}','{$plazo}','{$cite}','{$tramite}','{$name}','{$prioridad}',1)");
+   $PGSTAT = pg_result_status($sql);
+   if($PGSTAT == 1){
+      $ruta="../dist/archivos/".$name;
+      move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
+      $ui=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
 		$id=$ui['id'];
 
 		$destino=$_POST['destino'];$affects=0;
@@ -102,25 +103,29 @@ function updateHoja(){
     $id=$_POST['id_hoja'];
     $name="FILE".date("Ymdhis").".pdf";
     if($_FILES['archivo']['error'] == 0) {
+
         $sql=pg_query("UPDATE hojas SET archivo='{$name}'WHERE id={$id}");
         $PGSTAT = pg_result_status($sql);
+        echo "llegada archivo por el if".$PGSTAT;
         if($PGSTAT == 1){
+           echo "llegada archivo por el if de pdstat";
             $ruta="../dist/archivos/".$name;
             move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
         }
     }
     $procedencia=$_POST['procedencia'];$remitente=$_POST['remitente'];
-	$adjunto=$_POST['adjunto'];$num_hojas=$_POST['num_hojas'];
+    $cargo_remitente=$_POST['cargo_remitente'];
+	 $adjunto=$_POST['adjunto'];$num_hojas=$_POST['num_hojas'];
     $tipo=$_POST['tipo'];$referencia=$_POST['referencia'];
-	$plazo=$_POST['plazo'];$cite=$_POST['cite'];
-    $fecha=$_POST['fecha'];$prioridad=$_POST['prioridad'];
+	 $plazo=$_POST['plazo'];$cite=$_POST['cite'];
+    $fecha_cite=$_POST['fecha_cite'];$prioridad=$_POST['prioridad'];
     $user=$_SESSION['id_usu'];$fecha_update=date("Y-m-d h:i:s");
 
-    $sql=pg_query("UPDATE hojas SET procedencia='{$procedencia}',remitente_id={$remitente},adjunto_id={$adjunto},
-        num_hojas={$num_hojas},tipo_id={$tipo},referencia='{$referencia}',fecha='{$fecha}',plazo={$plazo},
+   $sql=pg_query("UPDATE hojas SET procedencia_id={$procedencia},remitente='{$remitente}',cargo_remitente='{$cargo_remitente}',adjunto_id={$adjunto},
+        num_hojas={$num_hojas},tipo_id={$tipo},referencia='{$referencia}',fecha_cite='{$fecha_cite}',plazo={$plazo},
         cite='{$cite}',prioridad='{$prioridad}',update_user={$user},fecha_update='{$fecha_update}' WHERE id={$id}");
-    $PGSTAT = pg_result_status($sql);
-    if($PGSTAT == 1){
+   $PGSTAT = pg_result_status($sql);
+   if($PGSTAT == 1){
         if(isset($_POST['accion_u'])){
             for ($i=0;$i<count($_POST['accion_u']);$i++) {
                 $accion=(array) json_decode($_POST['accion_u'][$i]);
@@ -144,7 +149,7 @@ function updateHoja(){
             }
         }
         echo "ok";
-	}
+	 }
 }
 function ver_usuario($var){
     $sql="SELECT * FROM usuarios WHERE UPPER(usuario) = UPPER('{$var}')";

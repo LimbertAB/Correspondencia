@@ -1,4 +1,4 @@
-<?php 
+<?php
 //obtenemos las funciones ue tiene el usuario
 $ejecute=pg_query("SELECT fu.numero as num_funcion FROM funciones fu,
  funcion_cargo fc, cargos ca, usuarios us WHERE fu.id=fc.funcion_id and fc.cargo_id=ca.id AND ca.id=us.id_cargo AND us.id=$_SESSION[id_usu]");
@@ -10,7 +10,7 @@ while ($datos=pg_fetch_assoc($ejecute)) {
 $funciones=array_unique($funciones);
 $con_funciones=0;
 foreach ($funciones as $key => $value){
-  if ($value==12) {
+  if ($value==13) {
     $con_funciones=1;
   }
 }
@@ -31,9 +31,8 @@ foreach ($funciones as $key => $value){
       </div>
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">NAVEGACIÓN PRINCIPAL</li>
         <?php foreach ($funciones as $key => $value) {
-            if ($value==13) {
+            if ($value==14) {
             ?>
               <li class="active">
                 <a href="index2.php">
@@ -43,6 +42,25 @@ foreach ($funciones as $key => $value){
             <?php
             }
         } ?>
+        <?php foreach ($funciones as $key => $value) {
+            if ($value==4):?>
+               <li class="header" style="font-weight:200;color:#12c8f3">HOJAS DE RUTA</li>
+               <li >
+                  <a href="mishojas.php">
+                     <i class="fa fa-file-powerpoint-o"></i>
+                     <span>Mis Hojas de Ruta</span>
+                  </a>
+               </li>
+            <?php endif;?>
+            <?php if ($value==13):?>
+               <li >
+                  <a href="hojas.php">
+                     <i class="fa fa-circle-o"></i>
+                     <span>Administrar Hojas</span>
+                  </a>
+               </li>
+            <?php endif; }?>
+        <li class="header" style="font-weight:200;color:#12c8f3">CONFIGURACION</li>
         <?php foreach ($funciones as $key => $value) {
             if ($value==2) {
             ?>
@@ -68,18 +86,6 @@ foreach ($funciones as $key => $value){
             }
         } ?>
         <?php foreach ($funciones as $key => $value) {
-            if ($value==4) {
-            ?>
-              <li>
-                <a href="hojas.php">
-                  <i class="fa fa-file-powerpoint-o"></i>
-                  <span>Hoja de rutas</span>
-                </a>
-              </li>
-            <?php
-            }
-        } ?>
-        <?php foreach ($funciones as $key => $value) {
             if ($value==6) {
             ?>
               <li>
@@ -93,20 +99,19 @@ foreach ($funciones as $key => $value){
         } ?>
 
         <?php foreach ($funciones as $key => $value) {
-            if ($value==7) {
+            if ($value==8) {
             ?>
               <li>
-                <a href="remitentes.php">
-                  <i class="fa fa-user"></i>
-                  <span>Remitentes</span>
+                <a href="procedencia.php">
+                  <i class="fa fa-institution"></i>
+                  <span>Procedencias</span>
                 </a>
               </li>
             <?php
             }
         } ?>
-
         <?php foreach ($funciones as $key => $value) {
-            if ($value==8) {
+            if ($value==10) {
             ?>
               <li>
                 <a href="tipos.php">
@@ -130,7 +135,7 @@ foreach ($funciones as $key => $value){
             }
         } ?>
         <?php foreach ($funciones as $key => $value) {
-            if ($value==10) {
+            if ($value==11) {
             ?>
               <li>
                 <a href="acciones.php">
@@ -141,7 +146,7 @@ foreach ($funciones as $key => $value){
             <?php
             }
         } ?>
-        
+
       </ul>
     </section>
     <!-- /.sidebar -->

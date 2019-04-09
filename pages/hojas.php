@@ -5,135 +5,74 @@
 <?php if (isset($_SESSION['mensaje'])) {?>
 	<script type="text/javascript"> alert("<?php echo $_SESSION['mensaje'] ?>")</script>
 <?php unset( $_SESSION["mensaje"] );}?>
-
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-	<?php if ($con_funciones==1):?>
-		<div class="fab" data-placement="top" title="Registrar Hoja de Ruta" data-target="#modal_hoja" data-toggle="modal"> + </div>
-		<div class="fab2"><a data-toggle="tooltip" data-placement="top" title="Imprimir Reporte" href="../crud/Createpdf.php/loadPDF/?inicio=<?php echo $data['inicio']?>&fin=<?php echo $data['fin']?>&estado=all&remitente=all" target="_blank" style="color:#ffcccc"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size: 30px;text-align: center;vertical-align: top;padding-top: 9px;"></span></a></div>
-	<?php else:?>
-		<div class="fab"><a data-toggle="tooltip" data-placement="top" title="Imprimir Reporte" href="../crud/Createpdf.php/loadPDF/?inicio=<?php echo $data['inicio']?>&fin=<?php echo $data['fin']?>&estado=all&remitente=all" target="_blank" style="color:#fff"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size: 40px;text-align: center;vertical-align: top;padding-top: 9px;"></span></a></div>
-	<?php endif; ?>
 	<section class="content">
 		<div class="row">
-			<div class="col-md-12 form-inline" >
-				<h1 align="center" style="margin:0 0 20px 0;font-weight:600">HOJAS DE RUTA </h1>
-				<div class="tab">
-					<div class="form-busq tab">
-						<h4>
-						 <span class="titulo pull-left">BUSQUEDA AVANZADA DE HOJAS DE RUTA</span>
-						</h4>
+			<div class="col-md-12 form-inline">
+			<?php if ($con_funciones==1):?>
+				<button type="button" data-target="#modal_hoja" data-toggle="modal" class="btn btn-primary" style="float:left;position:absolute">Nueva Hoja de Ruta</button>
+			<?php endif; ?>
+			<h1 align="center" style="margin:0 0 20px 0;font-weight:600">ADMINISTRAR HOJAS DE RUTA </h1>
+			</div>
+			<form id="formAvanzada" class="form-inline" autocomplete="off" aria-expanded="true" style="padding:20px">
+				<div class="form-group col-md-4" style="margin:0;padding:0">
+					<label class="control-label fecha" style="margin: 0 -4px;padding-top: 7px;padding-left:0;float:left;position:absolute">Fecha:</label>
+					<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12" style="padding:0 0px 0 40px">
+						<input type="date" name="inicio" class="form-control" value="<?php echo $data['inicio']?>" style="padding:5px 0 5px 10px;width:100%">
 					</div>
-					<span class="glyphicon btn-collapse glyphicon-minus" data-toggle="collapse" href="#formAvanzada" aria-expanded="true" style="text-align:left;"></span>
-					<div class="tab-content">
-						<div id="f-avanzada" class="tab-pane fade in  active">
-							<form id="formAvanzada" class="form-horizontal collapse in" autocomplete="off" aria-expanded="true">
-								<div class="row" style="padding:8px 20px 8px;display:table;">
-										<div class="form-group col-md-6" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Fecha:</label>
-											<div class="col-sm-9">
-												<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding:0 8px 0 0">
-													<input type="date" name="inicio" class="bg-info form-control" value="<?php echo $data['inicio']?>" style="width: 100%;padding:5px 0 5px 10px">
-												</div>
-												<label class="control-label fecha" style="margin: 0 -4px;padding-top: 7px;padding-left:0;float:left">a</label>
-												<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding:0 0 0 8px">
-												  <input type="date" name="fin" class="form-control" value="<?php echo $data['fin']==""?date('Y-m-d'):$data['fin']?>" max="<?php echo date('Y-m-d')?>" style="width: 100%;padding:5px 0 5px 10px">
-												</div>
-											</div>
-										</div>
-										<div class="form-group col-md-6" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Hoja Ruta:</label>
-											<div class="col-sm-9">
-												<input type="number" class="form-control" name="id" placeholder="Ejemplo: 10" style="width: 100%;" value="<?php echo $data['id']?>">
-											</div>
-										</div>
-										<div class="form-group col-md-6 col-sm-12 col-xs-12" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Cite:</label>
-											<div class="col-sm-9">
-												<input type="text" class="form-control" name="cite" placeholder="Ejemplo: Banco Central de Bolivia" style="width: 100%;" value="<?php echo $data['cite']?>">
-											</div>
-										</div>
-										<div class="form-group col-md-6 col-sm-12 col-xs-12" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Remitente:</label>
-											<div class="col-sm-9">
-												<select name="remitente" id="selectremitente_s" class="form-control select2" data-placeholder="Seleccione" style="width: 100%;">
-												  <option value="">Todos</option>
-												  <?php
-													 $consul=pg_query("SELECT CONCAT(nombres ,' ', apellidos) as nombres,id FROM remitentes");
-													 while ($remitente=pg_fetch_array($consul)) {
-														echo "<option value='$remitente[id]'>$remitente[nombres]</option>";
-													 }
-												  ?>
-												</select>
-											</div>
-										</div>
-										<div class="form-group col-md-6 col-sm-12 col-xs-12" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Procedencia:</label>
-											<div class="col-sm-9">
-												<input type="text" class="form-control" name="procedencia" placeholder="Ejemplo: Banco Central de Bolivia" style="width: 100%;" value="<?php echo $data['procedencia']?>">
-											</div>
-										</div>
-										<div class="form-group col-md-6 col-sm-12 col-xs-12" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Referencia:</label>
-											<div class="col-sm-9">
-												<input type="text" class="form-control" name="referencia" placeholder="Ejemplo: Archivo de suma importancia" style="width: 100%;" value="<?php echo $data['referencia']?>">
-											</div>
-										</div>
-										<div class="form-group col-md-6 col-sm-12 col-xs-12" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Estado:</label>
-											<div class="col-sm-9">
-												<select name="estado" id="selectestado_s" class="form-control select2" data-placeholder="Seleccione" style="width: 100%;">
-													<option value="">Todos</option>
-													<option value="revisado">Recepcionados</option>
-													<option value="proceso">En Proceso</option>
-													<option value="norevisado">No Revisados</option>
-												</select>
-											</div>
-										</div>
-										<div class="form-group col-md-6 col-sm-12 col-xs-12" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Adjunto:</label>
-											<div class="col-sm-9">
-												<select name="adjunto" id="selectadjunto_s" class="form-control select2" data-placeholder="Seleccione" style="width: 100%;">
-												  <option value="">Todos</option>
-												  <?php
-													 $consul=pg_query("SELECT * FROM adjuntos");
-													 while ($remitente=pg_fetch_array($consul)) {
-														echo "<option value='$remitente[id]'>".strtolower($remitente[nombre])."</option>";
-													 }
-												  ?>
-												</select>
-											</div>
-										</div>
-										<div class="form-group col-md-6 col-sm-12 col-xs-12" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Tipo documento:</label>
-											<div class="col-sm-9">
-												<select name="tipo" id="selecttipo_s" class="form-control select2" data-placeholder="Seleccione" style="width: 100%;">
-												  <option value="">Todos</option>
-												  <?php
-													 $consul=pg_query("SELECT * FROM tipos");
-													 while ($remitente=pg_fetch_array($consul)) {
-														echo "<option value='$remitente[id]'>".strtolower($remitente[nombre])."</option>";
-													 }
-												  ?>
-												</select>
-											</div>
-										</div>
-										<div class="form-group col-md-6" style="margin:5px 0 5px 0">
-											<label for="inputEmail3" class="col-sm-3 control-label">Numero Hojas:</label>
-											<div class="col-sm-9">
-												<input type="number" name="hojas" class="form-control" placeholder="Ejemplo: 10" style="width: 100%;" value="<?php echo $data['num_hojas']?>">
-											</div>
-										</div>
-								</div>
-								<div class="col-xs-12 control-label btns" style="padding:10px;background:#fff">
-									<button type="submit" class="btn btn-primary btn-sm" name="buscar">Buscar <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-									<input class="btn btn-default btn-sm limpiarForm" type="button" value="Limpiar" autocomplete="off">
-								</div>
-							</form>
-						</div>
+					<label class="control-label fecha" style="margin: 0 0 0 0px;padding-top: 7px;padding-left:0;float:left;position:absolute">a</label>
+					<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12" style="padding:0 0 0 8px">
+					  <input type="date" name="fin" class="form-control" value="<?php echo $data['fin']==""?date('Y-m-d'):$data['fin']?>" style="padding:5px 0 5px 10px;width:100%">
 					</div>
 				</div>
-			</div>
+				<div class="form-group col-md-3" style="margin:0;padding:0 0 0 5px">
+				   <label>Criterio</label>
+			      <input type="text" class="form-control select2" name="cite" placeholder="Ejemplo: AB001" value="<?php echo $data['cite']?>" style="width:80%;display:none">
+					<input type="number" class="form-control select2" name="id" placeholder="Hoja de ruta ejemplo: 10" value="<?php echo $data['id']?>" style="width:80%;display:none">
+					<select name="procedencia" id="selectprocedencia_s" class="form-control select2 recepcionado proceso norevisado" data-placeholder="Seleccione" style="width:80%;display:none">
+					  <?php
+						 $consul=pg_query("SELECT * FROM procedencia");
+						 while ($procedencia=pg_fetch_array($consul)) {
+							echo "<option value='$procedencia[id]'>$procedencia[nombre]</option>";
+						 }
+					  ?>
+					</select>
+					<input type="text" class="form-control select2" name="remitente" placeholder="Ejemplo: Maria Mercedez Condori" value="<?php echo $data['remitente']?>" style="width:80%;display:none">
+					<select name="adjunto" id="selectadjunto_s" class="form-control select2" style="width:80%;display:none">
+					  <?php
+						 $consul=pg_query("SELECT * FROM adjuntos");
+						 while ($remitente=pg_fetch_array($consul)) {
+							echo "<option value='$remitente[id]'>".strtolower($remitente[nombre])."</option>";
+						 }
+					  ?>
+					</select>
+					<select name="tipo" id="selecttipo_s" class="form-control select2" style="width:80%;display:none">
+					  <?php
+						 $consul=pg_query("SELECT * FROM tipos");
+						 while ($remitente=pg_fetch_array($consul)) {
+							echo "<option value='$remitente[id]'>".strtolower($remitente[nombre])."</option>";
+						 }
+					  ?>
+					</select>
+				</div>
+				<div class="form-group" style="margin:0;padding:0">
+				   <label>Seleccione:</label>
+					<select name="seleccionado" id="selectseleccion_s" class="form-control">
+						<option value="cite">Cite</option>
+						<option value="procedencia">Procedencia</option>
+						<option value="remitente">Remitente</option>
+						<option value="adjunto">Adjuntos</option>
+						<option value="tipo">Tipo de Documento</option>
+						<option value="revisado">Recepcionados</option>
+						<option value="proceso">En Proceso</option>
+						<option value="norevisado">No Revisados</option>
+					</select>
+			   </div>
+				<button type="submit" class="btn btn-warning" name="buscar">Buscar <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+				<a href="../crud/Createpdf.php/PrintHojas/all/?inicio=<?php echo $data['inicio']?>&fin=<?php echo $data['fin']?>&id=<?php echo $data['id']?>&cite=<?php echo $data['cite']?>&seleccionado=<?php echo $data['seleccionado']?>&remitente=<?php echo $data['remitente']?>&procedencia=<?php echo $data['procedencia']?>&adjunto=<?php echo $data['adjunto']?>&tipo=<?php echo $data['tipo']?>" target="_blank"><button title="imprimir hojas de ruta" type="button" class="btn btn-danger btn-xs">Pdf</button></a>
+				<button type="submit" class="btn btn-success btn-xs">Excel</button>
+				<button type="submit" class="btn btn-primary btn-xs">Word</button>
+			</form>
 		</div>
 		<div class="box">
 			<div class="box-body">
@@ -146,9 +85,9 @@
 								<th width="20%">PROCEDENCIA</th>
 								<th width="15%">REFERENCIA</th>
 								<th width="10%">PLAZO</th>
-								<th width="10%">ESTADO</th>
-								<th width="9%">FECHA</th>
-								<th width="11%">OPCIONES</th>
+								<th width="8%">ESTADO</th>
+								<th width="9%">FECHA CITE</th>
+								<th width="13%">OPCIONES</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -160,7 +99,7 @@
 									<td><h5><?php echo strtolower($datos[$i]['referencia'])?></h5></td>
 									<td><h5><?php $mensage=$datos[$i]['diferencia']>0? $datos[$i]['diferencia']." <small>dias restantes</small>":$mensage=$datos[$i]['diferencia']==0 ? "<small style='font-size:1em;color:#ed2e2e'>Ultimo dia</small>":" Plazo terminado";echo $mensage; ?></h5></td>
 									<td <?php echo $datos[$i]['color'];?>><h5><?php echo $datos[$i]['mensaje'];?></h5></td>
-									<td  style="text-align:center"><h5><?php echo date('Y-m-d', strtotime($datos[$i]['fecha']))?></h5></td>
+									<td  style="text-align:center"><h5><?php echo $datos[$i]['fecha_cite']?></h5></td>
 									<td style="vertical-align:middle;text-align:center">
 										<a onclick="verAjax(<?php echo $datos[$i]['id'] ?>)" data-target="#verhojarutaModal" data-toggle="modal"><button title="ver hoja de ruta" type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button></a>
 										<a href="../crud/Createpdf.php/PrintHoja/<?php echo $datos[$i]['id'] ?>" target="_blank"><button title="imprimir hoja de ruta" type="button" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a>
@@ -181,7 +120,7 @@
 		</div>
 		<div class="col-md-12">
 			<center>
-				<a href="../crud/Createpdf.php/PrintHojas/all/?inicio=<?php echo $data['inicio']?>&fin=<?php echo $data['fin']?>&id=<?php echo $data['id']?>&cite=<?php echo $data['cite']?>&remitente=<?php echo $data['remitente']?>&procedencia=<?php echo $data['procedencia']?>&referencia=<?php echo $data['referencia']?>&estado=<?php echo $data['estado']?>&adjunto=<?php echo $data['adjunto']?>&tipo=&hojas=<?php echo $data['num_hojas']?>"  target="_blank"><button title="imprimir hoja de ruta" type="button" class="btn btn-success btn-sm">IMPRIMIR HOJAS DE RUTA <span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a>
+				<a href="../crud/Createpdf.php/printreportePDF/?inicio=<?php echo $data['inicio']?>&fin=<?php echo $data['fin']?>&id=<?php echo $data['id']?>&cite=<?php echo $data['cite']?>&seleccionado=<?php echo $data['seleccionado']?>&remitente=<?php echo $data['remitente']?>&procedencia=<?php echo $data['procedencia']?>&adjunto=<?php echo $data['adjunto']?>&tipo=<?php echo $data['tipo']?>"  target="_blank"><button title="imprimir reporte" type="button" class="btn btn-success btn-sm">IMPRIMIR REPORTE <span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a>
 			</center>
 		</div>
 	</section>
@@ -217,37 +156,47 @@
 </style>
 <?php include 'modalverhojaRuta.php'; ?>
 <script>
-	var prioridad_u,remitente_u,tipo_u,adjunto_u,destino_u=[],accion_u=[],Get_ID=0,estado_destino=false,estado_accion=false;
+	var prioridad_u,procedencia_u,tipo_u,adjunto_u,destino_u=[],accion_u=[],Get_ID=0,estado_destino=false,estado_accion=false;
 	$(document).ready(function(){
-		$('[data-toggle="tooltip"]').tooltip()
+		var seleccionado=getUrlParameter('seleccionado');
+		$('#selectseleccion_s option[value="'+seleccionado+'"]').attr('selected','selected');
+		if (seleccionado=="proceso" || seleccionado=="revisado" || seleccionado=="norevisado") {
+			$('.select2[name="id"]').show();
+		}else{
+			$('.select2[name="'+$('#selectseleccion_s option:selected').attr('value')+'"]').show();
+		}
 		var seltipo=getUrlParameter('tipo')==undefined?"":getUrlParameter('tipo');
 		var seladjunto=getUrlParameter('adjunto')==undefined?"":getUrlParameter('adjunto');
-		var selremitente=getUrlParameter('remitente')==undefined?"":getUrlParameter('remitente');
+		var selprocedencia=getUrlParameter('procedencia')==undefined?"":getUrlParameter('procedencia');
 		var selestado=getUrlParameter('estado')==undefined?"":getUrlParameter('estado');
 		$('#selecttipo_s option[value="'+seltipo+'"]').attr('selected','selected');
 		$('#selectadjunto_s option[value="'+seladjunto+'"]').attr('selected','selected');
-		$('#selectremitente_s option[value="'+selremitente+'"]').attr('selected','selected');
+		$('#selectprocedencia_s option[value="'+selprocedencia+'"]').attr('selected','selected');
 		$('#selectestado_s option[value="'+selestado+'"]').attr('selected','selected');
 		$('#example1').DataTable( {
 		  "order": [[ 0, "desc" ]],"dom": '<"top"f>t<"bottom"p>'
 		});
-		$('.limpiarForm').click(function(){
-			$('#formAvanzada').find(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
+		$('#selectseleccion_s').change(function(){
+			$('.select2').hide();
+			if ($('#selectseleccion_s option:selected').attr('value')=="proceso" || $('#selectseleccion_s option:selected').attr('value')=="revisado" || $('#selectseleccion_s option:selected').attr('value')=="norevisado") {
+				$('.select2[name="id"]').show();
+			}else{
+
+				$('.select2[name="'+$('#selectseleccion_s option:selected').attr('value')+'"]').show();
+			}
 		});
 
 		$('#datetimepicker1').datetimepicker({
-		  locale: 'es',format: 'YYYY-MM-DD HH:mm:00',ignoreReadonly: true
-		}).on('dp.change', function(e){
-		  //validate_fecha("","true");
+		  locale: 'es',format: 'YYYY-MM-DD',ignoreReadonly: true
 		});
 		$('#datetimepicker1_u').datetimepicker({
-		  locale: 'es',format: 'YYYY-MM-DD HH:mm:00',ignoreReadonly: true
+		  locale: 'es',format: 'YYYY-MM-DD',ignoreReadonly: true
 		}).on('dp.change', function(e){
 		  function_validate('false');
 		});
-		$('#inputprocedencia,#inputprocedencia_u,#inputreferencia,#inputreferencia_u').keypress(function(e){not_number(e);}).keyup(function(){if($(this).val().trim().length>3){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
+		$('#inputremitente,#inputremitente_u,#inputcargoremitente,#inputcargoremitente_u,#inputreferencia,#inputreferencia_u').keypress(function(e){not_number(e);}).keyup(function(){if($(this).val().trim().length>3){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
 		$('#inputhoja,#inputhoja_u,#inputplazo,#inputplazo_u').keypress(function(e){yes_number(e);}).keyup(function(){if(parseInt($(this).val())>0){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
-		  $('#inputcite,#inputcite_u').keyup(function(){if($(this).val().trim().length>1){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
+		 $('#inputcite,#inputcite_u').keyup(function(){if($(this).val().trim().length>1){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
 		$("#selectdestinos,#selectaccion").change(function(){function_validate('true');});
 		$("#selectdestinos_u").change(function(){
 		  estado_destino=evaluar_twoarrays($('#selectdestinos_u').val()|| [],destino_u);
@@ -255,7 +204,7 @@
 		$("#selectaccion_u").change(function(){
 		  estado_accion=evaluar_twoarrays($('#selectaccion_u').val()|| [],accion_u);
 		  function_validate('false');});
-		$("#selectprioridad_u,#selectremitente_u,#selecttipo_u,#selectadjunto_u").change(function(){function_validate('false');});
+		$("#selectprioridad_u,#selectprocedencia_u,#selecttipo_u,#selectadjunto_u").change(function(){function_validate('false');});
 		$('#btnregistrar_hoja').click(function(){
 		  var parametros=new FormData($('#form_createhoja')[0]);
 		  $.ajax({
@@ -340,7 +289,7 @@
 				$('.vtramite').text(hoja.tramite);
 				$('.vprocedencia').text(hoja.procedencia.toLowerCase());
 				$('.vplazo').text(hoja.plazo+" Dias");
-				$('.vfecha').text(hoja.fecha);
+				$('.vfecha').text(hoja.fecha_cite);
 				$('.vtipo').text(hoja.tipo.toLowerCase());
 				$('.vprioridad').text(hoja.prioridad);
 				$('.vhojas').text(hoja.num_hojas+" hojas");
@@ -348,28 +297,14 @@
 				$('.vestado').text(hoja.estado==1?('Activo'):('Dado de Baja'));
 				$('.varchivo').text(hoja.archivo);
 				$('.vobservacion span').text(hoja.referencia.toLowerCase());
+				$('#btnnovalidado,#btnvalidado').hide();
 				if(hoja.permiso==""){
-					$('#btnnovalidado,#btnvalidado').hide();
 					$('#row_admin').show();
-					$('.vnombrer').text(hoja.usuario.toLowerCase());
+					$('.vnombrer').text(hoja.usuario.toLowerCase()+" ("+hoja.cedula+")");
 					$('.vnombreu').text(hoja.modificado==" "?("Hoja de Ruta no modificada"):(hoja.modificado.toLowerCase()));
 					$('.vfechau').text(hoja.fecha_update==null?("sin fecha"):(hoja.fecha_update));
-					$('.vcir').text(hoja.cedula);
-				}else{
-					$('#row_admin').hide();
-					if (arraydestino.length>0 && parseInt(hoja.diferencia)>=0 && arraydestino[0].usuario_id == null) {
-						console.log("aqui"+parseInt(hoja.diferencia));
-					  	$('#btnvalidado').hide();$('#btnnovalidado').show();
-					}else{
-					  	if(arraydestino[0].usuario_id != null){
-							console.log("aqui2"+parseInt(hoja.diferencia));
-						 	$('#btnnovalidado').hide();$('#btnvalidado').show();
-					  	}else{
-							console.log("aqui3"+parseInt(hoja.diferencia));
-						 	$('#btnnovalidado,#btnvalidado').hide();
-					  	}
-					}
-				}
+					$('.vcir').text(hoja.fecha);
+				}else{$('#row_admin').hide();}
 		  	}
 		});
 	}
@@ -378,22 +313,23 @@
 		  url: '../crud/ViewData.php/verHoja/'+val,
 		  type: 'get',
 		  success:function(obj){
-			 $("#btnupdate_hoja").attr('disabled', true);small_error(".fila1_u",true);small_error(".fila2_u",true);small_error(".fila3_u",true);small_error(".fila4_u",false);small_error(".fila5_u",true);small_error(".fila6_u",true);
+			 $("#btnupdate_hoja").attr('disabled', true);small_error(".fila1_u",true);small_error(".fila2_u",true);small_error(".fila3_u",true);small_error(".fila4_u",true);small_error(".fila5_u",false);small_error(".fila6_u",true);small_error(".fila7_u",true);
 			 accion_u=[],destino_u=[],estado_destino=false,estado_accion=false;
 			 var data = JSON.parse(obj);Get_ID=data.id;
-			 $('#datetimepicker1_u input').val(data.fecha);$('#datetimepicker1_u input').attr('placeholder',data.fecha);
-			 $('#inputprocedencia_u').val(data.procedencia.toLowerCase());$('#inputprocedencia_u').attr('placeholder',data.procedencia.toLowerCase());
+			 $('#datetimepicker1_u input').val(data.fecha_cite);$('#datetimepicker1_u input').attr('placeholder',data.fecha_cite);
+			 $('#inputremitente_u').val(data.remitente.toLowerCase());$('#inputremitente_u').attr('placeholder',data.remitente.toLowerCase());
+			 $('#inputcargoremitente_u').val(data.cargo_remitente.toLowerCase());$('#inputcargoremitente_u').attr('placeholder',data.cargo_remitente.toLowerCase());
 			 $('#inputcite_u').val(data.cite.toLowerCase());$('#inputcite_u').attr('placeholder',data.cite.toLowerCase());
 			 $('#inputreferencia_u').val(data.referencia.toLowerCase());$('#inputreferencia_u').attr('placeholder',data.referencia.toLowerCase());
 			 $('#inputhoja_u').val(data.num_hojas);$('#inputhoja_u').attr('placeholder',data.num_hojas);
 			 $('#inputplazo_u').val(data.plazo);$('#inputplazo_u').attr('placeholder',data.plazo);$('#inputfile_u').val("");
 
-			 prioridad_u=data.prioridad;remitente_u=data.remitente_id;tipo_u=data.tipo_id;adjunto_u=data.adjunto_id;
+			 prioridad_u=data.prioridad;procedencia_u=data.procedencia_id;tipo_u=data.tipo_id;adjunto_u=data.adjunto_id;
 			 $('#selectprioridad_u').selectpicker('val', prioridad_u);
-			 $('#selectremitente_u').selectpicker('val', remitente_u);
+			 $('#selectprocedencia_u').selectpicker('val', procedencia_u);
 			 $('#selecttipo_u').selectpicker('val', tipo_u);
 			 $('#selectadjunto_u').selectpicker('val', adjunto_u);
-			 $("#selectprioridad_u,#selectremitente_u,#selecttipo_u,#selectadjunto_u").selectpicker('refresh');
+			 $("#selectprioridad_u,#selectprocedencia_u,#selecttipo_u,#selectadjunto_u").selectpicker('refresh');
 
 			 $('#selectdestinos_u,#selectaccion_u').selectpicker('val', '');
 			 $("#selectdestinos_u,#selectaccion_u").selectpicker('refresh');
@@ -407,24 +343,25 @@
 	 }
 	function function_validate(validate){
 		if(validate!="false"&&validate=="true"){
-		  if(($('.fila1').hasClass('has-success'))&&($('.fila2').hasClass('has-success'))&&($('.fila3').hasClass('has-success'))&&($('.fila4').hasClass('has-success'))&&($('.fila5').hasClass('has-success'))&&($('.fila6').hasClass('has-success'))&&($('#selectremitente').val()!=null)&&($('#selecttipo').val()!=null)&&($('#selectadjunto').val()!=null)&&($('#selectdestinos').val()!=null)&&($('#selectaccion').val()!=null)){
+		  if(($('.fila1').hasClass('has-success'))&&($('.fila2').hasClass('has-success'))&&($('.fila3').hasClass('has-success'))&&($('.fila4').hasClass('has-success'))&&($('.fila5').hasClass('has-success'))&&($('.fila6').hasClass('has-success'))&&($('.fila7').hasClass('has-success'))&&($('#selectprocedencia').val()!=null)&&($('#selecttipo').val()!=null)&&($('#selectadjunto').val()!=null)&&($('#selectdestinos').val()!=null)&&($('#selectaccion').val()!=null)){
 				$("#btnregistrar_hoja").attr('disabled', false);}else{$("#btnregistrar_hoja").attr('disabled', true);}
 		}else{
-		  if($('.fila1_u').hasClass('has-success') && $('.fila2_u').hasClass('has-success') && $('.fila3_u').hasClass('has-success') && ($('.fila5_u').hasClass('has-success'))&&($('.fila6_u').hasClass('has-success'))&&($('#selectremitente_u').val()!=null)&&($('#selecttipo_u').val()!=null)&&($('#selectadjunto_u').val()!=null)&&($('#selectdestinos_u').val()!=null)&&($('#selectaccion_u').val()!=null)){
+		  if($('.fila1_u').hasClass('has-success') && $('.fila2_u').hasClass('has-success') && $('.fila3_u').hasClass('has-success') && ($('.fila4_u').hasClass('has-success'))&&($('.fila6_u').hasClass('has-success'))&&($('.fila7_u').hasClass('has-success'))&&($('#selectprocedencia_u').val()!=null)&&($('#selecttipo_u').val()!=null)&&($('#selectadjunto_u').val()!=null)&&($('#selectdestinos_u').val()!=null)&&($('#selectaccion_u').val()!=null)){
 			 console.log("aqui3");
-			 if (($('#inputfile_u').val()=="") || ($('.fila4_u').hasClass('has-success'))) {
+			 if (($('#inputfile_u').val()=="") || ($('.fila5_u').hasClass('has-success'))) {
 				console.log("aqui4");
-				if(($('#inputprocedencia_u').attr('placeholder')!=$('#inputprocedencia_u').val().trim().toLowerCase()) ||
-				  ($('#inputcite_u').attr('placeholder')!=$('#inputcite_u').val().trim().toLowerCase())  ||
-				  ($('#inputreferencia_u').attr('placeholder')!=$('#inputreferencia_u').val().trim().toLowerCase())  ||
-				  ($('#inputhoja_u').attr('placeholder')!=$('#inputhoja_u').val()) ||
-				  ($('#inputplazo_u').attr('placeholder')!=$('#inputplazo_u').val()) || estado_accion || estado_destino ||
-				  ($('#selectprioridad_u option:selected').attr('value')!=prioridad_u) ||
-				  ($('#selectremitente_u option:selected').attr('value')!=remitente_u) ||
-				  ($('#selecttipo_u option:selected').attr('value')!=tipo_u) ||
-				  ($('#selectadjunto_u option:selected').attr('value')!=adjunto_u) ||
-				  ($('#datetimepicker1_u input').attr('placeholder')!=$('#datetimepicker1_u input').val()) ||
-				  ($('.fila4_u').hasClass('has-success'))
+				if(($('#inputremitente_u').attr('placeholder')!=$('#inputremitente_u').val().trim().toLowerCase()) ||
+					($('#inputcargoremitente_u').attr('placeholder')!=$('#inputcargoremitente_u').val().trim().toLowerCase()) ||
+				   ($('#inputcite_u').attr('placeholder')!=$('#inputcite_u').val().trim().toLowerCase())  ||
+				   ($('#inputreferencia_u').attr('placeholder')!=$('#inputreferencia_u').val().trim().toLowerCase())  ||
+				   ($('#inputhoja_u').attr('placeholder')!=$('#inputhoja_u').val()) ||
+				   ($('#inputplazo_u').attr('placeholder')!=$('#inputplazo_u').val()) || estado_accion || estado_destino ||
+				   ($('#selectprioridad_u option:selected').attr('value')!=prioridad_u) ||
+				   ($('#selectprocedencia_u option:selected').attr('value')!=procedencia_u) ||
+				   ($('#selecttipo_u option:selected').attr('value')!=tipo_u) ||
+				   ($('#selectadjunto_u option:selected').attr('value')!=adjunto_u) ||
+				   ($('#datetimepicker1_u input').attr('placeholder')!=$('#datetimepicker1_u input').val()) ||
+				   ($('.fila5_u').hasClass('has-success'))
 				){
 				  $("#btnupdate_hoja").attr('disabled', false);
 				}else{$("#btnupdate_hoja").attr('disabled', true);}
@@ -435,7 +372,8 @@
 	function displayPreview(files,etiqueta) {
 		if(files.length>0){
 		  fileSize = Math.round(files[0].size/1024);
-		  if(fileSize>0 && files[0].type=="application/pdf"){
+		  console.log(fileSize);
+		  if(fileSize>0 && fileSize<2048 &&files[0].type=="application/pdf"){
 			 small_error(etiqueta,true);
 		  }else{
 			 small_error(etiqueta,false);
@@ -443,7 +381,7 @@
 		}else{
 		  small_error(etiqueta,false);
 		}
-		if(etiqueta==".fila4"){
+		if(etiqueta==".fila5"){
 		  function_validate('true');
 		}else{function_validate('false');}
 	 }

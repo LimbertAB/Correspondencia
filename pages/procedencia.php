@@ -1,56 +1,52 @@
 <?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>  
+<?php include("includes/aside.php"); ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Tabla de remitentes
+        Lista de Procedencias
       </h1>
       <ol class="breadcrumb">
-        <li><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_remitente">Nuevo remitente</button></li>
+        <li><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_procedencia">Nueva Procedencia</button></li>
       </ol>
-      
+
         <!-- /.modal -->
     </section>
     <!-- Main content -->
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
-          
+
           <div class="box">
             <!-- /.box-header -->
             <div class="box-body">
               <table style="font-style: oblique;" id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
+                  <th>Id</th>
+                  <th>Nombre</th>
+                  <th>Estado</th>
                   <th width="13%">Acciones</th>
-                  <th>Nombres</th>
-                  <th>Apellidos</th>
-                  <th>Cédula</th>
-                  <th>Teléfono</th>
                 </tr>
                 </thead>
                 <tbody>
-              <?php 
-                $ejecute=pg_query("SELECT * FROM remitentes");
+              <?php
+                $ejecute=pg_query("SELECT * FROM procedencia");
                 while ($datos=pg_fetch_array($ejecute)) {
                   ?>
                   <tr>
-                    <td>
-                      <button class="btn btn-success btn-sm">Editar</button>
-                    </td>
-                    <td><?php echo $datos['nombres'] ?></td>
-                    <td><?php echo $datos['apellidos'] ?></td>
-                    <td><?php echo $datos['cedula'] ?></td>
-                    <td><?php echo $datos['telefono'] ?></td>
+                     <td><?php echo $datos['id'] ?></td>
+                     <td><?php echo $datos['nombre'] ?></td>
+                     <td><?php echo $datos['estado']==1?"Activo":"De Baja" ?></td>
+                     <td>
+                        <button class="btn btn-success btn-sm">Editar</button>
+                     </td>
                   </tr>
                   <?php
                   }
                   ?>
-              
-                
               </table>
             </div>
             <!-- /.box-body -->
