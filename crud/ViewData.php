@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include("../db/conexion.php");
 include("../crud/ListPOO.php");
@@ -21,7 +21,19 @@ function Notificacion($id){
     echo json_encode($result);
 }
 function recepcionar($id){
-    $listPOO= new ListPOO; $result=$listPOO->recepcionar($id);
+    $listPOO= new ListPOO; $result=$listPOO->recepcionar($id,$_POST['observacion'],$_FILES['archivo']);
+    echo json_encode($result);
+}
+function modificar_recepcionar($id){
+    $listPOO= new ListPOO; $result=$listPOO->modificar_recepcionar($id,$_POST['observacion'],$_FILES['archivo']);
+    echo json_encode($result);
+}
+function revisar_hoja($id){
+    $listPOO= new ListPOO; $result=$listPOO->revisar_hoja($id);
+    echo json_encode($result);
+}
+function vermiperfil($id){
+    $listPOO= new ListPOO; $result=$listPOO->vermiperfil();
     echo json_encode($result);
 }
 ?>

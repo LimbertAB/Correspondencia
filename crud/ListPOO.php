@@ -26,12 +26,13 @@ class ListPOO{
             }else{$id="%%";}
             $seleccionado=$_GET['seleccionado'];
             $procedencia=$_GET['seleccionado']=="procedencia" ? intval($_GET['procedencia']) : "%%";
+            $proveido=$_GET['seleccionado']=="proveido" ? intval($_GET['proveido']) : "%%";
             $tipo=$_GET['seleccionado']=="tipo" ? intval($_GET['tipo']) : "%%";
             $adjunto=$_GET['seleccionado']=="adjunto" ? intval($_GET['adjunto']):"%%";
             $cite=$_GET['seleccionado']=="cite" ? $_GET['cite']="" ? "":strtoupper($_GET['cite']):"";
             $remitente=$_GET['seleccionado']=="remitente" ? $_GET['remitente']=="" ? "" :strtoupper($_GET['remitente']):"";
          }else{
-            $seleccionado="cite";$id="%%";$procedencia="%%";$tipo="%%";$adjunto="%%";$cite="";$remitente="";
+            $seleccionado="cite";$id="%%";$procedencia="%%";$proveido="%%";$tipo="%%";$adjunto="%%";$cite="";$remitente="";
          }
 
          $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
@@ -40,20 +41,21 @@ class ListPOO{
          CONCAT(u.nombres, ' ',u.apellidos) as  usuario
          FROM hojas as h
          JOIN procedencia as p ON p.id = h.procedencia_id
+         JOIN hoja_destino as hd ON hd.hoja_id = h.id
          JOIN adjuntos as a ON a.id = h.adjunto_id
          JOIN tipos as t ON t.id = h.tipo_id
          JOIN usuarios as u ON u.id = h.usuario_id
          WHERE CAST(h.id AS TEXT) LIKE '{$id}' AND CAST(h.procedencia_id AS TEXT) LIKE '{$procedencia}' AND
          CAST(h.tipo_id AS TEXT) LIKE '{$tipo}' AND CAST(h.adjunto_id AS TEXT) LIKE '{$adjunto}' AND
-         CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%' AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%'
-         {$cadena} GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos");
+         CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%' AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%' AND 
+         CAST(hd.destino_id AS TEXT) LIKE '{$proveido}' {$cadena} GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos");
 
          $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
          $hojastotal = array();
          $hojastotal=$this->get_hoja($all,"");
          return ["hoja"=>$hojastotal,"inicio"=>isset($_GET['inicio'])?$_GET['inicio']:"","fin"=>isset($_GET['fin'])?$_GET['fin']:"",
             "id"=>$_GET['id'] ?? "","procedencia"=>$_GET['procedencia']??"","tipo"=>$_GET['tipo']??"","adjunto"=>$_GET['adjunto']??"",
-            "remitente"=>$_GET['remitente']??"","cite"=>$cite,"seleccionado"=>$seleccionado];
+            "remitente"=>$_GET['remitente']??"","proveido"=>$_GET['proveido']??"","cite"=>$cite,"seleccionado"=>$seleccionado];
       }else{
          return ["hoja"=>[]];
       }
@@ -85,7 +87,7 @@ class ListPOO{
          JOIN usuarios as u ON u.id = h.usuario_id
          WHERE hd.destino_id={$this->USER_DESTINO} AND CAST(h.id AS TEXT) LIKE '{$id}' AND CAST(h.procedencia_id AS TEXT) LIKE '{$procedencia}' AND
          CAST(h.tipo_id AS TEXT) LIKE '{$tipo}' AND CAST(h.adjunto_id AS TEXT) LIKE '{$adjunto}' AND
-         CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%'AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%' {$cadena}
+         CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%'AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%' {$cadena} AND hd.estado<>'espera'
          GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos");
 
          $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
@@ -110,7 +112,7 @@ class ListPOO{
             WHERE h.id='{$id}' GROUP BY h.id,p.nombre,u.nombres,u.apellidos,u.cedula,a.nombre,t.nombre,us.nombres,us.apellidos"));
          $acciones = array();$destinos = array();
          $destinos=$this->get_destino($id);$acciones=$this->get_accion($id);
-         $sql["destino"]=$destinos;$sql["accion"]=$acciones;$sql["permiso"]=$this->USER_CONSULTA;
+         $sql["destino"]=$destinos;$sql["accion"]=$acciones;$sql["permiso"]=$this->USER_CONSULTA;$sql["midestino"]=$this->USER_DESTINO;
          return $sql;
       }else{
          return [];
@@ -120,7 +122,7 @@ class ListPOO{
       $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
       $sql=pg_query("SELECT (h.plazo - DATE_PART('day', '{$FECHA_ACTUAL}' - h.fecha)) as total FROM hojas as h
          JOIN hoja_destino as hd ON hd.hoja_id=h.id
-         WHERE hd.destino_id=".$this->USER_DESTINO." AND hd.usuario_id IS NULL");
+         WHERE hd.destino_id=".$this->USER_DESTINO." AND hd.estado='en proceso' AND (hd.usuario_id IS NULL OR hd.respuesta IS NOT NULL)");
       $total = 0;
       while ($rows =  pg_fetch_assoc($sql)) {
          if ($rows['total']>=0) {
@@ -129,13 +131,59 @@ class ListPOO{
       }
       return $total;
    }
-   function recepcionar($id){
+   function recepcionar($id,$observacion,$archivo){
       $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
       $sql=pg_fetch_assoc(pg_query("SELECT (plazo-(CAST(MAX('{$FECHA_ACTUAL}') AS date) - CAST(MIN(fecha) AS date)))as diferencia FROM hojas WHERE id='{$id}' GROUP BY plazo"));
       if(intval($sql['diferencia'])>=0){
          $fecha=date('Y-m-d h:i:s');$usuario=$this->USER_ID;$destino=$this->USER_DESTINO;
-         $sql=pg_query("UPDATE hoja_destino SET estado='revisado',fecha='{$fecha}',
-         usuario_id={$usuario} WHERE hoja_id={$id} AND destino_id={$destino} AND usuario_id IS NULL");
+         if($archivo['error'] == 0) {
+            $name="RESP".date("Ymdhis").".pdf";
+            $sql=pg_query("UPDATE hoja_destino SET archivo='{$name}' WHERE hoja_id={$id} AND destino_id={$destino} AND usuario_id IS NULL");
+            $PGSTAT = pg_result_status($sql);
+            if($PGSTAT == 1){
+                $ruta="../dist/respuestas/".$name;
+                move_uploaded_file($archivo['tmp_name'], $ruta);
+            }
+         }
+         $sql_primero=pg_fetch_assoc(pg_query("SELECT destino_id FROM hoja_destino WHERE hoja_id={$id} ORDER BY id asc LIMIT 1"));
+         if ($sql_primero['destino_id']==$destino){
+            $sql=pg_query("UPDATE hoja_destino SET estado='revisado',fecha='{$fecha}',usuario_id={$usuario},observacion='{$observacion}' WHERE hoja_id={$id} AND destino_id={$destino} AND usuario_id IS NULL");
+            $PGSTAT = pg_result_status($sql);
+            if($PGSTAT == 1){
+               $sql=pg_query("UPDATE hoja_destino SET estado='en proceso' WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$id} AND estado='espera' ORDER BY id ASC LIMIT  1)");
+               return "ok";
+            }else{
+               return false;
+            }
+         }else{
+            $sql=pg_query("UPDATE hoja_destino SET fecha='{$fecha}',usuario_id={$usuario},observacion='{$observacion}' WHERE hoja_id={$id} AND destino_id={$destino} AND usuario_id IS NULL");
+            $PGSTAT = pg_result_status($sql);
+            if($PGSTAT == 1){
+               return "ok";
+            }else{
+               return false;
+            }
+            
+         }
+      }else{
+         return false;
+      }
+   }
+   function modificar_recepcionar($id,$observacion,$archivo){
+      $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
+      $sql=pg_fetch_assoc(pg_query("SELECT (plazo-(CAST(MAX('{$FECHA_ACTUAL}') AS date) - CAST(MIN(fecha) AS date)))as diferencia FROM hojas WHERE id='{$id}' GROUP BY plazo"));
+      if(intval($sql['diferencia'])>=0){
+         $fecha=date('Y-m-d h:i:s');$usuario=$this->USER_ID;$destino=$this->USER_DESTINO;
+         if($archivo['error'] == 0) {
+            $name="RESP".date("Ymdhis").".pdf";
+            $sql=pg_query("UPDATE hoja_destino SET archivo='{$name}' WHERE hoja_id={$id} AND destino_id={$destino}");
+            $PGSTAT = pg_result_status($sql);
+            if($PGSTAT == 1){
+                $ruta="../dist/respuestas/".$name;
+                move_uploaded_file($archivo['tmp_name'], $ruta);
+            }
+         }
+         $sql=pg_query("UPDATE hoja_destino SET usuario_id={$usuario},observacion='{$observacion}',respuesta=null WHERE hoja_id={$id} AND destino_id={$destino}");
          $PGSTAT = pg_result_status($sql);
          if($PGSTAT == 1){
             return "ok";
@@ -144,6 +192,30 @@ class ListPOO{
          }
       }else{
          return false;
+      }
+   }
+   function revisar_hoja($id){
+      $fecha=date('Y-m-d h:i:s');
+      if (isset($_POST['observacion'])){
+         $observacion=$_POST['observacion'];
+         $sql=pg_query("UPDATE hoja_destino SET respuesta='{$observacion}' WHERE id={$id}");
+         $PGSTAT = pg_result_status($sql);
+         if($PGSTAT == 1){
+            return "ok";
+         }else{
+            return false;
+         }
+      }else{
+         $sql=pg_query("UPDATE hoja_destino SET estado='revisado',fecha='{$fecha}' WHERE id={$id}");
+         $sacarhoja_id=pg_fetch_assoc(pg_query("SELECT hoja_id FROM hoja_destino WHERE id={$id} LIMIT 1"));
+         $hoja_id=$sacarhoja_id['hoja_id'];
+         $PGSTAT = pg_result_status($sql);
+         if($PGSTAT == 1){
+            $sql=pg_query("UPDATE hoja_destino SET estado='en proceso' WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$hoja_id} AND estado='espera' ORDER BY id ASC LIMIT  1)");
+            return "ok";
+         }else{
+            return false;
+         }
       }
    }
    function imprimir_hojas($id){
@@ -170,12 +242,12 @@ class ListPOO{
 
          $sql["destino"]=$destinos;$sql["accion"]=$acciones;$sql["permiso"]=$this->USER_CONSULTA;
         return $sql;
-    }
+   }
    function get_destino($id){
       $sql2=pg_query("SELECT hd.*,CONCAT(u.nombres, ' ',u.apellidos) as usuario, d.nombre as nombre
          FROM hoja_destino as hd
          LEFT JOIN usuarios as u ON u.id = hd.usuario_id JOIN destinos as d ON d.id = hd.destino_id
-         WHERE hd.hoja_id={$id} {$this->USER_CONSULTA}");
+         WHERE hd.hoja_id={$id} ORDER BY hd.id ASC ");
       $destinos = array();while ($rows =  pg_fetch_assoc($sql2)) {$destinos[] = $rows;}
       return $destinos;
    }
@@ -204,7 +276,7 @@ class ListPOO{
          if (intval($all[$count]["diferencia"]) >= 0) {$RESTANTE=1;}
          $rowactividad=$all[$count]["id"];
          $row=pg_fetch_assoc(pg_query("SELECT COUNT(*) as total FROM hoja_destino WHERE hoja_id='{$rowactividad}' {$query}"));
-         $row1=pg_fetch_assoc(pg_query("SELECT COUNT(*) as faltantes from hoja_destino where hoja_id='{$rowactividad}'{$query} AND usuario_id IS NULL"));
+         $row1=pg_fetch_assoc(pg_query("SELECT COUNT(*) as faltantes from hoja_destino where hoja_id='{$rowactividad}'{$query} AND estado<>'revisado'"));
 
          //echo " plazo_activo-> ".$RESTANTE." total->".$row['total']." faltante->".$row1['faltantes']." access->".$revisado."<br>";
          if ($RESTANTE==1 && $row['total']>0 && $row['total']>=$row1['faltantes'] && $proceso && $row1['faltantes']!=0) {
@@ -233,5 +305,29 @@ class ListPOO{
          $count=$count+1;
       }
       return $hojastotal;
+   }
+   function backoffice(){
+      $usuarios=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM usuarios"));
+      $cargos=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM cargos"));
+      $destinos=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM destinos"));
+      $procedencias=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM procedencia"));
+      $tipos=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM tipos"));
+      $adjuntos=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM adjuntos"));
+      $acciones=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM acciones"));
+      $hojas=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM hojas"));
+      $mishojas=pg_fetch_assoc(pg_query("SELECT count(h.*) as total FROM hoja_destino as hd
+      JOIN hojas as h ON hd.hoja_id = h.id WHERE hd.destino_id={$this->USER_DESTINO}"));
+      $miperfil=pg_fetch_assoc(pg_query("SELECT u.*,c.nombre as cargo,d.nombre as destino FROM usuarios as u 
+      JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino WHERE u.id={$this->USER_ID}"));
+      return ["usuarios"=>$usuarios,"cargos"=>$cargos,"destinos"=>$destinos,"procedencias"=>$procedencias,"tipos"=>$tipos,"adjuntos"=>$adjuntos,"acciones"=>$acciones,"hojas"=>$hojas,"mishojas"=>$mishojas,"miperfil"=>$miperfil];
+      
+   }
+   function vermiperfil(){
+      $ejecute=pg_fetch_assoc(pg_query("SELECT u.*,c.nombre as cargos,d.nombre as destinos FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino WHERE u.id={$this->USER_ID}"));
+      return $ejecute;
+   }
+   function listaUsuarios(){
+      $sql=pg_query("SELECT u.*,c.nombre as cargo,d.nombre as destino FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino");
+      return $sql;
    }
 }

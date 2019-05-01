@@ -11,7 +11,7 @@ $ejecute=pg_query($consulta);
 //encontramos la cantidad de datos
 $cont=pg_num_rows($ejecute);
 //almacenamos en una variable todos los datos
-$datos=pg_fetch_array($ejecute);
+$datos=pg_fetch_assoc($ejecute);
 //consulta de si existe usuario
 if ($cont==0) {
 	$_SESSION['mensaje'] ="Usuario o contraseña incorrecto";//nombre
@@ -21,6 +21,6 @@ else
 {
 	$_SESSION['nombres'] = $datos['nombres'];//nombre
 	$_SESSION['id_usu'] = $datos['id'];//id de usuario
-	header("location:../pages/index.php");
+	header("location:../pages/index2.php");
 }
  ?>

@@ -57,12 +57,15 @@ if(!isset($_SESSION['nombres']))
 <div class="wrapper">
 
   <header class="main-header">
+    <?php
+      $USER_DATA=pg_fetch_assoc(pg_query("SELECT u.*,c.nombre as cargos,d.nombre as destinos FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino WHERE u.id=$_SESSION[id_usu]"));
+    ?>
     <!-- Logo -->
-    <a href="index.php" class="logo">
+    <a href="index2.php" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>CORRESPONDENCIA</b></span>
+      <span class="logo-mini"><b>CNM</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>CORRESPONDENCIA</span>
+      <span class="logo-lg"><b><?=strtoupper($USER_DATA['destinos'])?></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -90,10 +93,7 @@ if(!isset($_SESSION['nombres']))
               <!-- User image -->
               <li class="user-header">
                 <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                <p>
-                  Administrador
-                </p>
+                <p><?=$USER_DATA['cargos'];?></p>
               </li>
               </li>
               <!-- Menu Footer-->

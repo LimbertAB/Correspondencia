@@ -396,9 +396,9 @@
       <div class="box box-primary" style="border-top-width: 0px;margin-bottom: 0px;">
         <div class="modal-body" style="background:#fff;padding:0">
           <ul role="tablist" style="padding:0px;background:#e0e0e0" class="nav nav-tabs nav-justified" id="myTab">
-            <li  role="presentation" class="active"><a style="padding:0 15px 0 15px;color:#803b7f" href="#general_modal" aria-controls="general_modal" role="tab" data-toggle="tab">GENERAL<h5 id="idgeneral" class="badge" style="background:red;margin-left:10px">3</h5></a></li>
-            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#documento_modal" aria-controls="documento_modal" role="tab" data-toggle="tab">DOCUMENTO<h5 id="iddocumento" class="badge" style="background:red;margin-left:10px">2</h5></a></li>
-            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal" aria-controls="destino_modal" role="tab" data-toggle="tab">DESTINOS<h5 id="iddestinos" class="badge" style="background:red;margin-left:10px">2</h5></a></li>
+            <li  role="presentation" class="active"><a style="padding:0 15px 0 15px;color:#803b7f" href="#general_modal" aria-controls="general_modal" role="tab" data-toggle="tab">GENERAL<h5 id="idgeneral" class="badge" style="background:red;margin-left:10px">4</h5></a></li>
+            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#documento_modal" aria-controls="documento_modal" role="tab" data-toggle="tab">DOCUMENTO<h5 id="iddocumento" class="badge" style="background:red;margin-left:10px">3</h5></a></li>
+            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal" aria-controls="destino_modal" role="tab" data-toggle="tab">DESTINOS<h5 id="iddestinos" class="badge" style="background:red;margin-left:10px">3</h5></a></li>
           </ul>
           <div class="row">
             <div class="tab-content" style="margin:20px 30px 10px 30px">
@@ -483,9 +483,16 @@
                     </div>
                   </div>
                   <div class="form-group has-feedback  has-error fila6" style="padding:5px">
+                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROVEIDOS</label>
+                    <div class="col-sm-9" >
+                      <input type="text" name="proveido" id="inputproveido" class="form-control" validate="true" toggle=".fila6" placeholder="Ejemplo: pase a conocimiento de la jefatura ..">
+                      <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                  <div class="form-group has-feedback  has-error fila7" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">NUMERO DE HOJAS</label>
                     <div class="col-sm-9" >
-                      <input type="number" name="num_hojas" id="inputhoja" class="form-control" validate="true" toggle=".fila6" placeholder="Ejemplo: 10 hojas">
+                      <input type="number" name="num_hojas" id="inputhoja" class="form-control" validate="true" toggle=".fila7" placeholder="Ejemplo: 10 hojas">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
                     </div>
                   </div>
@@ -523,29 +530,11 @@
               </div>
               <div id="destino_modal" role="tabpanel" class="tab-pane">
                 <div class="box-body">
-                  <div class="form-group has-feedback  has-error fila7" style="padding:5px">
+                  <div class="form-group has-feedback  has-error fila8" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DIAS DE PLAZO</label>
                     <div class="col-sm-9">
-                      <input type="number" name="plazo" id="inputplazo" class="form-control" validate="true" toggle=".fila7" placeholder="Ejemplo: 5 dias">
+                      <input type="number" name="plazo" id="inputplazo" class="form-control" validate="true" toggle=".fila8" placeholder="Ejemplo: 5 dias">
                       <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
-                    </div>
-                  </div>
-                  <div class="alert alert-warning alert-dismissible col-md-12" role="alert" style="background-color:#f3e47f !important">
-                    <h5 style="color:#000"><strong>INFORMACION: </strong>Se enviara la hoja de ruta a todos los destinos que sean seleccionados en el siguiente Formulario</h5>
-                  </div>
-                  <div class="form-group" style="padding:5px">
-                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LOS DESTINOS</label>
-                    <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
-                      <select id="selectdestinos" name="destino[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
-                        <?php $ejecute=pg_query("SELECT * FROM destinos");
-                          while ($datos=pg_fetch_array($ejecute)) {
-                            ?>
-                            <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
-                            <?php
-                          }
-                          ?>
-                      </select>
-                      <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
                     </div>
                   </div>
                   <div class="form-group" style="padding:5px">
@@ -562,6 +551,35 @@
                       </select>
                       <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
                     </div>
+                  </div>
+                  <div class="alert alert-warning alert-dismissible col-md-12" role="alert" style="background-color:#f3e47f !important">
+                    <h5 style="color:#000"><strong>INFORMACION: </strong>Se enviara la hoja de ruta a todos los destinos que sean seleccionados en el siguiente Formulario</h5>
+                  </div>
+                  <div class="form-group" style="padding:5px">
+                    <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LOS DESTINOS</label>
+                    <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
+                      <select id="selectdestinos" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
+                        <?php $ejecute=pg_query("SELECT * FROM destinos");
+                          while ($datos=pg_fetch_array($ejecute)) {
+                            ?>
+                            <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
+                            <?php
+                          }
+                          ?>
+                      </select>
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                     <table class="table table-hover table-bordered" style="width:80%;margin:0 auto">
+                        <thead>
+                           <tr style="background:#08c">
+                              <th width="80%" style="border: 1px solid black;text-align:center;color:#fff">DESTINOS</th><th width="20%" style="border: 1px solid black;text-align:center;color:#fff">OPCIONES</th>
+                           </tr>
+                        </thead>
+                        <tbody id="tabledestino_registro">
+                        </tbody>
+                     </table>
                   </div>
                 </div>
               </div>
@@ -595,7 +613,7 @@
               <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal_u" aria-controls="destino_modal_u" role="tab" data-toggle="tab">DESTINOS<h5 class="badge" style="background:red#313131;margin-left:10px">2</h5></a></li>
             </ul>
             <div class="row">
-              <div class="tab-content" style="margin:20px 30px 10px 30px">
+               <div class="tab-content" style="margin:20px 30px 10px 30px">
                 <div id="general_modal_u" role="tabpanel" class="tab-pane active">
                   <div class="box-body">
                     <div class="form-group has-feedback has-success">
@@ -668,17 +686,24 @@
                 </div>
                 <div id="documento_modal_u" role="tabpanel" class="tab-pane">
                   <div class="box-body">
-                    <div class="form-group has-feedback has-error fila5_u" style="padding:5px">
+                    <div class="form-group has-feedback has-success fila5_u" style="padding:5px">
                       <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO (<2MB)</label>
                       <div class="col-sm-9">
                         <input id="inputfile_u" name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila5_u');" class="form-control" validate="false" toggle=".fila5_u">
-                        <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                       </div>
                     </div>
                     <div class="form-group has-feedback  has-success fila6_u" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROVEIDOS</label>
+                      <div class="col-sm-9" >
+                        <input type="text" name="proveido" id="inputproveido_u" class="form-control" validate="false" toggle=".fila6_u">
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                    <div class="form-group has-feedback  has-success fila7_u" style="padding:5px">
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">NUMERO DE HOJAS</label>
                       <div class="col-sm-9" >
-                        <input type="number" name="num_hojas" id="inputhoja_u" class="form-control" validate="false" toggle=".fila6_u">
+                        <input type="number" name="num_hojas" id="inputhoja_u" class="form-control" validate="false" toggle=".fila7_u">
                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                       </div>
                     </div>
@@ -716,32 +741,14 @@
                 </div>
                 <div id="destino_modal_u" role="tabpanel" class="tab-pane">
                   <div class="box-body">
-                    <div class="form-group has-feedback  has-success fila7_u" style="padding:5px">
+                     <div class="form-group has-feedback  has-success fila8_u" style="padding:5px">
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DIAS DE PLAZO</label>
                       <div class="col-sm-9">
-                        <input type="number" name="plazo" id="inputplazo_u" class="form-control" validate="false" toggle=".fila7_u">
+                        <input type="number" name="plazo" id="inputplazo_u" class="form-control" validate="false" toggle=".fila8_u">
                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                       </div>
-                    </div>
-                    <div class="alert alert-warning alert-dismissible col-md-12" role="alert" style="background-color:#f3e47f !important">
-                      <h5 style="color:#000"><strong>INFORMACION: </strong>Se enviara la hoja de ruta a todos los destinos que sean seleccionados en el siguiente Formulario</h5>
-                    </div>
-                    <div class="form-group" style="padding:5px">
-                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LOS DESTINOS</label>
-                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
-                        <select id="selectdestinos_u" name="destino[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
-                          <?php $ejecute=pg_query("SELECT * FROM destinos");
-                            while ($datos=pg_fetch_array($ejecute)) {
-                              ?>
-                              <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
-                              <?php
-                            }
-                            ?>
-                        </select>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
-                      </div>
-                    </div>
-                    <div class="form-group" style="padding:5px">
+                     </div>
+                     <div class="form-group" style="padding:5px">
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LAS ACCIONES</label>
                       <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
                         <select id="selectaccion_u" name="accion[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="15" data-selected-text-format="count > 2">
@@ -755,10 +762,39 @@
                         </select>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
                       </div>
-                    </div>
+                     </div>
+                     <div class="alert alert-warning alert-dismissible col-md-12" role="alert" style="background-color:#f3e47f !important">
+                      <h5 style="color:#000"><strong>INFORMACION: </strong>Se enviara la hoja de ruta a todos los destinos que sean seleccionados en el siguiente Formulario</h5>
+                     </div>
+                     <div class="form-group" style="padding:5px">
+                      <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LOS DESTINOS</label>
+                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
+                        <select id="selectdestinos_u" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
+                          <?php $ejecute=pg_query("SELECT * FROM destinos");
+                            while ($datos=pg_fetch_array($ejecute)) {
+                              ?>
+                              <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
+                              <?php
+                            }
+                            ?>
+                        </select>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
+                      </div>
+                     </div>
+                     </div>
+                     <div class="row">
+                        <table class="table table-hover table-bordered" style="width:80%;margin:0 auto">
+                           <thead>
+                              <tr style="background:#08c">
+                                 <th width="80%" style="border: 1px solid black;text-align:center;color:#fff">DESTINOS</th><th width="20%" style="border: 1px solid black;text-align:center;color:#fff">OPCIONES</th>
+                              </tr>
+                           </thead>
+                           <tbody id="tabledestino_update">
+                           </tbody>
+                        </table>
+                     </div>
                   </div>
-                </div>
-              </div>
+               </div>
             </div>
           </div>
         </div>

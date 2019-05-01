@@ -2,6 +2,7 @@
 //obtenemos las funciones ue tiene el usuario
 $ejecute=pg_query("SELECT fu.numero as num_funcion FROM funciones fu,
  funcion_cargo fc, cargos ca, usuarios us WHERE fu.id=fc.funcion_id and fc.cargo_id=ca.id AND ca.id=us.id_cargo AND us.id=$_SESSION[id_usu]");
+
 while ($datos=pg_fetch_assoc($ejecute)) {
     //lo almaceno en un vector
     $funciones[]=$datos['num_funcion'];
@@ -24,24 +25,18 @@ foreach ($funciones as $key => $value){
           <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p><?php echo $_SESSION['nombres'];?></p>
+          <p><?=$USER_DATA['nombres'];?></p>
           <a href="#"><i class="fa fa-circle text-success"></i> En linea</a>
         </div>
 
       </div>
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <?php foreach ($funciones as $key => $value) {
-            if ($value==14) {
-            ?>
-              <li class="active">
-                <a href="index2.php">
-                  <i class="fa fa-dashboard"></i> <span>Panel general</span>
-                </a>
-              </li>
-            <?php
-            }
-        } ?>
+        <li class="active">
+          <a href="index2.php">
+            <i class="fa fa-dashboard"></i> <span>Panel general</span>
+          </a>
+        </li>
         <?php foreach ($funciones as $key => $value) {
             if ($value==4):?>
                <li class="header" style="font-weight:200;color:#12c8f3">HOJAS DE RUTA</li>

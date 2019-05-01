@@ -20,6 +20,10 @@ class Createpdf{
       $listPOO= new ListPOO; $result=$listPOO->listmiHojaRuta();
       $this->GeneraPDF($result,'reporte','Reporte de Hojas de Ruta','landscape');
    }
+   public function printreporteusuarioPDF($empty){
+      $listPOO= new ListPOO; $result=$listPOO->listaUsuarios();
+      $this->GeneraPDF($result,'reporte_usuario','Reporte de Usuarios','portrait');
+   }
    public function PrintHoja($id){
       $listPOO= new ListPOO; $result=$listPOO->verhoja($id);
       $this->GeneraPDF($result,'hojaruta','Hoja de Ruta','portrait');

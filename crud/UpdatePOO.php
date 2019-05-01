@@ -62,6 +62,7 @@ function createHoja(){
    $fecha_cite=$_POST['fecha'];
    $prioridad=$_POST['prioridad'];
    $referencia=$_POST['referencia'];
+   $proveido=$_POST['proveido'];
 	$user=$_SESSION['id_usu'];
    $fecha=date('Y-m-d h:i:s');
    //obtengo el ultimo id de hoja
@@ -69,7 +70,7 @@ function createHoja(){
    $ultimo=$ultimoid['id']+1;$tramite="CNM-".$ultimo."/".date("Y");
 
 	$name="FILE".date("Ymdhis").".pdf";
-   $sql = pg_query("INSERT INTO hojas (procedencia_id,remitente,cargo_remitente,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,fecha_cite,plazo,cite,tramite,archivo,prioridad,estado) values('{$procedencia}','{$remitente}','{$cargo_remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$fecha_cite}','{$plazo}','{$cite}','{$tramite}','{$name}','{$prioridad}',1)");
+   $sql = pg_query("INSERT INTO hojas (procedencia_id,remitente,cargo_remitente,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,fecha_cite,plazo,cite,tramite,archivo,prioridad,estado,proveido) values('{$procedencia}','{$remitente}','{$cargo_remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$fecha_cite}','{$plazo}','{$cite}','{$tramite}','{$name}','{$prioridad}',1,'{$proveido}')");
    $PGSTAT = pg_result_status($sql);
    if($PGSTAT == 1){
       $ruta="../dist/archivos/".$name;
@@ -79,7 +80,8 @@ function createHoja(){
 
 		$destino=$_POST['destino'];$affects=0;
 		for ($i=0; $i <count($destino) ; $i++) {
-			$sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values($id,$destino[$i],'en proceso')");
+         $estado=$i==0?"en proceso":"espera";
+			$sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values($id,$destino[$i],'{$estado}')");
             $PGSTAT = pg_result_status($sql);
             if($PGSTAT == 1){
                 $affects++;
@@ -103,7 +105,6 @@ function updateHoja(){
     $id=$_POST['id_hoja'];
     $name="FILE".date("Ymdhis").".pdf";
     if($_FILES['archivo']['error'] == 0) {
-
         $sql=pg_query("UPDATE hojas SET archivo='{$name}'WHERE id={$id}");
         $PGSTAT = pg_result_status($sql);
         echo "llegada archivo por el if".$PGSTAT;
@@ -118,12 +119,12 @@ function updateHoja(){
 	 $adjunto=$_POST['adjunto'];$num_hojas=$_POST['num_hojas'];
     $tipo=$_POST['tipo'];$referencia=$_POST['referencia'];
 	 $plazo=$_POST['plazo'];$cite=$_POST['cite'];
-    $fecha_cite=$_POST['fecha_cite'];$prioridad=$_POST['prioridad'];
+    $fecha_cite=$_POST['fecha_cite'];$prioridad=$_POST['prioridad'];$proveido=$_POST['proveido'];
     $user=$_SESSION['id_usu'];$fecha_update=date("Y-m-d h:i:s");
 
    $sql=pg_query("UPDATE hojas SET procedencia_id={$procedencia},remitente='{$remitente}',cargo_remitente='{$cargo_remitente}',adjunto_id={$adjunto},
         num_hojas={$num_hojas},tipo_id={$tipo},referencia='{$referencia}',fecha_cite='{$fecha_cite}',plazo={$plazo},
-        cite='{$cite}',prioridad='{$prioridad}',update_user={$user},fecha_update='{$fecha_update}' WHERE id={$id}");
+        cite='{$cite}',prioridad='{$prioridad}',update_user={$user},fecha_update='{$fecha_update}',proveido='{$proveido}' WHERE id={$id}");
    $PGSTAT = pg_result_status($sql);
    if($PGSTAT == 1){
         if(isset($_POST['accion_u'])){
@@ -137,18 +138,30 @@ function updateHoja(){
                 }
             }
         }
-        if(isset($_POST['destino_u'])){
-            for ($i=0;$i<count($_POST['destino_u']);$i++) {
-                $destino=(array) json_decode($_POST['destino_u'][$i]);
-                $id_destino=$destino['id'];
-                if ($destino['estado']) {
-                    $sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values({$id},{$id_destino},'en proceso')");
-                }else{
-                    $sql=pg_query("DELETE from hoja_destino where hoja_id={$id} AND destino_id={$id_destino}");
-                }
+         if(isset($_POST['destinos'])){
+            for ($i=0;$i<count($_POST['destinos']);$i++) {
+               $destino=(array) json_decode($_POST['destinos'][$i]);
+               $id_hojadestino=isset($_POST['id_hojadestino'][$i]) ? json_decode($_POST['id_hojadestino'][$i]) : "";
+               $id_destino=$destino['id'];
+               switch ($destino['estado']) {
+                  case 'verdad':
+                     break;
+                  case 'falso':
+                     //echo "modificar la id_hojadestino:".$id_hojadestino." destino:".$id_destino." position:".$i.'</br>';
+                     pg_query("UPDATE hoja_destino SET destino_id={$id_destino} WHERE id={$id_hojadestino}");
+                     break;
+                  case 'nuevo':
+                     //echo "switch_nuevo:".$id_destino." position:".$i.'</br>';
+                     $sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values({$id},{$id_destino},'espera')");
+                     break;
+                  case 'eliminar':
+                     //echo "eliminar la hoja_destino:".$id_hojadestino." position:".$i.'</br>';
+                     $sql=pg_query("DELETE from hoja_destino where id={$id_hojadestino}");
+                     break;
+               }
             }
-        }
-        echo "ok";
+         }
+         echo "ok";
 	 }
 }
 function ver_usuario($var){

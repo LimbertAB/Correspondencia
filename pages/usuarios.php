@@ -1,71 +1,161 @@
 <?php include("includes/header.php"); ?>
 <?php include("includes/aside.php"); ?>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="fab" data-target="#modal_usuario" data-toggle="modal"> + </div>
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>Tabla de usuarios</h1>
-    </section>
-    <!-- Main content -->
+    <?php if(isset($_GET['registrar'])){?>
+      <!-- Main content -->
     <section class="content">
       <div class="row">
-        <div class="col-xs-12">
-
-          <div class="box">
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table style="font-style: oblique;" id="example1" class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                  <th>Nombres</th>
-                  <th>Apellidos</th>
-                  <th>Cedula</th>
-                  <th>Usuario</th>
-                  <th>Cargos</th>
-                  <th width="10%">Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-              <?php
-                $ejecute=pg_query("SELECT u.*,c.nombre as cargo,d.nombre as destino FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino");
-                while ($datos=pg_fetch_assoc($ejecute)) {
-                  ?>
-                  <tr>
-                    <td><?php echo $datos['nombres'] ?></td>
-                    <td><?php echo $datos['apellidos'] ?></td>
-                    <td><?php echo $datos['cedula'] ?></td>
-                    <td><?php echo $datos['usuario'] ?></td>
-                    <td><?php echo $datos['cargo'] ?></td>
-                    <td>
-                      <button class="btn btn-info btn-xs" onclick="verUsuario(<?php echo $datos['id'];?>)" data-toggle="modal" data-target="#updateusuarioModal">Ver</button>
-                    </td>
-                  </tr>
-                  <?php
-                  }
-                  ?>
-
-
-              </table>
-            </div>
-            <!-- /.box-body -->
+        <!-- left column -->
+        <div class="col-md-6">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <!-- form start -->
+            <form id="frmusuario">
+              <div class="box-body" style="background: #fff;">
+                <input type="hidden"  name="usu" value="algo">
+                <div class="form-group has-feedback  has-error fila1" style="padding:5px">
+                  <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">NOMBRES</label>
+                  <input type="text" name="nom_usu" id="inputnombre" class="form-control" validate="true" toggle=".fila1" placeholder="Ejemplo: Alejandra">
+                  <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                </div>
+                <div class="form-group has-feedback  has-error fila2" style="padding:5px">
+                  <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">APELIDOS</label>
+                  <input type="text" name="ape_usu" id="inputapellido" class="form-control" validate="true" toggle=".fila2" placeholder="Ejemplo: Torrez Ruiz">
+                  <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                </div>
+                <div class="form-group has-feedback  has-error fila3" style="padding:5px">
+                  <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CEDULA DE IDENTIDAD</label>
+                  <input type="text" name="ced_usu" id="inputci" class="form-control" validate="true" toggle=".fila3" placeholder="Ejemplo: 5570345">
+                  <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                </div>
+                <div class="form-group has-feedback has-error fila4" style="padding:5px">
+                  <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">NOMBRE DE USUARIO</label>
+                  <input type="text" name="usu_usu" id="inputusuario" class="form-control" validate="true" toggle=".fila4" placeholder="Ejemplo: alejandra">
+                  <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                  <em style="color:#cf6666;display:none" id="error_registro_u">El nombre de usuario ya esta en uso!</em>
+                </div>
+                <div class="form-group has-feedback has-error fila5" style="padding:5px">
+                  <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CONTRASEÑA</label>
+                  <input type="password" name="pas_usu" autocomplete="false" autocorrect="off" class="form-control" id="inputpassword" validate="true" placeholder="Minimo 5 caracteres" toggle=".fila5">
+                  <span toggle="#inputpassword" id="togglepassword_u" class="fa fa-fw fa-eye field-icon"></span>
+                </div>
+                <div class="form-group" style="padding:5px" id="ok_cargo15">
+                  <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CARGO</label>
+                  <div class='input-group'>
+                    <select id="selectcargo" name="id_cargo" class="form-control selectpicker show-tick" data-live-search="true">
+                      <?php $ejecute=pg_query("SELECT * FROM cargos");
+                        while ($datos=pg_fetch_array($ejecute)) { ?>
+                          <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
+                        <?php
+                          }
+                        ?>
+                    </select>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                  </div>
+                </div>
+                <div class="form-group" style="padding:5px" id="ok_cargo16">
+                  <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DESTINO</label>
+                  <div class='input-group'>
+                    <select id="selectdestino" name="id_destino" class="form-control selectpicker show-tick" data-live-search="true">
+                      <?php
+                        $ejecute=pg_query("SELECT * FROM destinos");
+                        while ($datos=pg_fetch_array($ejecute)) {
+                          ?>
+                          <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
+                          <?php
+                        }
+                      ?>
+                    </select>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
-          <!-- /.box -->
         </div>
-        <!-- /.col -->
+        <div class="col-md-6">
+          <div class="box box-warning">
+            <div class="box-footer" style="padding:20px">
+              <a href="usuarios.php"><button class="btn bg-orange col-md-12" style="margin-top:0px">Cancelar</button></a>
+              <button class="btn bg-navy col-md-12" style="margin-top:10px" id="btnregistrar" disabled onclick="reg_usuario()">Guardar Registro</button>
+            </div>
+          </div>  
+        </div>
       </div>
-      <!-- /.row -->
     </section>
-    <?php 	include 'includes/modales.php'; ?>
-    <!-- /.content -->
+    <?php }else{?>
+      <section class="content-header">
+        <h1 style="font-weight:700;color: #525252;">LISTA DE USUARIOS</h1>
+        <ol class="breadcrumb" style="padding-top:0">
+          <li><a href="usuarios.php?registrar=true"><button type="button" class="btn bg-purple btn-sm">Registrar Nuevo Usuario</button></a></li>
+        </ol>
+      </section>
+      <section class="content">
+        <div class="row">
+          <div class="col-xs-12">
+
+            <div class="box">
+              <!-- /.box-header -->
+              <div class="box-body">
+                <table style="font-style: oblique;" id="example1" class="table table-bordered table-striped">
+                  <thead>
+                    <tr style="background:#a5a5a5">
+                      <th>Nombres</th>
+                      <th>Apellidos</th>
+                      <th>Cedula</th>
+                      <th>Destino</th>
+                      <th>Cargos</th>
+                      <th width="3%">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                <?php
+                  $ejecute=pg_query("SELECT u.*,c.nombre as cargo,d.nombre as destino FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino");
+                  while ($datos=pg_fetch_assoc($ejecute)) {
+                    ?>
+                    <tr>
+                      <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['nombres'] ?></td>
+                      <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['apellidos'] ?></td>
+                      <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['cedula'] ?></td>
+                      <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['destino'] ?></td>
+                      <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['cargo'] ?></td>
+                      <td style="padding: 2px 5px 2px 10px;}">
+                        <center>
+                          <button class="btn btn-info btn-xs" onclick="verUsuario(<?php echo $datos['id'];?>)" data-toggle="modal" data-target="#updateusuarioModal">Ver</button>
+                        </center>
+                      </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <div class="row">
+          <center>
+            <a href="../crud/Createpdf.php/printreporteusuarioPDF/all" target="_blank"><button title="imprimir reporte" type="button" class="btn btn-success btn-sm">IMPRIMIR REPORTE <span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a>
+          </center>
+        </div>
+      </section>
+      <?php 	include 'includes/modales.php'; ?>
+    <?php }?>
   </div>
-
-  <!-- /.content-wrapper -->
-
   <script>
-  var id_cargos_u=0,id_destinos_u=0,id_usuario=0;
+    var id_cargos_u=0,id_destinos_u=0,id_usuario=0;
     $(document).ready(function(){
+      $('#example1').DataTable({
+        "order": [
+          [0, "desc"]
+        ],
+        "dom": '<"top"f>t<"bottom"p>'
+		  });
       $("#togglepassword,#togglepassword_u").click(function() {
           $(this).toggleClass("fa-eye fa-eye-slash");
                var input = $($(this).attr("toggle"));
@@ -162,8 +252,6 @@
 				}else{$("#buttonupdate").attr('disabled', true);}
 			}
 		}
-
-
   </script>
 
   <footer class="main-footer">
