@@ -1,5 +1,13 @@
-<!DOCTYPE html>
-<?php ob_start();$number=1;$months=["Enero","Febrero","Marzo", "Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];?>
+<?php 
+// header("Content-type: application/vnd.ms-excel");
+// header("Content-Disposition: attachment;Filename=reporte_word.xls");
+// header("Pragma: no-cache");
+// header("Expires: 0");
+    header("Content-type: application/vnd.ms-word");
+    header("Content-Disposition: attachment;Filename=reporte_word.doc");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+?>
 <!DOCTYPE html>
 	<html>
 	<head>
@@ -14,32 +22,16 @@
 				border-collapse: collapse;
 				padding-left: 10px;
 			}
-			#header,#header th { position: fixed; left: 0px; top: 0px; height: 50px; text-align: center; }
 		</style>
  	</head>
 	 <body>
-	 	<script type="text/php">
-			if ( isset($pdf) ) {
-				$font = Font_Metrics::get_font("helvetica");
-				$pdf->page_text(200, 760, "Pagina: {PAGE_NUM} de {PAGE_COUNT}", $font, 6, array(0,0,0));
-				$date=date('d-m-Y');
-				$pdf->page_text(530, 760, "Fecha: {$date}", $font, 6, array(0,0,0));
-			}
-		</script>
-		<table id="header" width="100%"  style="border:1px solid #313131;margin:0">
-			<tr>
-				<th width="20%" style="border-left:1px solid #313131"><img src="../pages/images/logo.jpg" height="50px"></th>
-				<th width="60%" style="border-bottom:1px solid #313131;border-left: 1px #fff solid;border-top: 1px #313131 solid;border-right: 1px #fff solid;"><h1 align="center" style="margin:0px;font-family:Arial, Helvetica, sans-serif;font-weight:800;color:#535353">CASA NACIONAL <br>DE LA MONEDA</h1></th>
-				<th width="20%" style="border:0;border-right:1px solid #313131"><img src="../pages/images/logo.jpg" height="50px" ></th>
-			</tr>
-		</table>
 		<?php for ($x=0; $x < count($result['hoja']); $x++): $row_accion=$result['hoja'][$x]['acciones'];$destinos=$result['hoja'][$x]['destinos'];$resp=$result['hoja'][$x];?>
 			<table class="table-hover" width="100%" border="1">
 				<tr>
 					<th  rowspan="4" width="20%">
 					</th>
 					<th  width="60%" colspan="3" rowspan="4"><h4 align="center">HOJA DE RUTA</h4></th>
-					<th width="20%" style="background:#ececec">N° DE REGISTRO</th>
+					<th width="20%" style="background:#ececec">No DE REGISTRO</th>
 				</tr>
 				<tr>
 					<td style="text-align:center"><?php echo $resp['id']?></td>
@@ -88,11 +80,11 @@
 					<td rowspan="2">AREA DE DESTINO</td>
 					<td rowspan="2"><?php $aux=0;while ($aux<count($destinos)){echo $aux==count($destinos)-1 ? $destinos[$aux]['nombre']:$destinos[$aux]['nombre']." - ";$aux++;}?></td>
 					<td>NOMBRE</td>
-					<td colspan="2"><?=strtolower($destinos[0]['usuario'])?></td>
+					<td colspan="2"></td>
 				</tr>
 				<tr>
 					<td >CARGO</td>
-					<td  colspan="2"><?=strtolower($destinos[0]['cargo'])?></td>
+					<td  colspan="2"></td>
 				</tr>
 				<tr>
 					<td >GESTOR VC</td>
@@ -111,7 +103,7 @@
 						<td width="2%"><?php echo $row_accion[0]['estado']==1 ? "x":"";?></td>
 						<td width="15%">Plazo respuesta</td>
 						<td width="20%"><?php echo $resp['plazo']." Dias"?></td>
-						<td colspan="2" rowspan="<?=count($row_accion)?>" width="33%" style="vertical-align:text-top"><h3 style="text-align:center;font-weight:800;color:#535353;margin-top:0">PROVEIDO<small style="color:#313131;font-weight:300"><br><?=$resp['proveido']?></small></h3></td>
+						<td colspan="2" rowspan="<?=count($row_accion)?>" width="33%" style="vertical-align:text-top"><h3 style="text-align:center;font-weight:800;color:#000;margin-top:0;font-size:1.2em">PROVEIDO<small style="color:#000;font-weight:300;font-size:.9em"><br><?=$resp['proveido']?></small></h3></td>
 					</tr>
 					<tr>
 						<td><?php echo $row_accion[1]['nombre']?></td>
@@ -133,24 +125,9 @@
 						<td width="10%">Con copia a:</td>
 						<td width="20%"></td>
 					</tr>
-					<table border="1" width="145px" style="position:absolute;right:0;margin-top:-79px;" >
-						<tr>
-							<td colspan="2" align="center" style="border:1px solid white">......................................................<br>Firma y sello</td>
-						</tr>
-						<tr>
-							<td>Fecha</td>
-							<td>Hora</td>
-						</tr>
-						<tr>
-							<td><?=$destinos[$i]['fecha']==null?"en espera":date('Y-m-d', strtotime($destinos[$i]['fecha']))?></td>
-							<td><?=$destinos[$i]['fecha']==null?"en espera":date('h:i:s', strtotime($destinos[$i]['fecha']))?></td>
-						</tr>
-						<tr><td colspan="2" style="border:1px solid #fff;"></td></tr>
-						<tr><td colspan="2" style="border:1px solid #fff;"></td></tr>
-					</table>
+					
 				</table>
 			<?php endfor;?>
-			<?php if ($x < count($result['hoja'])-1) {echo "<div style='page-break-after: always;'></div>";}?>
 		<?php endfor;?>
  </body>
  </html>

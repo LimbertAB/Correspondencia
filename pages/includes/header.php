@@ -53,9 +53,8 @@ if(!isset($_SESSION['nombres']))
   <script src="../plugins/bootstrap-toggle.min.js"></script>
   <script src="../plugins/pdfobject.min.js"></script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue fixed sidebar-mini">
 <div class="wrapper">
-
   <header class="main-header">
     <?php
       $USER_DATA=pg_fetch_assoc(pg_query("SELECT u.*,c.nombre as cargos,d.nombre as destinos FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino WHERE u.id=$_SESSION[id_usu]"));
@@ -69,46 +68,51 @@ if(!isset($_SESSION['nombres']))
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
-      <!-- Sidebar toggle button-->
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-        <span class="sr-only">Toggle navigation</span>
-      </a>
-      <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-
-          <!-- Notifications: style can be found in dropdown.less -->
-          <li class="dropdown notifications-menu">
-            <a href="mishojas.php?seleccionado=proceso">
-              <i class="fa fa-bell-o"></i>
-              <span class="label label-danger" id="cantobject"></span>
-            </a>
-          </li>
-          <!-- User Account: style can be found in dropdown.less -->
-          <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs"><?php echo $_SESSION['nombres'];?></span>
-            </a>
-            <ul class="dropdown-menu">
-              <!-- User image -->
-              <li class="user-header">
-                <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                <p><?=$USER_DATA['cargos'];?></p>
-              </li>
-              </li>
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Perfil</a>
-                </div>
-                <div class="pull-right">
-                  <a href="../db/destroy.php" class="btn btn-default btn-flat">Salir</a>
-                </div>
-              </li>
-            </ul>
-          </li>
-
-        </ul>
+      <div class="col-md-12" style="padding:0 15px 0 0">
+        <div class="col-md-1 col-sm-2 col-xs-2" style="padding:0">
+          <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="font-size:1.5em;padding-top:10px;padding-bottom:10px">
+            <span class="sr-only"></span>
+          </a>
+        </div>
+        <div class="col-md-6 hidden-sm hidden-xs" style="padding:0">
+          <div style="float:left">
+            <h3 class="title_page"></h3>
+          </div>
+        </div>
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <li class="dropdown notifications-menu">
+              <a href="mishojas.php?seleccionado=proceso">
+                <i class="fa fa-bell-o"></i><span class="label label-danger" id="cantobject"></span>
+              </a>
+            </li>
+            <li class="dropdown notifications-menu">
+              <a href="peticiones.php">
+                <i class="fa fa-envelope-o"></i><span class="label label-danger" id="cantobject1"></span>
+              </a>
+            </li>
+            <li class="dropdown user user-menu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                <span class="hidden-xs"><?php echo $_SESSION['nombres'];?></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="user-header">
+                  <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                  <p><?=$USER_DATA['cargos'];?></p>
+                </li>
+                <li class="user-footer">
+                  <div class="pull-left">
+                    <a href="#" class="btn btn-default btn-flat">Perfil</a>
+                  </div>
+                  <div class="pull-right">
+                    <a href="../db/destroy.php" class="btn btn-default btn-flat">Salir</a>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   </header>
@@ -117,7 +121,18 @@ if(!isset($_SESSION['nombres']))
     $.ajax({
       url: '../crud/ViewData.php/Notificacion/all',type: "get",success: function(res){
         var data = JSON.parse(res);
-        $('#cantobject').text(res);
+        if(data.mensaje>0){
+          $('#cantobject1').text(data.mensaje);
+          $('#cantobject1').show();
+        }else{
+          $('#cantobject1').hide();
+        }
+        if (data.notificacion>0) {
+          $('#cantobject').text(data.notificacion);
+          $('#cantobject').show();
+        }else{
+          $('#cantobject').hide();
+        }
       }
     });
   });

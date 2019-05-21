@@ -37,10 +37,10 @@
                 while ($datos=pg_fetch_array($ejecute)) {
                   ?>
                   <tr>
-                     <td><?php echo $datos['id'] ?></td>
-                     <td><?php echo $datos['nombre'] ?></td>
-                     <td><?php echo $datos['estado']==1?"Activo":"De Baja" ?></td>
-                     <td>
+                      <td><?php echo $datos['id'] ?></td>
+                      <td><?php echo $datos['nombre'] ?></td>
+                      <td><?php echo $datos['estado']==1?"Activo":"De Baja" ?></td>
+                      <td>
                         <button class="btn btn-success btn-sm">Editar</button>
                      </td>
                   </tr>

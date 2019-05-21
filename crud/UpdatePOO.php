@@ -2,7 +2,6 @@
 session_start();
 include("../db/conexion.php");
 $enlace=conectar();
-
 $urlParams = explode('/', $_SERVER['REQUEST_URI']);
 $functionName = $urlParams[4];
 $functionName();
@@ -51,36 +50,42 @@ function Retorno($sql){
     }
 }
 function createHoja(){
-   $procedencia=$_POST['procedencia'];
-	$remitente=$_POST['remitente'];
-   $cargo_remitente=$_POST['cargo_remitente'];
-	$adjunto=$_POST['adjunto'];
-	$num_hojas=$_POST['num_hojas'];
-	$tipo=$_POST['tipo'];
-	$plazo=$_POST['plazo'];
-   $cite=$_POST['cite'];
-   $fecha_cite=$_POST['fecha'];
-   $prioridad=$_POST['prioridad'];
-   $referencia=$_POST['referencia'];
-   $proveido=$_POST['proveido'];
-	$user=$_SESSION['id_usu'];
-   $fecha=date('Y-m-d h:i:s');
-   //obtengo el ultimo id de hoja
-   $ultimoid=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
-   $ultimo=$ultimoid['id']+1;$tramite="CNM-".$ultimo."/".date("Y");
-
-	$name="FILE".date("Ymdhis").".pdf";
-   $sql = pg_query("INSERT INTO hojas (procedencia_id,remitente,cargo_remitente,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,fecha_cite,plazo,cite,tramite,archivo,prioridad,estado,proveido) values('{$procedencia}','{$remitente}','{$cargo_remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$fecha_cite}','{$plazo}','{$cite}','{$tramite}','{$name}','{$prioridad}',1,'{$proveido}')");
-   $PGSTAT = pg_result_status($sql);
-   if($PGSTAT == 1){
-      $ruta="../dist/archivos/".$name;
-      move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
-      $ui=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
+    $procedencia=$_POST['procedencia'];
+    $remitente=$_POST['remitente'];
+    $cargo_remitente=$_POST['cargo_remitente'];
+    $adjunto=$_POST['adjunto'];
+    $num_hojas=$_POST['num_hojas'];
+    $tipo=$_POST['tipo'];
+    $plazo=$_POST['plazo'];
+    $cite=$_POST['cite'];
+    $fecha_cite=$_POST['fecha'];
+    $prioridad=$_POST['prioridad'];
+    $referencia=$_POST['referencia'];
+    $proveido=$_POST['proveido'];
+    $user=$_SESSION['id_usu'];
+    $fecha=date('Y-m-d h:i:s');
+    //obtengo el ultimo id de hoja
+    $ultimoid=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
+    $ultimo=$ultimoid['id']+1;$tramite="CNM-".$ultimo."/".date("Y");
+    if($_FILES['archivo']['error'] == 0) {
+        $name="FILE".date("Ymdhis").".pdf";
+        $sql = pg_query("INSERT INTO hojas (procedencia_id,remitente,cargo_remitente,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,fecha_cite,plazo,cite,tramite,archivo,prioridad,estado,proveido) values('{$procedencia}','{$remitente}','{$cargo_remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$fecha_cite}','{$plazo}','{$cite}','{$tramite}','{$name}','{$prioridad}',1,'{$proveido}')");
+        $PGSTAT = pg_result_status($sql);
+        if($PGSTAT == 1){
+            $ruta="../dist/archivos/".$name;
+            move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
+        }
+    }else{
+        $sql = pg_query("INSERT INTO hojas (procedencia_id,remitente,cargo_remitente,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,fecha_cite,plazo,cite,tramite,prioridad,estado,proveido) values('{$procedencia}','{$remitente}','{$cargo_remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$fecha_cite}','{$plazo}','{$cite}','{$tramite}','{$prioridad}',1,'{$proveido}')");
+    }
+    $PGSTAT = pg_result_status($sql);
+    if($PGSTAT == 1){
+        $ui=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
 		$id=$ui['id'];
 
 		$destino=$_POST['destino'];$affects=0;
 		for ($i=0; $i <count($destino) ; $i++) {
-         $estado=$i==0?"en proceso":"espera";
+            $estado=$i==0?"en proceso":"espera";
 			$sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values($id,$destino[$i],'{$estado}')");
             $PGSTAT = pg_result_status($sql);
             if($PGSTAT == 1){
@@ -116,7 +121,7 @@ function updateHoja(){
     }
     $procedencia=$_POST['procedencia'];$remitente=$_POST['remitente'];
     $cargo_remitente=$_POST['cargo_remitente'];
-	 $adjunto=$_POST['adjunto'];$num_hojas=$_POST['num_hojas'];
+	$adjunto=$_POST['adjunto'];$num_hojas=$_POST['num_hojas'];
     $tipo=$_POST['tipo'];$referencia=$_POST['referencia'];
 	 $plazo=$_POST['plazo'];$cite=$_POST['cite'];
     $fecha_cite=$_POST['fecha_cite'];$prioridad=$_POST['prioridad'];$proveido=$_POST['proveido'];
@@ -168,4 +173,60 @@ function ver_usuario($var){
     $sql="SELECT * FROM usuarios WHERE UPPER(usuario) = UPPER('{$var}')";
     $resultado=pg_query($sql);
     return pg_num_rows($resultado);
+}
+function createPeticion(){
+    $id_usuario=$_SESSION['id_usu'];
+    $ID_DESTINO=pg_fetch_assoc(pg_query("SELECT id_destino from usuarios WHERE id={$id_usuario}"));
+    $ID_DESTINO=$ID_DESTINO['id_destino'];
+    $respuesta_id_destino=$_POST['id_destino'];
+    $descripcion=strtolower(trim($_POST['descripcion']));
+    $fecha=date('Y-m-d h:i:s');
+    if($_FILES['archivo']['error'] == 0) {
+        $name="PEDIDO".date("Ymdhis").".pdf";
+        $sql = pg_query("INSERT INTO peticion (id_destino,descripcion,archivo,fecha,id_usuario,respuesta_id_destino) values({$ID_DESTINO},'{$descripcion}','{$name}','{$fecha}',{$id_usuario},{$respuesta_id_destino})");
+        $PGSTAT = pg_result_status($sql);
+        if($PGSTAT == 1){
+            $ruta="../dist/archivos/".$name;
+            move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }else{
+        $sql = pg_query("INSERT INTO peticion (id_destino,descripcion,fecha,id_usuario,respuesta_id_destino) values({$ID_DESTINO},'{$descripcion}','{$fecha}',{$id_usuario},{$respuesta_id_destino})");
+        $PGSTAT = pg_result_status($sql);
+        if($PGSTAT == 1){
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }
+}
+function responderPeticion(){
+    $id=$_POST['id'];
+    $id_usuario=$_SESSION['id_usu'];
+    $ID_DESTINO=pg_fetch_assoc(pg_query("SELECT id_destino from usuarios WHERE id={$id_usuario}"));
+    $ID_DESTINO=$ID_DESTINO['id_destino'];
+    $descripcion=strtolower(trim($_POST['descripcion']));
+    $fecha=date('Y-m-d h:i:s');
+    if($_FILES['archivo']['error'] == 0) {
+        $name="PEDIDO".date("Ymdhis").".pdf";
+        $sql = pg_query("UPDATE peticion SET respuesta_descripcion='{$descripcion}',respuesta_archivo='{$name}',respuesta_fecha='{$fecha}',respuesta_id_usuario={$id_usuario} WHERE respuesta_id_destino={$ID_DESTINO} AND id={$id}");
+        $PGSTAT = pg_result_status($sql);
+        if($PGSTAT == 1){
+            $ruta="../dist/archivos/".$name;
+            move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }else{
+        $sql = pg_query("UPDATE peticion SET respuesta_descripcion='{$descripcion}',respuesta_fecha='{$fecha}',respuesta_id_usuario={$id_usuario} WHERE respuesta_id_destino={$ID_DESTINO} AND id={$id}");
+        $PGSTAT = pg_result_status($sql);
+        if($PGSTAT == 1){
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }
 }

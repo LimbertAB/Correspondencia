@@ -65,6 +65,12 @@
           </style>
      </head>
      <body >
+          <script type="text/php">
+			if ( isset($pdf) ) {
+				$font = Font_Metrics::get_font("helvetica");
+				$pdf->page_text(40, 760, "Pagina: {PAGE_NUM} de {PAGE_COUNT}", $font, 6, array(0,0,0));
+			}
+		</script>
           <img src="../pages/images/logo.jpg" width="60px" style="position: absolute;top:-20px;z-index:10">
           <h5 style="z-index:10;margin-top:2px;line-height: 1em;margin-left:65px">CASA NACIONAL DE LA MONEDA<br><small> Potosi - Bolivia</small></h5>
           <center><h3 style="font-weight:700">REPORTE DE USUARIOS</h3></center>
@@ -88,7 +94,7 @@
                         <td style="padding: 8px"><?php echo $datos['cedula'] ?></td>
                         <td style="padding: 8px 5px 8px 10px;text-align:left"><?php echo strtolower($datos['destino'])?></td>
                         <td style="padding: 8px 5px 8px 10px;text-align:left"><?php echo strtolower($datos['cargo'])?></td>
-                        <td style="padding: 8px"><?php echo $datos['estado'];$aux++;?></td>
+                        <td style="padding: 8px"><?= $datos['estado']==1?"Activo":"De Baja";$aux++;?></td>
                     </tr>
                 <?php } ?>
                </tbody>

@@ -10,6 +10,7 @@
                html, body {
                     height: 100%;
                     font-family: Arial, Helvetica, sans-serif;
+                    padding-top: 55px
                }
                table td{
                     border: 1px solid #8b8b8b;
@@ -53,7 +54,7 @@
                }
                h5{
                     margin:3px;padding:0;
-                    font-weight:200;font-size: .64em;
+                    font-weight:200;font-size: .77em;
                }
                h3{
                     margin: 0;padding: 0;
@@ -62,14 +63,26 @@
                span#procent {display: block;position: absolute;left: 50%;top: 104%;font-size: 50px;transform: translate(-50%, -50%);color: #545454;}
                span#procent::after {content: '%';}
                .canvas-wrap {position: relative;width: 300px;height: 300px;}
+               #header,#header th { position: fixed; left: 0px; top: 0px; height: 50px; text-align: center; }
           </style>
      </head>
      <body >
-          <img src="../pages/images/logo.jpg" width="60px" style="position: absolute;top:-20px;z-index:10">
-          <h5 style="z-index:10;margin-top:2px;line-height: 1em;margin-left:65px">CASA NACIONAL DE LA MONEDA<br><small> Potosi - Bolivia</small></h5>
-          <center><h3 style="font-weight:700">REPORTE DE HOJAS DE RUTA</h3></center>
-          <h5 style="z-index:10;margin-top:7px;text-align:center">FECHA  DE: <small><?php $result['inicio']?></small> FECHA HASTA:  <small><?php $result['fin']?></small></h5>
-
+          <script type="text/php">
+			if ( isset($pdf) ) {
+				$font = Font_Metrics::get_font("helvetica");
+                    $pdf->page_text(380, 580, "Pagina: {PAGE_NUM} de {PAGE_COUNT}", $font, 6, array(0,0,0));
+                    $date=date('d-m-Y');
+                    $pdf->page_text(710, 580, "Fecha: {$date}", $font, 6, array(0,0,0));
+			}
+		</script>
+          
+          <table id="header" width="100%" border="0">
+			<tr>
+				<th width="20%"><img src="../pages/images/logo.jpg" height="50px"></th>
+				<th width="60%"><h1 align="center" style="margin:10px 0 0 0;font-family:Arial, Helvetica, sans-serif;font-weight:800;color:#535353;line-height:20px">CASA NACIONAL DE LA MONEDA <small style="color:#000;font-size:.7em"><br>Reporte de Hojas de Ruta</small> </h1></th>
+				<th width="20%"><img src="../pages/images/logo.jpg" height="50px" ></th>
+			</tr>
+		</table>
           <table width="100%" style="margin-top:10px"  width="100%" cellspacing="0" cellpadding="0">
                <thead style="background:#bdbdbd;text-align:center">
                     <tr>

@@ -16,9 +16,6 @@ $datos = $data['hoja']; ?>
 <div class="content-wrapper">
 	<section class="content">
 		<div class="row">
-			<div class="col-md-12 form-inline">
-				<h1 align="center" style="margin:0 0 20px 0;font-weight:600">MIS HOJAS DE RUTA </h1>
-			</div>
 			<form id="formAvanzada" class="form-inline" autocomplete="off" aria-expanded="true" style="padding:20px">
 				<div class="form-group col-md-4" style="margin:0;padding:0">
 					<label class="control-label fecha" style="margin: 0 -4px;padding-top: 7px;padding-left:0;float:left;position:absolute">Fecha:</label>
@@ -75,71 +72,59 @@ $datos = $data['hoja']; ?>
 					</select>
 				</div>
 				<button type="submit" class="btn btn-warning" name="buscar">Buscar <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-				<a href="../crud/Createpdf.php/PrintmisHojas/all/?inicio=<?php echo $data['inicio'] ?>&fin=<?php echo $data['fin'] ?>&id=<?php echo $data['id'] ?>&cite=<?php echo $data['cite'] ?>&seleccionado=<?php echo $data['seleccionado'] ?>&remitente=<?php echo $data['remitente'] ?>&procedencia=<?php echo $data['procedencia'] ?>&adjunto=<?php echo $data['adjunto'] ?>&tipo=<?php echo $data['tipo'] ?>" target="_blank"><button title="imprimir hojas de ruta" type="button" class="btn btn-danger btn-xs">Pdf</button></a>
-				<button type="submit" class="btn btn-success btn-xs">Excel</button>
-				<button type="submit" class="btn btn-primary btn-xs">Word</button>
+				<div class="btn-group btn-group-sm">
+					<a href="../crud/Createpdf.php/PrintHojas/all/?inicio=<?php echo $data['inicio'] ?>&fin=<?php echo $data['fin'] ?>&id=<?php echo $data['id'] ?>&cite=<?php echo $data['cite'] ?>&seleccionado=<?php echo $data['seleccionado'] ?>&remitente=<?php echo $data['remitente'] ?>&proveido=<?php echo $data['proveido'] ?>&procedencia=<?php echo $data['procedencia'] ?>&adjunto=<?php echo $data['adjunto'] ?>&tipo=<?php echo $data['tipo'] ?>" target="_blank"><button title="imprimir hojas de ruta" type="button" class="btn btn-danger btn-xs">PDF</button></a>
+					<a href="../crud/Createpdf.php/PrintexcelHojas/all/?inicio=<?php echo $data['inicio'] ?>&fin=<?php echo $data['fin'] ?>&id=<?php echo $data['id'] ?>&cite=<?php echo $data['cite'] ?>&seleccionado=<?php echo $data['seleccionado'] ?>&remitente=<?php echo $data['remitente'] ?>&proveido=<?php echo $data['proveido'] ?>&procedencia=<?php echo $data['procedencia'] ?>&adjunto=<?php echo $data['adjunto'] ?>&tipo=<?php echo $data['tipo'] ?>" target="_blank"><button title="imprimirreporte en EXCEL" type="button" class="btn btn-success btn-xs">XLS</button></a>
+					<a href="../crud/Createpdf.php/PrintwordHojas/all/?inicio=<?php echo $data['inicio'] ?>&fin=<?php echo $data['fin'] ?>&id=<?php echo $data['id'] ?>&cite=<?php echo $data['cite'] ?>&seleccionado=<?php echo $data['seleccionado'] ?>&remitente=<?php echo $data['remitente'] ?>&proveido=<?php echo $data['proveido'] ?>&procedencia=<?php echo $data['procedencia'] ?>&adjunto=<?php echo $data['adjunto'] ?>&tipo=<?php echo $data['tipo'] ?>" target="_blank"><button title="imprimirreporte en WORD" type="button" class="btn btn-primary btn-xs">DOC</button></a>
+				</div>
 			</form>
 		</div>
 		<div class="box">
 			<div class="box-body">
 				<div class="table-responsive">
-					<table id="example1" class="table dataTable table-hover table-striped table-bordered table-condensed">
+					<table id="table_data" class="table dataTable table-hover table-striped table-bordered table-condensed">
 						<thead>
-							<tr style="background:#b5b5b5;color:#000000">
+							<tr>
 								<th width="5%">N°</th>
-								<th width="20%">REMITENTE</th>
-								<th width="20%">PROCEDENCIA</th>
-								<th width="15%">REFERENCIA</th>
-								<th width="10%">PLAZO</th>
-								<th width="10%">ESTADO</th>
-								<th width="9%">FECHA CITE</th>
-								<th width="11%">OPCIONES</th>
+								<th width="20%">Remitente</th>
+								<th width="20%">Procedencia</th>
+								<th width="15%">Proveido</th>
+								<th width="10%">Plazo</th>
+								<th width="8%">Estado</th>
+								<th width="8%">Fecha</th>
+								<th width="3%">Ver</th>
+								<th width="3%">Imp</th>
+								<th width="3%">Arc</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php $i = 0;
 							while ($i < count($datos)) : ?>
 								<tr>
-									<td>
-										<h5>0<?php echo $datos[$i]['id'] ?></h5>
-									</td>
-									<td>
-										<h5><?php echo strtolower($datos[$i]['remitente']) ?></h5>
-									</td>
-									<td>
-										<h5><?php echo strtolower($datos[$i]['procedencia']) ?></h5>
-									</td>
-									<td>
-										<h5><?php echo strtolower($datos[$i]['referencia']) ?></h5>
-									</td>
-									<td>
-										<h5><?php $mensage = $datos[$i]['diferencia'] > 0 ? $datos[$i]['diferencia'] . " <small>dias restantes</small>" : $mensage = $datos[$i]['diferencia'] == 0 ? "<small style='font-size:1em;color:#ed2e2e'>Ultimo dia</small>" : " Plazo terminado";
-											echo $mensage; ?></h5>
-									</td>
-									<td <?php echo $datos[$i]['color']; ?>>
-										<h5><?php echo $datos[$i]['mensaje']; ?></h5>
-									</td>
-									<td style="text-align:center">
-										<h5><?php echo $datos[$i]['fecha_cite'] ?></h5>
-									</td>
-									<td style="vertical-align:middle;text-align:center">
-										<a onclick="verAjax(<?php echo $datos[$i]['id'] ?>)" data-target="#verhojarutaModal" data-toggle="modal"><button title="ver hoja de ruta" type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button></a>
-										<a href="../crud/Createpdf.php/PrintHoja/<?php echo $datos[$i]['id'] ?>" target="_blank"><button title="imprimir hoja de ruta" type="button" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a>
-										<a href="../dist/archivos/<?php echo $datos[$i]['archivo'] ?>" target="_blank"><button title="ver archivo adjuntado" type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button></a>
-									</td>
+									<td class="text-center"><h5>0<?=$datos[$i]['id'] ?></h5></td>
+									<td><h5><?=strtolower($datos[$i]['remitente'])?></h5></td>
+									<td><h5><?=strtolower($datos[$i]['procedencia'])?></h5></td>
+									<td><h5><?=strtolower($datos[$i]['proveido'])?></h5></td>
+									<td><h5><?php $mensage = $datos[$i]['diferencia'] > 0 ? $datos[$i]['diferencia'] . " <small>dias restantes</small>" : $mensage = $datos[$i]['diferencia'] == 0 ? "<small style='font-size:1em;color:#ed2e2e'>Ultimo dia</small>" : " Plazo terminado";echo $mensage?></h5></td>
+									<td <?=$datos[$i]['color']?>><h5><?=$datos[$i]['mensaje']?></h5></td>
+									<td class="text-center"><h5><?=date('d-m-Y', strtotime($datos[$i]['fecha']))?></h5></td>
+									<td class="td_btn"><a onclick="verAjax(<?=$datos[$i]['id'] ?>)" data-target="#verhojarutaModal" data-toggle="modal"><button title="ver hoja de ruta" type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button></a></td>
+									<td class="td_btn"><a href="../crud/Createpdf.php/PrintHoja/<?=$datos[$i]['id'] ?>" target="_blank"><button title="imprimir hoja de ruta" type="button" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a></td>
+									<td class="td_btn"><?php echo $datos[$i]['archivo']==null? '<button class="btn bg-gray-active btn-xs" disabled><span class="glyphicon glyphicon-copy"></span></button></td>': '<a href="../dist/archivos/'.$datos[$i]["archivo"].'" target="_blank"><button title="ver archivo adjuntado" type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span></button></a>'?></td>
 								</tr>
 								<?php $i++;
 							endwhile; ?>
 						</tbody>
 					</table>
 				</div>
+				<div class="col-md-12" style="margin:10px">
+					<center>
+						<a href="../crud/Createpdf.php/printreportePDF/?inicio=<?php echo $data['inicio'] ?>&fin=<?php echo $data['fin'] ?>&id=<?php echo $data['id'] ?>&cite=<?php echo $data['cite'] ?>&seleccionado=<?php echo $data['seleccionado'] ?>&remitente=<?php echo $data['remitente']?>&proveido=<?php echo $data['proveido']?>&procedencia=<?php echo $data['procedencia'] ?>&adjunto=<?php echo $data['adjunto'] ?>&tipo=<?php echo $data['tipo'] ?>" target="_blank"><button title="imprimir reporte" type="button" class="btn btn-success btn-sm">IMPRIMIR REPORTE <span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a>
+					</center>
+				</div>
 			</div>
 		</div>
-		<div class="col-md-12">
-			<center>
-				<a href="../crud/Createpdf.php/printmireportePDF/?inicio=<?php echo $data['inicio'] ?>&fin=<?php echo $data['fin'] ?>&id=<?php echo $data['id'] ?>&cite=<?php echo $data['cite'] ?>&seleccionado=<?php echo $data['seleccionado'] ?>&remitente=<?php echo $data['remitente'] ?>&procedencia=<?php echo $data['procedencia'] ?>&adjunto=<?php echo $data['adjunto'] ?>&tipo=<?php echo $data['tipo'] ?>" target="_blank"><button title="imprimir reporte" type="button" class="btn btn-success btn-sm">IMPRIMIR REPORTE <span class="glyphicon glyphicon-print" aria-hidden="true"></span></button></a>
-			</center>
-		</div>
+		
 	</section>
 </div>
 
@@ -196,6 +181,7 @@ include 'modal_validarhoja.php'; ?>
 		estado_destino = false,
 		estado_accion = false;
 	$(document).ready(function() {
+		$('.title_page').text('Mis Hojas de Ruta');
 		var seleccionado = getUrlParameter('seleccionado');
 		$('#selectseleccion_s option[value="' + seleccionado + '"]').attr('selected', 'selected');
 
@@ -212,11 +198,18 @@ include 'modal_validarhoja.php'; ?>
 		$('#selectadjunto_s option[value="' + seladjunto + '"]').attr('selected', 'selected');
 		$('#selectprocedencia_s option[value="' + selprocedencia + '"]').attr('selected', 'selected');
 		$('#selectestado_s option[value="' + selestado + '"]').attr('selected', 'selected');
-		$('#example1').DataTable({
+		$('#table_data').DataTable({
 			"order": [
 				[0, "desc"]
 			],
-			"dom": '<"top"f>t<"bottom"p>'
+			"dom": '<"top"f>t<"bottom"p>',
+			"language": {
+				"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+			},
+			"aoColumns": [
+				null,null,null,null,null,null,null,
+				{ "orderSequence": [ "" ] },{ "orderSequence": [ "" ] },{ "orderSequence": [ "" ] }
+			]
 		});
 		$('#selectseleccion_s').change(function() {
 			$('.select2').hide();
@@ -421,7 +414,6 @@ include 'modal_validarhoja.php'; ?>
 			}
 		});
 	}
-
 	function validateAjax(id) {
 		$('#verhojarutaModal').modal('toggle');
 		console.log('vamos a rechazar'+id);

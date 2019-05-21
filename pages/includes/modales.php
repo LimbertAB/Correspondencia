@@ -475,11 +475,11 @@
               </div>
               <div id="documento_modal" role="tabpanel" class="tab-pane">
                 <div class="box-body">
-                  <div class="form-group has-feedback has-error fila5" style="padding:5px">
+                  <div class="form-group" style="padding:5px">
                     <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO (<2MB)</label>
                     <div class="col-sm-9">
-                      <input name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila5');" class="form-control" validate="true" toggle=".fila5">
-                      <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                      <input name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'#file_error',true);" class="form-control">
+                      <small class="text-red hidden" id="file_error">Peso Maximo admitido 2MB</small>
                     </div>
                   </div>
                   <div class="form-group has-feedback  has-error fila6" style="padding:5px">
@@ -686,11 +686,11 @@
                 </div>
                 <div id="documento_modal_u" role="tabpanel" class="tab-pane">
                   <div class="box-body">
-                    <div class="form-group has-feedback has-success fila5_u" style="padding:5px">
+                    <div class="form-group" style="padding:5px">
                       <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO (<2MB)</label>
                       <div class="col-sm-9">
-                        <input id="inputfile_u" name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'.fila5_u');" class="form-control" validate="false" toggle=".fila5_u">
-                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                        <input id="inputfile_u" name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'#file_error_respuesta',false);" class="form-control">
+                        <small class="text-red hidden" id="file_error_respuesta">Peso Maximo admitido 2MB</small>
                       </div>
                     </div>
                     <div class="form-group has-feedback  has-success fila6_u" style="padding:5px">

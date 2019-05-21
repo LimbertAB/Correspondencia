@@ -36,4 +36,17 @@ function vermiperfil($id){
     $listPOO= new ListPOO; $result=$listPOO->vermiperfil();
     echo json_encode($result);
 }
+function eliminar_peticion($id){
+    $ejecute=pg_query("DELETE FROM peticion WHERE id={$id}");
+    $PGSTAT = pg_result_status($ejecute);
+    if($PGSTAT == 1){
+        echo "ok";
+    }else{
+        echo "false";
+    }
+}
+function eliminar_hoja($id){
+    $listPOO= new ListPOO; $result=$listPOO->eliminarhoja($id);
+    echo $result;
+}
 ?>

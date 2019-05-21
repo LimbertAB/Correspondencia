@@ -141,7 +141,6 @@ foreach ($funciones as $key => $value){
             <?php
             }
         } ?>
-
       </ul>
     </section>
     <!-- /.sidebar -->

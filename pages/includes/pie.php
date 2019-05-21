@@ -4,6 +4,7 @@
   $.widget.bridge('uibutton', $.ui.button);
 </script> -->
 <script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net/js/dataTables.buttons.min.js"></script>
 <script src="../bower_components/raphael/raphael.min.js"></script>
 <script src="../bower_components/morris.js/morris.min.js"></script>
 <script src="../bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>

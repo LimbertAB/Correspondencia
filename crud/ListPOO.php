@@ -48,8 +48,7 @@ class ListPOO{
          WHERE CAST(h.id AS TEXT) LIKE '{$id}' AND CAST(h.procedencia_id AS TEXT) LIKE '{$procedencia}' AND
          CAST(h.tipo_id AS TEXT) LIKE '{$tipo}' AND CAST(h.adjunto_id AS TEXT) LIKE '{$adjunto}' AND
          CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%' AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%' AND 
-         CAST(hd.destino_id AS TEXT) LIKE '{$proveido}' {$cadena} GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos");
-
+         CAST(hd.destino_id AS TEXT) LIKE '{$proveido}' {$cadena} GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos ORDER BY h.id ASC");
          $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
          $hojastotal = array();
          $hojastotal=$this->get_hoja($all,"");
@@ -88,14 +87,14 @@ class ListPOO{
          WHERE hd.destino_id={$this->USER_DESTINO} AND CAST(h.id AS TEXT) LIKE '{$id}' AND CAST(h.procedencia_id AS TEXT) LIKE '{$procedencia}' AND
          CAST(h.tipo_id AS TEXT) LIKE '{$tipo}' AND CAST(h.adjunto_id AS TEXT) LIKE '{$adjunto}' AND
          CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%'AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%' {$cadena} AND hd.estado<>'espera'
-         GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos");
+         GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos ORDER BY h.id ASC");
 
          $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
          $hojastotal = array();
          $hojastotal=$this->get_hoja($all,"AND destino_id=".$this->USER_DESTINO);
          return ["hoja"=>$hojastotal,"inicio"=>isset($_GET['inicio'])?$_GET['inicio']:"","fin"=>isset($_GET['fin'])?$_GET['fin']:"",
             "id"=>$_GET['id'] ?? "","procedencia"=>$_GET['procedencia']??"","tipo"=>$_GET['tipo']??"","adjunto"=>$_GET['adjunto']??"",
-            "remitente"=>$_GET['remitente']??"","cite"=>$cite,"seleccionado"=>$seleccionado];
+            "remitente"=>$_GET['remitente']??"","cite"=>$cite,"seleccionado"=>$seleccionado,"proveido"=>$_GET['proveido']??""];
       }else {
          return ["hoja"=>[]];
       }
@@ -129,7 +128,8 @@ class ListPOO{
             $total++;
          }
       }
-      return $total;
+      $mensaje=pg_fetch_assoc(pg_query("SELECT count(*) as total FROM peticion WHERE respuesta_id_destino={$this->USER_DESTINO} AND respuesta_id_usuario IS NULL"));
+      return ["notificacion"=>$total,"mensaje"=>$mensaje['total']];
    }
    function recepcionar($id,$observacion,$archivo){
       $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
@@ -244,9 +244,10 @@ class ListPOO{
         return $sql;
    }
    function get_destino($id){
-      $sql2=pg_query("SELECT hd.*,CONCAT(u.nombres, ' ',u.apellidos) as usuario, d.nombre as nombre
+      $sql2=pg_query("SELECT hd.*,CONCAT(u.nombres, ' ',u.apellidos) as usuario,c.nombre as cargo,d.nombre as nombre
          FROM hoja_destino as hd
-         LEFT JOIN usuarios as u ON u.id = hd.usuario_id JOIN destinos as d ON d.id = hd.destino_id
+         LEFT JOIN usuarios as u ON u.id = hd.usuario_id
+         LEFT JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = hd.destino_id
          WHERE hd.hoja_id={$id} ORDER BY hd.id ASC ");
       $destinos = array();while ($rows =  pg_fetch_assoc($sql2)) {$destinos[] = $rows;}
       return $destinos;
@@ -280,21 +281,21 @@ class ListPOO{
 
          //echo " plazo_activo-> ".$RESTANTE." total->".$row['total']." faltante->".$row1['faltantes']." access->".$revisado."<br>";
          if ($RESTANTE==1 && $row['total']>0 && $row['total']>=$row1['faltantes'] && $proceso && $row1['faltantes']!=0) {
-            $all[$count]['color']="bgcolor='#e2f971'";$all[$count]['mensaje']="En Proceso";
+            $all[$count]['color']="bgcolor='#e2f971'";$all[$count]['mensaje']="Nuevo";
             $all[$count]['total']=$row['total'];$all[$count]['faltantes']=$row1['faltantes'];$all[$count]['estado_plazo']=$RESTANTE;
             $acciones = array();$destinos = array();
             $destinos=$this->get_destino($rowactividad);$acciones=$this->get_accion($rowactividad);
             $all[$count]['destinos']=$destinos;$all[$count]['acciones']=$acciones;array_push($hojastotal,$all[$count]);
          }else{
             if ($row['total']>0 && $row1['faltantes']==0 && $revisado) {
-               $all[$count]['color']="bgcolor='#67FF99'";$all[$count]['mensaje']="Recepcionado";
+               $all[$count]['color']="bgcolor='#67FF99'";$all[$count]['mensaje']="Atendido";
                $all[$count]['total']=$row['total'];$all[$count]['faltantes']=$row1['faltantes'];$all[$count]['estado_plazo']=$RESTANTE;
                $acciones = array();$destinos = array();
                $destinos=$this->get_destino($rowactividad);$acciones=$this->get_accion($rowactividad);
                $all[$count]['destinos']=$destinos;$all[$count]['acciones']=$acciones;array_push($hojastotal,$all[$count]);
             }else{
                if ($RESTANTE==0 && $row['total']>0 && $row1['faltantes']>0 && $norevisado) {
-                  $all[$count]['color']="bgcolor='#f59a9a'";$all[$count]['mensaje']="No Recepcionado";
+                  $all[$count]['color']="bgcolor='#f59a9a'";$all[$count]['mensaje']="No Atendido";
                   $all[$count]['total']=$row['total'];$all[$count]['faltantes']=$row1['faltantes'];$all[$count]['estado_plazo']=$RESTANTE;
                   $acciones = array();$destinos = array();
                   $destinos=$this->get_destino($rowactividad);$acciones=$this->get_accion($rowactividad);
@@ -329,5 +330,44 @@ class ListPOO{
    function listaUsuarios(){
       $sql=pg_query("SELECT u.*,c.nombre as cargo,d.nombre as destino FROM usuarios as u JOIN cargos as c ON c.id = u.id_cargo JOIN destinos as d ON d.id = u.id_destino");
       return $sql;
+   }
+   function listPeticion(){
+      $sql=pg_query("SELECT p.*,d.nombre as destino,rd.nombre as respuesta_destino,
+      CONCAT(u.nombres, ' ',u.apellidos) as  usuario_enviado,CONCAT(ru.nombres, ' ',ru.apellidos) as  usuario_recibido
+      FROM peticion as p
+      JOIN destinos as d ON d.id = p.id_destino
+      JOIN destinos as rd ON rd.id = p.respuesta_id_destino
+      JOIN usuarios as u ON u.id = p.id_usuario
+      LEFT JOIN usuarios as ru ON ru.id = p.respuesta_id_usuario
+      WHERE p.id_destino={$this->USER_DESTINO} ORDER BY p.id ASC");
+
+      $sql2=pg_query("SELECT p.*,d.nombre as destino,rd.nombre as respuesta_destino,
+      CONCAT(u.nombres, ' ',u.apellidos) as  usuario_enviado,CONCAT(ru.nombres, ' ',ru.apellidos) as  usuario_recibido
+      FROM peticion as p
+      JOIN destinos as d ON d.id = p.id_destino
+      JOIN destinos as rd ON rd.id = p.respuesta_id_destino
+      JOIN usuarios as u ON u.id = p.id_usuario
+      LEFT JOIN usuarios as ru ON ru.id = p.respuesta_id_usuario
+      WHERE p.respuesta_id_destino={$this->USER_DESTINO} ORDER BY p.id ASC");
+      // $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
+      // $hojastotal = array();
+      // $hojastotal=$this->get_hoja($all,"");
+      return ["enviado"=>$sql,"recibido"=>$sql2];
+   }
+   function eliminarhoja($id){
+      if($this->ADMINISTRAR_HOJA==1){
+         $ejecute=pg_query("DELETE FROM hoja_accion WHERE id_hoja={$id}");
+         $ejecute1=pg_query("DELETE FROM hoja_destino WHERE hoja_id={$id}");
+         $ejecute2=pg_query("DELETE FROM hojas WHERE id={$id}");
+         $PGSTAT = pg_result_status($ejecute2);
+         if($PGSTAT == 1){
+            return "ok";
+         }else{
+            return "false";
+         }
+      }else{
+         return "false";
+      }
+      
    }
 }

@@ -8,145 +8,152 @@
 			body{
 				font-family: serif;
 				font-size: 59%;
+				padding-top: 55px
 			}
 			table, tr, td{
 				border-collapse: collapse;
 				padding-left: 10px;
 			}
-			.firma{
-				border-left: 1px #fff solid;
-				border-top: 1px #fff solid;
-				border-right: 1px #fff solid;
-			}
+			#header,#header th { position: fixed; left: 0px; top: 0px; height: 50px; text-align: center; }
 		</style>
  	</head>
- 	<body><br>
-			<table class="table-hover" width="100%" border="1">
+	 <body>
+		<script type="text/php">
+			if ( isset($pdf) ) {
+				$font = Font_Metrics::get_font("helvetica");
+				$pdf->page_text(280, 760, "Pagina: {PAGE_NUM} de {PAGE_COUNT}", $font, 6, array(0,0,0));
+				$date=date('d-m-Y');
+				$pdf->page_text(530, 760, "Fecha: {$date}", $font, 6, array(0,0,0));
+			}
+		</script>
+		<table id="header" width="100%"  style="border:1px solid #313131;margin:0">
+			<tr>
+				<th width="20%" style="border-left:1px solid #313131"><img src="../pages/images/logo.jpg" height="50px"></th>
+				<th width="60%" style="border-bottom:1px solid #313131;border-left: 1px #fff solid;border-top: 1px #313131 solid;border-right: 1px #fff solid;"><h1 align="center" style="margin:0px;font-family:Arial, Helvetica, sans-serif;font-weight:800;color:#535353">CASA NACIONAL <br>DE LA MONEDA</h1></th>
+				<th width="20%" style="border:0;border-right:1px solid #313131"><img src="../pages/images/logo.jpg" height="50px" ></th>
+			</tr>
+		</table>
+		<table class="table-hover" width="100%" border="1" style="margin:0">
+			<tr>
+				<th  rowspan="4" width="20%"></th>
+				<th  width="60%" colspan="3" rowspan="4"><h4 align="center">HOJA DE RUTA</h4></th>
+				<th width="20%" style="background:#ececec">N° DE REGISTRO</th>
+			</tr>
+			<tr>
+				<td style="text-align:center"><?php echo $resp['id']?></td>
+			</tr>
 				<tr>
-					<th  rowspan="4" width="20%">
-					</th>
-					<th  width="60%" colspan="3" rowspan="4"><h4 align="center">HOJA DE RUTA</h4></th>
-					<th width="20%" style="background:#ececec">N° DE REGISTRO</th>
-				</tr>
+				<th style="background:#ececec">TRAMITE</th>
+			</tr>
 				<tr>
-					<td style="text-align:center"><?php echo $resp['id']?></td>
-				</tr>
-					<tr>
-					<th style="background:#ececec">TRAMITE</th>
-				</tr>
-					<tr>
-					<td style="text-align:center"><?php echo $resp['tramite'] ?></td>
-				</tr>
-				<tr>
-					<td>PROCEDENCIA</td>
-					<td colspan="3"><?php echo $resp['procedencia'] ?></td>
-						<th style="background:#ececec">CITE</th>
-				</tr>
-				<tr>
-					<td>REMITENTE</td>
-					<td colspan="3"><?php echo "$resp[remitente]"; ?></td>
-					<td style="text-align:center"><?php echo "$resp[cite]"; ?></td>
-				</tr>
-				<tr>
-					<td>CARGO REMITENTE</td>
-					<td colspan="3"><?php echo $resp['cargo_remitente']?></td>
-					<th style="background:#ececec">FECHA CITE</th>
-				</tr>
-				<tr>
-					<td>ADJUNTOS</td>
-					<td colspan="3"><?php echo $resp['adjunto'] ?></td>
-					<td style="text-align:center"> <?php echo "$resp[fecha_cite]"; ?></td>
-				</tr>
-				<tr>
-					<td >N° DE HOJAS</td>
-					<td colspan="3"><?php echo $resp['num_hojas'] ?></td>
-					<th style="background:#ececec">FECHA REGISTRO</th>
-				</tr>
-				<tr>
-					<td >TIPO DE DOCUMENTO</td>
-					<td colspan="3"><?php echo $resp['tipo'] ?></td>
-					<td style="text-align:center"> <?php echo "$resp[fecha]";?></td>
-				</tr>
-				<tr>
-					<td >REFERENCIA</td>
-					<td colspan="4"><?php echo $resp['referencia'] ?></td>
-				</tr>
-				<tr>
-					<td  rowspan="2">AREA DE DESTINO</td>
-					<td width="40%" rowspan="2">
-							<?php $aux=0;
-						while ($aux<count($destinos)) {
-								echo $aux==count($destinos)-1?$destinos[$aux]['nombre']:$destinos[$aux]['nombre']." - ";
-								$aux++;
-						}
-						?>
-					</td>
-					<td width="10%">NOMBRE</td>
-					<td colspan="2"></td>
-				</tr>
-				<tr>
-					<td >CARGO</td>
-					<td colspan="2"></td>
-				</tr>
-				<tr>
-					<td >GESTOR VC</td>
-					<td  colspan="4"><?php echo $resp['usuario'] ?></td>
-				</tr>
-			</table>
+				<td style="text-align:center"><?php echo $resp['tramite'] ?></td>
+			</tr>
+			<tr>
+				<td>PROCEDENCIA</td>
+				<td colspan="3"><?php echo $resp['procedencia'] ?></td>
+					<th style="background:#ececec">CITE</th>
+			</tr>
+			<tr>
+				<td>REMITENTE</td>
+				<td colspan="3"><?php echo "$resp[remitente]"; ?></td>
+				<td style="text-align:center"><?php echo "$resp[cite]"; ?></td>
+			</tr>
+			<tr>
+				<td>CARGO REMITENTE</td>
+				<td colspan="3"><?php echo $resp['cargo_remitente']?></td>
+				<th style="background:#ececec">FECHA CITE</th>
+			</tr>
+			<tr>
+				<td>ADJUNTOS</td>
+				<td colspan="3"><?php echo $resp['adjunto'] ?></td>
+				<td style="text-align:center"> <?php echo "$resp[fecha_cite]"; ?></td>
+			</tr>
+			<tr>
+				<td >N° DE HOJAS</td>
+				<td colspan="3"><?php echo $resp['num_hojas'] ?></td>
+				<th style="background:#ececec">FECHA REGISTRO</th>
+			</tr>
+			<tr>
+				<td >TIPO DE DOCUMENTO</td>
+				<td colspan="3"><?php echo $resp['tipo'] ?></td>
+				<td style="text-align:center"> <?php echo "$resp[fecha]";?></td>
+			</tr>
+			<tr>
+				<td >REFERENCIA</td>
+				<td colspan="4"><?php echo $resp['referencia'] ?></td>
+			</tr>
+			<tr>
+				<td  rowspan="2">AREA DE DESTINO</td>
+				<td width="40%" rowspan="2">
+						<?php $aux=0;
+					while ($aux<count($destinos)) {
+							echo $aux==count($destinos)-1?$destinos[$aux]['nombre']:$destinos[$aux]['nombre']." - ";
+							$aux++;
+					}
+					?>
+				</td>
+				<td width="10%">NOMBRE</td>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td >CARGO</td>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td >GESTOR VC</td>
+				<td  colspan="4"><?php echo $resp['usuario'] ?></td>
+			</tr>
+		</table>
 		<?php for ($i=0; $i < count($destinos); $i++): $row_accion=$result['accion']; ?>
-			<table width="100%" border="1">
-        <tr>
+			<table width="100%" border="1" style="page-break-inside: avoid;">
+				<tr style="background:#e8e8e8">
 					<td colspan="2">ACCION</td>
 					<td >Destinatario</td>
 					<td colspan="3"><?php echo $destinos[$i]['nombre']?></td>
-        </tr>
-        <tr>
+				</tr>
+        		<tr>
 					<td width="30%"><?php echo $row_accion[0]['nombre']?></td>
 					<td width="2%"><?php echo $row_accion[0]['estado']==1 ? "x":"";?></td>
 					<td width="15%">Plazo respuesta</td>
-					<td width="20%"></td>
-					<td colspan="2" width="33%" style="padding-right:30px" rowspan="<?php echo count($row_accion) ?>">
-						<br><br><br><br><br><br><br><br>
-						<br><br><br><br>
-						<table border="1" width="10%" align="right">
-								<tr>
-										<td colspan="2" align="center" class="firma">...................................................................................<br>Firma y sello</td>
-								</tr>
-								<tr>
-									<td>Fecha</td>
-									<td>Hora</td>
-								</tr>
-								<tr>
-									<td><?php echo $destinos[$i]['fecha']==null?"en espera":date('Y-m-d', strtotime($destinos[$i]['fecha']))?></td>
-									<td><?php echo $destinos[$i]['fecha']==null?"en espera":date('h:i:s', strtotime($destinos[$i]['fecha']))?></td>
-								</tr>
-						</table>
-						<br><br><br>
-          </td>
-        </tr>
-        <tr>
+					<td width="20%"><?php echo $resp['plazo']." Dias"?></td>
+					<td colspan="2" rowspan="<?=count($row_accion)?>" width="33%" style="vertical-align:text-top"><h3 style="text-align:center;font-weight:800;color:#535353;margin-top:0">PROVEIDO<small style="color:#313131;font-weight:300"><br><?=$resp['proveido']?></small></h3></td>
+        		</tr>
+				<tr>
 					<td><?php echo $row_accion[1]['nombre']?></td>
 					<td><?php echo $row_accion[1]['estado']==1 ? "x":"";?></td>
-					<td colspan="2" rowspan="<?php echo count($row_accion)-1 ?>"></td>
-        </tr>
-        <?php for ($j=2; $j < count($row_accion); $j++):?>
-          <tr>
+					<td colspan="2" rowspan="<?=count($row_accion)-1?>"></td>
+				</tr>
+				<?php for ($j=2; $j < count($row_accion); $j++):?>
+					<tr>
 						<td><?php echo $row_accion[$j]['nombre']?></td>
 						<?php if($row_accion[$j]['estado']==1):
-							echo '<td>x</td>';
+							echo '<td>x</td></tr>';
 						else:
-							echo '<td></td>';
+							echo '<td></td></tr>';
 						endif;
-
 				endfor;?>
 				<tr>
 					<td>Cordinar con:</td>
 					<td colspan="3"></td>
-					<td >Con copia a:</td>
-					<td width="140px"></td>
+					<td width="10%">Con copia a:</td>
+					<td width="20%"></td>
 				</tr>
-    	</table>
+				<table border="1" width="145px" style="position:absolute;right:0;margin-top:-79px;" >
+					<tr>
+						<td colspan="2" align="center" style="border:1px solid white">......................................................<br>Firma y sello</td>
+					</tr>
+					<tr>
+						<td>Fecha</td>
+						<td>Hora</td>
+					</tr>
+					<tr>
+						<td><?=$destinos[$i]['fecha']==null?"en espera":date('Y-m-d', strtotime($destinos[$i]['fecha']))?></td>
+						<td><?=$destinos[$i]['fecha']==null?"en espera":date('h:i:s', strtotime($destinos[$i]['fecha']))?></td>
+					</tr>
+					<tr><td colspan="2" style="border:1px solid #fff;"></td></tr>
+					<tr><td colspan="2" style="border:1px solid #fff;"></td></tr>
+				</table>
+			</table>
 		<?php endfor;?>
-
  </body>
  </html>

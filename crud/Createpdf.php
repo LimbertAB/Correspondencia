@@ -36,11 +36,18 @@ class Createpdf{
       $listPOO= new ListPOO; $result=$listPOO->listmiHojaRuta();
       $this->GeneraPDF($result,'hojas','Hojas de Ruta','portrait');
    }
+   public function PrintwordHojas($id){
+      $listPOO= new ListPOO; $result=$listPOO->listHojaRuta();
+      require '../pages/print/word.php';
+   }
+   public function PrintexcelHojas($id){
+      $listPOO= new ListPOO; $result=$listPOO->listHojaRuta();
+      require '../pages/print/excel.php';
+   }
    function GeneraPDF($result,$view,$title,$paper){
-      require '../pages/print/'.$view.'.php';
       require_once '../bower_components/dompdf/dompdf_config.inc.php';
+      require '../pages/print/'.$view.'.php';
       $dompdf = new DOMPDF();
-
       $result=utf8_encode(ob_get_clean());
       $dompdf->load_html(utf8_decode($result));
       $dompdf->set_paper('letter', $paper); //portrait
