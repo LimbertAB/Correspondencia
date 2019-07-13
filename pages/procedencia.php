@@ -1,5 +1,9 @@
-<?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>
+<?php include("includes/header.php");$permiso=0;
+  foreach($funciones as $key => $value){
+    if ($value==8) {$permiso=1;}
+  }
+  if($permiso==0){?><script>window.location.href = "404.php";</script><?php } include("includes/aside.php");
+?> 
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -28,7 +32,7 @@
                   <th>Id</th>
                   <th>Nombre</th>
                   <th>Estado</th>
-                  <th width="13%">Acciones</th>
+                  <th width="20%">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -37,12 +41,17 @@
                 while ($datos=pg_fetch_array($ejecute)) {
                   ?>
                   <tr>
-                      <td><?php echo $datos['id'] ?></td>
-                      <td><?php echo $datos['nombre'] ?></td>
-                      <td><?php echo $datos['estado']==1?"Activo":"De Baja" ?></td>
-                      <td>
-                        <button class="btn btn-success btn-sm">Editar</button>
-                     </td>
+                    <td><?php echo $datos['id'] ?></td>
+                    <td><?php echo $datos['nombre'] ?></td>
+                    <td><?=$datos['estado']==1?"Activo":"Inactivo"?></td>
+                    <td>
+                      <button class="btn btn-warning btn-xs" onclick="updateObjeto_all(<?=$datos['id']?>,'<?=$datos['nombre']?>','procedencia')">Editar</button>
+                      <?php if($datos['estado']==1):?>
+                        <button class="btn btn-danger btn-xs" onclick="EliminarObjeto(<?=$datos['id']?>,'procedencia')">Eliminar</button>
+                      <?php else:?>
+                        <button class="btn btn-success btn-xs" onclick="AltaObjeto(<?=$datos['id']?>,'procedencia')">Alta</button>
+                      <?php endif;?>
+                    </td>
                   </tr>
                   <?php
                   }

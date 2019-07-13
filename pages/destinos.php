@@ -1,5 +1,9 @@
-<?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>  
+<?php include("includes/header.php");$permiso=0;
+  foreach($funciones as $key => $value){
+    if ($value==6) {$permiso=1;}
+  }
+  if($permiso==0){?><script>window.location.href = "404.php";</script><?php } include("includes/aside.php");
+?> 
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -25,29 +29,32 @@
               <table style="font-style: oblique;" id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                  <th width="13%">Acciones</th>
-                  <th>Nombres</th>
-                  <th>Descripcion</th>
+                    <th>Id</th>
+                    <th>Nombres</th>
+                    <th>Descripcion</th>
+                    <th>Estado</th>
+                    <th width="20%">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
               <?php 
                 $ejecute=pg_query("SELECT * FROM destinos");
-                while ($datos=pg_fetch_array($ejecute)) {
-                  ?>
+                while ($datos=pg_fetch_array($ejecute)) {?>
                   <tr>
-                    <td>
-                      <button class="btn btn-success btn-sm">Editar</button>
-                      <button class="btn btn-info btn-sm">Ver</button>
-                    </td>
+                    <td><?php echo $datos['id'] ?></td>
                     <td><?php echo $datos['nombre'] ?></td>
                     <td><?php echo $datos['descripcion'] ?></td>
+                    <td><?=$datos['estado']==1?"Activo":"Inactivo"?></td>
+                    <td>
+                      <button class="btn btn-warning btn-xs" onclick="updateObjeto_destino(<?=$datos['id']?>,'<?=$datos['nombre']?>','<?=$datos['descripcion']?>','destinos')">Editar</button>
+                      <?php if($datos['estado']==1):?>
+                        <button class="btn btn-danger btn-xs" onclick="EliminarObjeto(<?=$datos['id']?>,'destinos')">Eliminar</button>
+                      <?php else:?>
+                        <button class="btn btn-success btn-xs" onclick="AltaObjeto(<?=$datos['id']?>,'destinos')">Alta</button>
+                      <?php endif;?>
+                    </td>
                   </tr>
-                  <?php
-                  }
-                  ?>
-              
-                
+                  <?php }?>
               </table>
             </div>
             <!-- /.box-body -->

@@ -1,8 +1,10 @@
 <?php 
-header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment;Filename=reporte_excel.xls");
-header("Pragma: no-cache");
+
+header("Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
+header("Content-Disposition: attachment;filename=reporte_excel.xls");
+header("Cache-Control: max-age=0");
 header("Expires: 0");
+
 ?>
 <!DOCTYPE html>
 	<html>
@@ -18,6 +20,7 @@ header("Expires: 0");
 				border-collapse: collapse;
 				padding-left: 10px;
 			}
+			#header,#header th { position: fixed; left: 0px; top: 0px; height: 50px; text-align: center; }
 		</style>
  	</head>
 	<body>

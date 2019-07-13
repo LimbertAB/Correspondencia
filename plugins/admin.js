@@ -5,25 +5,7 @@ function reg_usuario() {
     type: "POST",
     url: "../crud/UpdatePOO.php/CreateUser/",
     data: datos,
-    success: function (resp) {
-      if (resp == 0) {
-        console.log("aqui2");
-        $('#error_registro').show();
-      } else {
-        swal("Mensaje de Alerta!", "Usuario Registrado Satisfactoriamente!", "success");
-        setInterval(function () { location.reload() }, 1500);
-      }
-    }
-  });
-}
-//Registro de cargo
-function reg_cargo() {
-  var datos = $('#frmcargo').serialize();
-  $.ajax({
-    type: "POST",
-    url: "../crud/UpdatePOO.php/createUser/",
-    data: datos,
-    success: function (resp) {
+    success: function (obj) {
       if (obj == false) {
         swal("Mensaje de Alerta!", "Usuario no Registrado. Ocurrio un Error Inesperado!", "error");
         setInterval(function () { location.reload() }, 1500);
@@ -34,6 +16,23 @@ function reg_cargo() {
       }
       if (obj == "duplicado") {
         $('#error_registro_u').show();
+      }
+    }
+  });
+}
+//Registro de cargo
+function reg_cargo() {
+  var datos = $('#frmcargo').serialize();
+  $.ajax({
+    type: "POST",
+    url: "../crud/insert.php",
+    data: datos,
+    success: function (resp) {
+      if (resp == 0) {
+        swal("Mensaje de Alerta!", "Cargo Registrado Satisfactoriamente!", "success");
+        setInterval(function () { location.reload() }, 1500);
+      } else {
+        $('.error_registro_u').show();
       }
     }
   });
@@ -350,3 +349,121 @@ function not_number(e) { var keyCode = (e.keyCode ? e.keyCode : e.which); if ((k
 function key_placa(e) { var keyCode = (e.keyCode ? e.keyCode : e.which); if ((keyCode > 96 && keyCode < 123) || (keyCode > 64 && keyCode < 91) || keyCode == 241 || keyCode == 209 || (keyCode > 47 && keyCode < 58) || keyCode == 45 || keyCode == 8) { return true; } else { e.preventDefault(); } }
 function validate_sinsmall(e, t) { if (t) { $(e).removeClass('has-error').addClass('has-success'); } else { $(e).removeClass('has-success').addClass('has-error'); } }
 function small_error(e, t) { if (t) { $(e).removeClass('has-error').addClass('has-success'); $(e + " span").removeClass('glyphicon-remove').addClass('glyphicon-ok'); } else { $(e).removeClass('has-success').addClass('has-error'); $(e + " span").removeClass('glyphicon-ok').addClass('glyphicon-remove'); } }
+
+function EliminarObjeto(id,table) {//usuarios,cargos,destinos,adjuntos,acciones,tipos,procedencia
+  swal({
+    title: "¿Estás seguro?",
+    text: "Esta Seguro que quiere Eliminar "+table,
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#ff5456",
+    confirmButtonText: "Eliminar "+table,
+    closeOnConfirm: false
+  }, function() {
+    $.ajax({
+      url: '../crud/ViewData.php/eliminar_objeto/'+table+'/'+ id,
+      type: 'get',
+      success: function(obj) {
+        if (obj == "ok") {
+          swal("Mensaje de Alerta!", "Los Datos se Eliminaron Satisfactoriamente", "success");
+          setInterval(function() {
+            location.reload();
+          }, 1000);
+        } else {
+          swal("Mensaje de Alerta!", "No se Elimino debido a un problema de conexion - " + table+": dado de baja", "error");
+          setInterval(function() {
+            location.reload();
+          }, 3000);
+        }
+      }
+    });
+  });
+}
+function AltaObjeto(id,table) {//usuarios,cargos,destinos,adjuntos,acciones,tipos,procedencia
+  swal({
+    title: "¿Estás seguro?",
+    text: "Esta Seguro que quiere Dar de alta "+table,
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3fdc76",
+    confirmButtonText: "Dar de Alta "+table,
+    closeOnConfirm: false
+  }, function() {
+    $.ajax({
+      url: '../crud/ViewData.php/alta_objeto/'+table+'/'+ id,
+      type: 'get',
+      success: function(obj) {
+        if (obj == "ok") {
+          swal("Mensaje de Alerta!", "Dado de Alta Satisfactoriamente", "success");
+          setInterval(function() {
+            location.reload();
+          }, 1000);
+        } else {
+          swal("Mensaje de Alerta!", "No se dio de alta debido a un problema de conexion", "error");
+        }
+      }
+    });
+  });
+}
+let GET_ID_U,GET_TABLE;
+function updateObjeto_all(id,nombre,table){
+  GET_ID_U = id;GET_TABLE=table;
+  $('#nombre_objeto_u').val(nombre);
+  $('#modal_update_objeto').modal('show')
+}
+function updateObjeto_destino(id,nombre,descripcion,table){
+  GET_ID_U = id;GET_TABLE=table;
+  $('#nombre_destino_u').val(nombre);
+  $('#descripcion_destino_u').val(descripcion);
+  $('#modal_update_destino').modal('show')
+}
+$(document).ready(function() {
+  $("#btn_update_objeto").click(function(e) {
+    var valid = this.form.checkValidity(); 
+    $("#valid").html(valid);
+    if (valid) {
+      e.preventDefault();
+      var parametros = new FormData($('#form_update_objeto')[0]);
+      enviardotosAjax(parametros);
+    }
+  });
+  $("#btn_update_destino").click(function(e) {
+    var valid = this.form.checkValidity(); 
+    $("#valid").html(valid);
+    if (valid) {
+      e.preventDefault();
+      var parametros = new FormData($('#form_update_destino')[0]);
+      enviardotosAjax(parametros);
+    }
+  });
+});
+function enviardotosAjax(parametros){
+  parametros.append('id', GET_ID_U);
+  parametros.append('tabla', GET_TABLE);
+  $.ajax({
+    data: parametros,
+    url: '../crud/UpdatePOO.php/modificarUnDato/',
+    type: "POST",
+    contentType: false,
+    processData: false,
+    success: function(res) {
+      switch (res){
+        case "false":
+            swal("Mensaje de Alerta!", "Ocurrio un error inerperado, vuelva a intentarlo!", "error");
+            setInterval(function() {
+              location.reload();
+            }, 1500);
+          break;
+        case "duplicado":
+          $('.error_update_objeto').removeClass('hidden');
+          break;
+        case "true":
+          swal("Mensaje de Alerta!", "La información se modificó Satisfactoriamente", "success");
+          setInterval(function() {
+            location.reload();
+          }, 1500);
+          break;
+      }
+    }
+  });
+}

@@ -1,16 +1,12 @@
-<?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>
-<?php include("../crud/ListPOO.php");
-$listPOO = new ListPOO;
-$data = $listPOO->listHojaRuta();
-$datos = $data['hoja']; ?>
-<!--Control de mensajes-->
-<?php if (isset($_SESSION['mensaje'])) { ?>
-	<script type="text/javascript">
-		alert("<?php echo $_SESSION['mensaje'] ?>")
-	</script>
-	<?php unset($_SESSION["mensaje"]);
-} ?>
+<?php include("includes/header.php");$permiso=0;
+  	foreach($funciones as $key => $value){
+    	if ($value==13) {$permiso=1;}
+  	}
+  	if($permiso==0){?><script>window.location.href = "404.php";</script><?php } include("includes/aside.php");include("../crud/ListPOO.php");
+  	$listPOO = new ListPOO;
+	$data = $listPOO->listHojaRuta();
+	$datos = $data['hoja'];
+?> 
 <div class="content-wrapper">
 	<section class="content">
 		<div class="row">
@@ -193,9 +189,7 @@ $datos = $data['hoja']; ?>
 		destino_old_u = [],
 		accion_u = [],
 		Get_ID = 0,
-		estado_destino = false,
-		estado_accion = false,
-		nuevos_destinos = [];FILE_STATUS = true;FILE_STATUS_RESPUESTA = true;
+		nuevos_destinos = [];nuevos_proveidos = [];FILE_STATUS = true;FILE_STATUS_RESPUESTA = true;
 	$(document).ready(function() {
 		$('.title_page').text('Administrar Hojas de Ruta');
 		var seleccionado = getUrlParameter('seleccionado');
@@ -259,10 +253,8 @@ $datos = $data['hoja']; ?>
 		}).on('dp.change', function(e) {
 			function_validate('false');
 		});
-		$('#inputremitente,#inputremitente_u,#inputcargoremitente,#inputcargoremitente_u,#inputreferencia,#inputreferencia_u').keypress(function(e) {
-			not_number(e);
-		}).keyup(function() {
-			if ($(this).val().trim().length > 3) {
+		$('#inputremitente,#inputremitente_u,#inputcargoremitente,#inputcargoremitente_u,#inputreferencia,#inputreferencia_u').keyup(function() {
+			if ($(this).val().trim().length > 1) {
 				small_error($(this).attr('toggle'), true);
 			} else {
 				small_error($(this).attr('toggle'), false);
@@ -270,7 +262,7 @@ $datos = $data['hoja']; ?>
 			function_validate($(this).attr('validate'));
 		});
 		$('#inputproveido,#inputproveido_u').keyup(function() {
-			if ($(this).val().trim().length > 3) {
+			if ($(this).val().trim().length > 1) {
 				small_error($(this).attr('toggle'), true);
 			} else {
 				small_error($(this).attr('toggle'), false);
@@ -305,17 +297,19 @@ $datos = $data['hoja']; ?>
 				contentType: false,
 				processData: false,
 				success: function(obj) {
-					if (obj == "false") {} else {
+					if (obj == "true") {
 						swal("Mensaje de Alerta!", "La Hoja de Ruta Se Registro Satisfactoriamente", "success");
 						setInterval(function() {
 							location.reload();
 						}, 1500);
+					} else {
+						swal("Mensaje de Alerta!", "Ocurrio un problema en el registro!!", "error");
 					}
 				}
 			});
 		});
 		$('#btnupdate_hoja').click(function() {
-			var parametros = new FormData($('#form_updatehoja')[0]);
+			var parametros = new FormData($('#form_updatehoja')[0]);cambiosDestinos();
 			var accion = [],
 				values = $('#selectaccion_u').val();
 			for (var i = 0; i < accion_u.length; i++) {
@@ -354,64 +348,70 @@ $datos = $data['hoja']; ?>
 					});
 				}
 			}
-			if (estado_destino) {
-				if (nuevos_destinos.length != destino_u.length) {
-					if (nuevos_destinos.length > destino_u.length) {
-						for (var i = 0; i < nuevos_destinos.length; i++) {
-							if (i < destino_u.length) {
-								if (nuevos_destinos[i] == destino_u[i]) {
-									parametros.append('destinos[]', JSON.stringify({
-										'id': nuevos_destinos[i],
-										'estado': 'verdad'
-									}));
-								} else {
-									parametros.append('destinos[]', JSON.stringify({
-										'id': nuevos_destinos[i],
-										'estado': 'falso'
-									}));
-								}
+			if (nuevos_destinos.length != destino_u.length) {
+				if (nuevos_destinos.length > destino_u.length) {
+					for (var i = 0; i < nuevos_destinos.length; i++) {
+						if (i < destino_u.length) {
+							if (nuevos_destinos[i] == destino_u[i]) {
+								parametros.append('destinos[]', JSON.stringify({
+									'id': nuevos_destinos[i],
+									'proveido':nuevos_proveidos[i],
+									'estado': 'verdad'
+								}));
 							} else {
 								parametros.append('destinos[]', JSON.stringify({
 									'id': nuevos_destinos[i],
-									'estado': 'nuevo'
+									'proveido':nuevos_proveidos[i],
+									'estado': 'falso'
 								}));
 							}
-						}
-					} else {
-						for (var i = 0; i < destino_u.length; i++) {
-							if (i < nuevos_destinos.length) {
-								if (nuevos_destinos[i] == destino_u[i]) {
-									parametros.append('destinos[]', JSON.stringify({
-										'id': nuevos_destinos[i],
-										'estado': 'verdad'
-									}));
-								} else {
-									parametros.append('destinos[]', JSON.stringify({
-										'id': nuevos_destinos[i],
-										'estado': 'falso'
-									}));
-								}
-							} else {
-								parametros.append('destinos[]', JSON.stringify({
-									'id': destino_u[i],
-									'estado': 'eliminar'
-								}));
-							}
-						}
-					}
-				} else {
-					for (var i = 0; i < nuevos_destinos.length; i++) {
-						if (nuevos_destinos[i] == destino_u[i]) {
-							parametros.append('destinos[]', JSON.stringify({
-								'id': nuevos_destinos[i],
-								'estado': 'verdad'
-							}));
 						} else {
 							parametros.append('destinos[]', JSON.stringify({
 								'id': nuevos_destinos[i],
-								'estado': 'falso'
+								'proveido':nuevos_proveidos[i],
+								'estado': 'nuevo'
 							}));
 						}
+					}
+				} else {
+					for (var i = 0; i < destino_u.length; i++) {
+						if (i < nuevos_destinos.length) {
+							if (nuevos_destinos[i] == destino_u[i]) {
+								parametros.append('destinos[]', JSON.stringify({
+									'id': nuevos_destinos[i],
+									'proveido':nuevos_proveidos[i],
+									'estado': 'verdad'
+								}));
+							} else {
+								parametros.append('destinos[]', JSON.stringify({
+									'id': nuevos_destinos[i],
+									'proveido':nuevos_proveidos[i],
+									'estado': 'falso'
+								}));
+							}
+						} else {
+							parametros.append('destinos[]', JSON.stringify({
+								'id': destino_u[i],
+								'proveido':nuevos_proveidos[i],
+								'estado': 'eliminar'
+							}));
+						}
+					}
+				}
+			} else {
+				for (var i = 0; i < nuevos_destinos.length; i++) {
+					if (nuevos_destinos[i] == destino_u[i]) {
+						parametros.append('destinos[]', JSON.stringify({
+							'id': nuevos_destinos[i],
+							'proveido':nuevos_proveidos[i],
+							'estado': 'verdad'
+						}));
+					} else {
+						parametros.append('destinos[]', JSON.stringify({
+							'id': nuevos_destinos[i],
+							'proveido':nuevos_proveidos[i],
+							'estado': 'falso'
+						}));
 					}
 				}
 			}
@@ -426,15 +426,24 @@ $datos = $data['hoja']; ?>
 				contentType: false,
 				processData: false,
 				success: function(obj) {
-					if (obj == "false") {} else {
-						swal("Mensaje de Alerta!", "La Hoja de Ruta Se Modifico Satisfactoriamente", "success");
-						setInterval(function(){ location.reload();}, 1500);
+					if (obj == "ok") {
+						swal("Mensaje de Alerta!", "La Hoja de Ruta Se Registro Satisfactoriamente", "success");
+						setInterval(function() {
+							location.reload();
+						}, 1500);
+					} else {
+						swal("Mensaje de Alerta!", "Ocurrio un problema en la actualizacion!!", "error");
 					}
 				}
 			});
 		});
 
 		$("#selectaccion").change(function() {
+			if ($(this).val() != null) {
+				$('#rowaccionerror').removeClass('has-error').addClass('has-success');
+			}else{
+				$('#rowaccionerror').removeClass('has-success').addClass('has-error');
+			}
 			function_validate('true');
 		});
 		$("#selectdestinos").change(function() {
@@ -452,7 +461,7 @@ $datos = $data['hoja']; ?>
 		$('#selectdestinos').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
 			var sel_multi = document.getElementById('selectdestinos');
 			if (isSelected) {
-				$('#tabledestino_registro').append('<tr class="fila' + sel_multi.options[clickedIndex].value + '"><td style="border: 1px solid black;margin-right:5px"><input type="hidden" name="destino[]" value="' + sel_multi.options[clickedIndex].value + '">' + sel_multi.options[clickedIndex].text + '</td><td style="border: 1px solid black;text-align:center"><a class="up" style="margin-right:5px"><span class="glyphicon glyphicon-menu-up"></span></a><a class="down"><span class="glyphicon glyphicon-menu-down"></span></a></td></tr>');
+				$('#tabledestino_registro').append('<tr class="fila' + sel_multi.options[clickedIndex].value + '"><td style="border: 1px solid black;margin-right:5px"><input type="hidden" name="destino[]" value="' + sel_multi.options[clickedIndex].value + '">' + sel_multi.options[clickedIndex].text + '</td><td style="border: 1px solid black;margin-right:5px"><input type="text" class="form-control" name="proveidos[]" placeholder="describa una descripcion"></td><td style="border: 1px solid black;text-align:center"><a class="up" style="margin-right:5px"><span class="glyphicon glyphicon-menu-up"></span></a><a class="down"><span class="glyphicon glyphicon-menu-down"></span></a></td></tr>');
 			} else {
 				$('#tabledestino_registro .fila' + sel_multi.options[clickedIndex].value).remove();
 			}
@@ -462,25 +471,26 @@ $datos = $data['hoja']; ?>
 			var $row = $(this).parents('tr');
 			if ($row.index() === 1) return; // Don't go above the header
 			$row.prev().before($row.get(0));
-			cambiosDestinos();
 		});
 		$('#tabledestino_update').on('click', '.down', function() {
 			var $row = $(this).parents('tr');
 			$row.next().after($row.get(0));
-			cambiosDestinos();
 		});
 		$('#selectdestinos_u').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
 			var sel_multi = document.getElementById('selectdestinos_u');
 			if (isSelected) {
-				$('#tabledestino_update').append('<tr class="fila' + sel_multi.options[clickedIndex].value + '"><td style="border: 1px solid black;margin-right:5px"><input type="hidden" value="' + sel_multi.options[clickedIndex].value + '">' + sel_multi.options[clickedIndex].text + '</td><td style="border: 1px solid black;text-align:center"><a class="up" style="margin-right:5px"><span class="glyphicon glyphicon-menu-up"></span></a><a class="down"><span class="glyphicon glyphicon-menu-down"></span></a></td></tr>');
+				$('#tabledestino_update').append('<tr class="fila' + sel_multi.options[clickedIndex].value + '"><td style="border: 1px solid black;margin-right:5px"><input type="hidden" value="' + sel_multi.options[clickedIndex].value + '">' + sel_multi.options[clickedIndex].text + '</td><td style="border: 1px solid black;margin-right:5px"><input type="text" class="form-control" name="proveidos[]" placeholder="describa una descripcion"></td><td style="border: 1px solid black;text-align:center"><a class="up" style="margin-right:5px"><span class="glyphicon glyphicon-menu-up"></span></a><a class="down"><span class="glyphicon glyphicon-menu-down"></span></a></td></tr>');
 			} else {
 				$('#tabledestino_update .fila' + sel_multi.options[clickedIndex].value).remove();
 			}
-			cambiosDestinos();
 		});
 		//$("#selectdestinos_u").change(function(){});
 		$("#selectaccion_u").change(function() {
-			estado_accion = evaluar_twoarrays($('#selectaccion_u').val() || [], accion_u);
+			if ($(this).val() != null) {
+				$('#rowaccionerror_u').removeClass('has-error').addClass('has-success');
+			}else{
+				$('#rowaccionerror_u').removeClass('has-success').addClass('has-error');
+			}
 			function_validate('false');
 		});
 		$("#selectprioridad_u,#selectprocedencia_u,#selecttipo_u,#selectadjunto_u").change(function() {
@@ -501,6 +511,7 @@ $datos = $data['hoja']; ?>
 				//MOSTRAR INFORMACION GENERAL
 				if (hoja.permiso == "") {$('#row_admin').show();$('.vcir').text(hoja.fecha);$('.vnombrer').text(hoja.usuario.toLowerCase() + " (" + hoja.cedula + ")");$('.vnombreu').text(hoja.modificado == " " ? ("Hoja de Ruta no modificada") : (hoja.modificado.toLowerCase()));$('.vfechau').text(hoja.fecha_update == null ? ("sin fecha") : (hoja.fecha_update));} else {$('#row_admin').hide();}
 				$('.vnombre').text(hoja.remitente.toLowerCase());$('.vcite').text(hoja.cite);
+				$('.vproveido').html("<br>"+hoja.proveido.toLowerCase());
 				$('.vtramite').text(hoja.tramite);$('.vprocedencia').text(hoja.procedencia.toLowerCase());
 				$('.vplazo').text(hoja.plazo + " Dias");$('.vprioridad').text(hoja.prioridad);
 				$('.vfecha').text(hoja.fecha_cite);$('.vestado').text(hoja.estado == 1 ? ('Activo') : ('Dado de Baja'));
@@ -579,14 +590,15 @@ $datos = $data['hoja']; ?>
 			type: 'get',
 			success: function(obj) {
 				$('#tabledestino_update').empty();
-				$("#btnupdate_hoja").attr('disabled', true);
+				$("#btnupdate_hoja").attr('disabled', false);
+				$('#idgeneral_u,#iddocumento_u,#iddestinos_u').html('<span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span>').css('background','#00a65a');
 				small_error(".fila1_u", true);
 				small_error(".fila2_u", true);
 				small_error(".fila3_u", true);
 				small_error(".fila4_u", true);
 				small_error(".fila6_u", true);
-				small_error(".fila7_u", true);
-				accion_u = [], destino_u = [], estado_destino = false, estado_accion = false;
+				small_error(".fila7_u", true);small_error(".fila8_u", true);
+				accion_u = [], destino_u = [];
 				var data = JSON.parse(obj);
 				Get_ID = data.id;
 				$('#datetimepicker1_u input').val(data.fecha_cite);
@@ -621,7 +633,8 @@ $datos = $data['hoja']; ?>
 				$("#selectdestinos_u,#selectaccion_u").selectpicker('refresh');
 				var i = 0;
 				while (i < data.destino.length) {
-					$('#tabledestino_update').append('<tr class="fila' + data.destino[i].destino_id + '"><td style="border: 1px solid black;margin-right:5px"><input type="hidden" value="' + data.destino[i].destino_id + '">' + data.destino[i].nombre.toUpperCase() + '</td><td style="border: 1px solid black;text-align:center"><a class="up" style="margin-right:5px"><span class="glyphicon glyphicon-menu-up"></span></a><a class="down"><span class="glyphicon glyphicon-menu-down"></span></a></td></tr>');
+					proveidos=data.destino[i].proveido==null ? "":data.destino[i].proveido
+					$('#tabledestino_update').append('<tr class="fila' + data.destino[i].destino_id + '"><td style="border: 1px solid black;margin-right:5px"><input type="hidden" value="' + data.destino[i].destino_id + '">' + data.destino[i].nombre.toUpperCase() + '</td><td style="border: 1px solid black;margin-right:5px"><input type="text" class="form-control" name="proveidos[]" placeholder="describa una descripcion" value="' + proveidos + '"></td><td style="border: 1px solid black;text-align:center"><a class="up" style="margin-right:5px"><span class="glyphicon glyphicon-menu-up"></span></a><a class="down"><span class="glyphicon glyphicon-menu-down"></span></a></td></tr>');
 					destino_u.push(data.destino[i].destino_id);
 					destino_old_u.push(data.destino[i].id);
 					i++;
@@ -642,29 +655,44 @@ $datos = $data['hoja']; ?>
 
 	function function_validate(validate) {
 		if (validate != "false" && validate == "true") {
-			if (($('.fila1').hasClass('has-success')) && ($('.fila2').hasClass('has-success')) && ($('.fila3').hasClass('has-success')) && ($('.fila4').hasClass('has-success')) && FILE_STATUS && ($('.fila6').hasClass('has-success')) && ($('.fila7').hasClass('has-success')) && ($('.fila8').hasClass('has-success')) && ($('#selectprocedencia').val() != null) && ($('#selecttipo').val() != null) && ($('#selectadjunto').val() != null) && ($('#selectdestinos').val() != null) && ($('#selectaccion').val() != null)) {
+			if($('#general_modal .has-error').length>0){
+				$('#idgeneral').text($('#general_modal .has-error').length).css('background','red');
+			}else{
+				$('#idgeneral').html('<span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span>').css('background','#00a65a');
+			}
+			if($('#documento_modal .has-error').length>0){
+				$('#iddocumento').text($('#documento_modal .has-error').length).css('background','red');
+			}else{
+				$('#iddocumento').html('<span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span>').css('background','#00a65a');
+			}
+			if($('#destino_modal .has-error').length>0){
+				$('#iddestinos').text($('#destino_modal .has-error').length).css('background','red');
+			}else{
+				$('#iddestinos').html('<span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span>').css('background','#00a65a');
+			}
+			if (($('.fila1').hasClass('has-success')) && ($('.fila2').hasClass('has-success')) && ($('.fila3').hasClass('has-success')) && ($('.fila4').hasClass('has-success')) && FILE_STATUS && ($('.fila6').hasClass('has-success')) && ($('.fila7').hasClass('has-success')) && ($('.fila8').hasClass('has-success')) && ($('#selectprocedencia').val() != null) && ($('#selecttipo').val() != null) && ($('#selectadjunto').val() != null) && ($('#selectaccion').val() != null)) {
 				$("#btnregistrar_hoja").attr('disabled', false);
 			} else {
 				$("#btnregistrar_hoja").attr('disabled', true);
 			}
 		} else {
-			if ($('.fila1_u').hasClass('has-success') && $('.fila2_u').hasClass('has-success') && $('.fila3_u').hasClass('has-success') && ($('.fila4_u').hasClass('has-success')) && FILE_STATUS_RESPUESTA && ($('.fila6_u').hasClass('has-success')) && ($('.fila7_u').hasClass('has-success')) && ($('.fila8_u').hasClass('has-success')) && ($('#selectprocedencia_u').val() != null) && ($('#selecttipo_u').val() != null) && ($('#selectadjunto_u').val() != null) && ($('#selectdestinos_u').val() != null) && ($('#selectaccion_u').val() != null)) {
-				if (($('#inputremitente_u').attr('placeholder') != $('#inputremitente_u').val().trim().toLowerCase()) ||
-					($('#inputcargoremitente_u').attr('placeholder') != $('#inputcargoremitente_u').val().trim().toLowerCase()) ||
-					($('#inputcite_u').attr('placeholder') != $('#inputcite_u').val().trim().toLowerCase()) ||
-					($('#inputreferencia_u').attr('placeholder') != $('#inputreferencia_u').val().trim().toLowerCase()) ||
-					($('#inputhoja_u').attr('placeholder') != $('#inputhoja_u').val()) ||
-					($('#inputplazo_u').attr('placeholder') != $('#inputplazo_u').val()) || estado_accion || estado_destino ||
-					($('#selectprioridad_u option:selected').attr('value') != prioridad_u) ||
-					($('#selectprocedencia_u option:selected').attr('value') != procedencia_u) ||
-					($('#selecttipo_u option:selected').attr('value') != tipo_u) ||
-					($('#selectadjunto_u option:selected').attr('value') != adjunto_u) ||
-					($('#datetimepicker1_u input').attr('placeholder') != $('#datetimepicker1_u input').val())
-				) {
-					$("#btnupdate_hoja").attr('disabled', false);
-				} else {
-					$("#btnupdate_hoja").attr('disabled', true);
-				}
+			if($('#general_modal_u .has-error').length>0){
+				$('#idgeneral_u').text($('#general_modal_u .has-error').length).css('background','red');
+			}else{
+				$('#idgeneral_u').html('<span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span>').css('background','#00a65a');
+			}
+			if($('#documento_modal_u .has-error').length>0){
+				$('#iddocumento_u').text($('#documento_modal_u .has-error').length).css('background','red');
+			}else{
+				$('#iddocumento_u').html('<span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span>').css('background','#00a65a');
+			}
+			if($('#destino_modal_u .has-error').length>0){
+				$('#iddestinos_u').text($('#destino_modal_u .has-error').length).css('background','red');
+			}else{
+				$('#iddestinos_u').html('<span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span>').css('background','#00a65a');
+			}
+			if ($('.fila1_u').hasClass('has-success') && $('.fila2_u').hasClass('has-success') && $('.fila3_u').hasClass('has-success') && ($('.fila4_u').hasClass('has-success')) && FILE_STATUS_RESPUESTA && ($('.fila6_u').hasClass('has-success')) && ($('.fila7_u').hasClass('has-success')) && ($('.fila8_u').hasClass('has-success')) && ($('#selectprocedencia_u').val() != null) && ($('#selecttipo_u').val() != null) && ($('#selectadjunto_u').val() != null) && ($('#selectaccion_u').val() != null)) {
+				$("#btnupdate_hoja").attr('disabled', false);
 			} else {
 				$("#btnupdate_hoja").attr('disabled', true);
 			}
@@ -674,7 +702,7 @@ $datos = $data['hoja']; ?>
 	function displayPreview(files,etiqueta,estado) {
 		if (files.length > 0) {
 			fileSize = Math.round(files[0].size / 1024);
-			if (fileSize > 0 && fileSize < 2048 && files[0].type == "application/pdf") {
+			if (fileSize > 0 && fileSize < 2048) {
 				$(etiqueta).addClass('hidden');
 				if(estado){
 					FILE_STATUS = true;
@@ -792,15 +820,15 @@ $datos = $data['hoja']; ?>
 		var oTable = document.getElementById('tabledestino_update').rows;
 		var rows = [];
 		nuevos_destinos = [];
+		nuevos_proveidos = [];
 		for (var i = 0; i < oTable.length; i++) {
 			rows.push(oTable[i]);
 		}
 		for (i = 0; i < rows.length; i++) {
 			nuevos_destinos.push(rows[i].getElementsByTagName('td')[0].getElementsByTagName('input')[0].value);
-
+			nuevos_proveidos.push(rows[i].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value);
 		}
-		estado_destino = evaluar_twoarrays2(nuevos_destinos || [], destino_u);
-		function_validate('false');
+
 	}
 	function Eliminarhoja(id) {
 		swal({

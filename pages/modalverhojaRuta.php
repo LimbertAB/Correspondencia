@@ -300,7 +300,7 @@
          <div class="modal-body" style="padding:0;z-index:20">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="right: 5px;z-index:100;position:absolute"><span aria-hidden="true">&times;</span></button>
             <div class="row" style="margin:0px;background:#08c;">
-               <h3 style="margin:10px;text-align:center;color:#fff;font-weight:800">INFORMACION DE LA HOJA DE RUTA</h3>
+               <h3 style="20px 0 10px 0;text-align:center;color:#fff;font-weight:800;line-height:10px">INFORMACION DE LA HOJA DE RUTA <small class="vproveido" style="color:#fff;font-weight:300"><br> gdfgdfgfdgfh</small></h3>
             </div>
             <div class="row" style="margin:0px;background:#3b4579;" id="row_admin">
                <div class="col-md-12" style="padding:5px 0 5px 0;">

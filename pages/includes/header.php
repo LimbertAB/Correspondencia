@@ -1,16 +1,26 @@
 <?php
-session_start();
-include("../db/conexion.php");
-$enlace=conectar();
-if(!isset($_SESSION['nombres']))
-{
-  header('Location: ../index.php');
-  exit();
-}else{
-  $USER_ID=$_SESSION['id_usu'];
-}
+  session_start();
+  include("../db/conexion.php");
+  $enlace=conectar();
+  if(!isset($_SESSION['nombres'])){
+    header('Location: ../index.php');
+    exit();
+  }else{
+    $USER_ID=$_SESSION['id_usu'];
+    $ejecute=pg_query("SELECT fu.id as num_funcion FROM funciones fu,
+    funcion_cargo fc, cargos ca, usuarios us WHERE fu.id=fc.funcion_id and fc.cargo_id=ca.id AND ca.id=us.id_cargo AND us.id=$USER_ID");
+    while ($datos=pg_fetch_assoc($ejecute)) {
+        $funciones[]=$datos['num_funcion'];
+    }
+    $funciones=array_unique($funciones);
+    $con_funciones=0;
+    foreach ($funciones as $key => $value){
+      if ($value==13) {
+        $con_funciones=1;
+      }
+    }
+  }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -64,7 +74,7 @@ if(!isset($_SESSION['nombres']))
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>CNM</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b><?=strtoupper($USER_DATA['destinos'])?></span>
+      <span class="logo-lg"><b><?php echo strtoupper($USER_DATA['destinos'])?></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -100,6 +110,7 @@ if(!isset($_SESSION['nombres']))
                 <li class="user-header">
                   <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                   <p><?=$USER_DATA['cargos'];?></p>
+                  <button id="btnbackup" class="btn btn-warning btn-xs">Copia de Seguridad</button>
                 </li>
                 <li class="user-footer">
                   <div class="pull-left">
@@ -118,6 +129,16 @@ if(!isset($_SESSION['nombres']))
   </header>
 <script>
   $(document).ready(function(){
+    $('#btnbackup').click(function(){
+      $.ajax({
+        type: "GET",
+        url: "../crud/ViewData.php/backup/true",
+        success: function (obj) {
+          console.log(obj);
+          
+        }
+      });
+    });
     $.ajax({
       url: '../crud/ViewData.php/Notificacion/all',type: "get",success: function(res){
         var data = JSON.parse(res);

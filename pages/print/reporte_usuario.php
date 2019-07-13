@@ -53,7 +53,7 @@
                }
                h5{
                     margin:3px;padding:0;
-                    font-weight:200;font-size: .64em;
+                    font-weight:200;font-size: .9em;
                }
                h3{
                     margin: 0;padding: 0;
@@ -71,10 +71,13 @@
 				$pdf->page_text(40, 760, "Pagina: {PAGE_NUM} de {PAGE_COUNT}", $font, 6, array(0,0,0));
 			}
 		</script>
-          <img src="../pages/images/logo.jpg" width="60px" style="position: absolute;top:-20px;z-index:10">
-          <h5 style="z-index:10;margin-top:2px;line-height: 1em;margin-left:65px">CASA NACIONAL DE LA MONEDA<br><small> Potosi - Bolivia</small></h5>
-          <center><h3 style="font-weight:700">REPORTE DE USUARIOS</h3></center>
-          
+          <table id="header" width="100%" border="0">
+			<tr>
+				<th width="25%" style="font-size:.6em;text-align:left;color:#535353">FUNDACION CULTURAL B.C.B. <br>CASA NACIONAL DE MONEDA <br>POTOSÍ - BOLIVIA</th>
+				<th width="50%"><h3 align="center" style="margin:10px 0 0 0;font-family:Arial, Helvetica, sans-serif;font-weight:800;color:#313131;line-height:20px">REPORTE DE HOJAS DE RUTA</h3></th>
+				<th width="25%"><img src="../pages/images/logo.png" height="50px" ></th>
+			</tr>
+		</table>
           <table width="100%" style="margin-top:10px"  width="100%" cellspacing="0" cellpadding="0">
                <thead style="background:#bdbdbd;text-align:center">
                     <tr>

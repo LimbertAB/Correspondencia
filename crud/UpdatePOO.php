@@ -11,7 +11,7 @@ function CreateUser(){
 	$ape_usu=$_POST['ape_usu'];
 	$ced_usu=$_POST['ced_usu'];
 	$usu_usu=$_POST['usu_usu'];
-    $pas_usu=$_POST['pas_usu'];
+    $pas_usu=password_hash($_POST['pas_usu'], PASSWORD_BCRYPT);
     $car_usu=$_POST['id_cargo'];
     $des_usu=$_POST['id_destino'];
     if(ver_usuario($_POST['usu_usu'])==0){
@@ -23,7 +23,8 @@ function CreateUser(){
 }
 function updateUser(){
     if($_POST['password']!=""){
-        pg_query("UPDATE usuarios SET password='".$_POST['password']."'WHERE id=".$_POST['id']."");
+        $pass=password_hash($_POST['password'], PASSWORD_BCRYPT);
+        pg_query("UPDATE usuarios SET password='{$pass}' WHERE id=".$_POST['id']."");
     }
     if($_POST['usuario']==""){
         $sql=pg_query("UPDATE usuarios SET cedula='".$_POST['cedula']."',nombres='".$_POST['nombre']."',
@@ -68,7 +69,9 @@ function createHoja(){
     $ultimoid=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
     $ultimo=$ultimoid['id']+1;$tramite="CNM-".$ultimo."/".date("Y");
     if($_FILES['archivo']['error'] == 0) {
-        $name="FILE".date("Ymdhis").".pdf";
+        $exploded = explode('.',$_FILES['archivo']['name']);
+        $ext = $exploded[count($exploded) - 1]; 
+        $name="FILE".date("Ymdhis").".".$ext;
         $sql = pg_query("INSERT INTO hojas (procedencia_id,remitente,cargo_remitente,adjunto_id,num_hojas,tipo_id,referencia,usuario_id,fecha,fecha_cite,plazo,cite,tramite,archivo,prioridad,estado,proveido) values('{$procedencia}','{$remitente}','{$cargo_remitente}','{$adjunto}','{$num_hojas}','{$tipo}','{$referencia}','{$user}','{$fecha}','{$fecha_cite}','{$plazo}','{$cite}','{$tramite}','{$name}','{$prioridad}',1,'{$proveido}')");
         $PGSTAT = pg_result_status($sql);
         if($PGSTAT == 1){
@@ -83,10 +86,11 @@ function createHoja(){
         $ui=pg_fetch_assoc(pg_query("SELECT max(id) as id FROM hojas"));
 		$id=$ui['id'];
 
-		$destino=$_POST['destino'];$affects=0;
+        $destino=isset($_POST['destino'])?$_POST['destino']:[];$affects=0;
+        $proveidos=isset($_POST['proveidos'])?$_POST['proveidos']:[];   
 		for ($i=0; $i <count($destino) ; $i++) {
             $estado=$i==0?"en proceso":"espera";
-			$sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values($id,$destino[$i],'{$estado}')");
+			$sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,proveido,estado) values($id,$destino[$i],'{$proveidos[$i]}','{$estado}')");
             $PGSTAT = pg_result_status($sql);
             if($PGSTAT == 1){
                 $affects++;
@@ -108,8 +112,11 @@ function createHoja(){
 }
 function updateHoja(){
     $id=$_POST['id_hoja'];
-    $name="FILE".date("Ymdhis").".pdf";
+    
     if($_FILES['archivo']['error'] == 0) {
+        $exploded = explode('.',$_FILES['archivo']['name']);
+        $ext = $exploded[count($exploded) - 1]; 
+        $name="FILE".date("Ymdhis").".".$ext;
         $sql=pg_query("UPDATE hojas SET archivo='{$name}'WHERE id={$id}");
         $PGSTAT = pg_result_status($sql);
         echo "llegada archivo por el if".$PGSTAT;
@@ -143,31 +150,37 @@ function updateHoja(){
                 }
             }
         }
-         if(isset($_POST['destinos'])){
+        if(isset($_POST['destinos'])){
             for ($i=0;$i<count($_POST['destinos']);$i++) {
-               $destino=(array) json_decode($_POST['destinos'][$i]);
-               $id_hojadestino=isset($_POST['id_hojadestino'][$i]) ? json_decode($_POST['id_hojadestino'][$i]) : "";
-               $id_destino=$destino['id'];
-               switch ($destino['estado']) {
-                  case 'verdad':
-                     break;
-                  case 'falso':
-                     //echo "modificar la id_hojadestino:".$id_hojadestino." destino:".$id_destino." position:".$i.'</br>';
-                     pg_query("UPDATE hoja_destino SET destino_id={$id_destino} WHERE id={$id_hojadestino}");
-                     break;
-                  case 'nuevo':
-                     //echo "switch_nuevo:".$id_destino." position:".$i.'</br>';
-                     $sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,estado) values({$id},{$id_destino},'espera')");
-                     break;
-                  case 'eliminar':
-                     //echo "eliminar la hoja_destino:".$id_hojadestino." position:".$i.'</br>';
-                     $sql=pg_query("DELETE from hoja_destino where id={$id_hojadestino}");
-                     break;
+                $destino=(array) json_decode($_POST['destinos'][$i]);
+                $id_hojadestino=isset($_POST['id_hojadestino'][$i]) ? json_decode($_POST['id_hojadestino'][$i]) : "";
+                $id_destino=$destino['id'];
+                $proveidos=$destino['proveido'];
+                switch ($destino['estado']) {
+                    case 'verdad':
+                        pg_query("UPDATE hoja_destino SET proveido='{$proveidos}' WHERE id={$id_hojadestino}");
+                        break;
+                    case 'falso':
+                        pg_query("UPDATE hoja_destino SET destino_id={$id_destino}, proveido='{$proveidos}' WHERE id={$id_hojadestino}");
+                        break;
+                    case 'nuevo':
+                        if($i==0){
+                            $sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,proveido,estado) values({$id},{$id_destino},'{$proveidos}','en proceso')");
+                        }else{
+                            $sql = pg_query("INSERT INTO hoja_destino (hoja_id,destino_id,proveido,estado) values({$id},{$id_destino},'{$proveidos}','espera')");
+                        }
+                        break;
+                    case 'eliminar':
+                        $sql=pg_query("DELETE from hoja_destino where id={$id_hojadestino}");
+                        break;
                }
             }
-         }
-         echo "ok";
-	 }
+        }
+        echo "ok";
+    }
+    else{
+        echo "error";
+    }
 }
 function ver_usuario($var){
     $sql="SELECT * FROM usuarios WHERE UPPER(usuario) = UPPER('{$var}')";
@@ -181,8 +194,10 @@ function createPeticion(){
     $respuesta_id_destino=$_POST['id_destino'];
     $descripcion=strtolower(trim($_POST['descripcion']));
     $fecha=date('Y-m-d h:i:s');
-    if($_FILES['archivo']['error'] == 0) {
-        $name="PEDIDO".date("Ymdhis").".pdf";
+    if(isset($_FILES['archivo']) && $_FILES['archivo']['error'] == 0) {
+        $exploded = explode('.',$_FILES['archivo']['name']);
+        $ext = $exploded[count($exploded) - 1]; 
+        $name="FILE".date("Ymdhis").".".$ext;
         $sql = pg_query("INSERT INTO peticion (id_destino,descripcion,archivo,fecha,id_usuario,respuesta_id_destino) values({$ID_DESTINO},'{$descripcion}','{$name}','{$fecha}',{$id_usuario},{$respuesta_id_destino})");
         $PGSTAT = pg_result_status($sql);
         if($PGSTAT == 1){
@@ -209,8 +224,10 @@ function responderPeticion(){
     $ID_DESTINO=$ID_DESTINO['id_destino'];
     $descripcion=strtolower(trim($_POST['descripcion']));
     $fecha=date('Y-m-d h:i:s');
-    if($_FILES['archivo']['error'] == 0) {
-        $name="PEDIDO".date("Ymdhis").".pdf";
+    if(isset($_FILES['archivo']) && $_FILES['archivo']['error'] == 0) {
+        $exploded = explode('.',$_FILES['archivo']['name']);
+        $ext = $exploded[count($exploded) - 1]; 
+        $name="FILE".date("Ymdhis").".".$ext;
         $sql = pg_query("UPDATE peticion SET respuesta_descripcion='{$descripcion}',respuesta_archivo='{$name}',respuesta_fecha='{$fecha}',respuesta_id_usuario={$id_usuario} WHERE respuesta_id_destino={$ID_DESTINO} AND id={$id}");
         $PGSTAT = pg_result_status($sql);
         if($PGSTAT == 1){
@@ -229,4 +246,30 @@ function responderPeticion(){
             echo "false";
         }
     }
+}
+function modificarUnDato(){
+    $id=$_POST['id'];
+    $nombre=$_POST['nombre'];
+    $tabla=$_POST['tabla'];
+    if(ver_nombre($tabla,$nombre,$id)==0){
+        if ($tabla=="destinos") {
+            $descripcion=$_POST['descripcion'];
+            $sql = pg_query("UPDATE {$tabla} SET nombre='{$nombre}',descripcion='{$descripcion}' WHERE id={$id}");
+        }else{
+            $sql = pg_query("UPDATE {$tabla} SET nombre='{$nombre}' WHERE id={$id}");
+        }
+        $PGSTAT = pg_result_status($sql);
+        if($PGSTAT == 1){
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }else{
+        echo "duplicado";
+    }
+}
+function ver_nombre($table,$nombre,$id){
+    $sql="SELECT * FROM {$table} WHERE UPPER(nombre) = UPPER('{$nombre}') AND id<>{$id}";
+    $resultado=pg_query($sql);
+    return pg_num_rows($resultado);
 }

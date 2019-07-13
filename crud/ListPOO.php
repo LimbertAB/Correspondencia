@@ -26,13 +26,13 @@ class ListPOO{
             }else{$id="%%";}
             $seleccionado=$_GET['seleccionado'];
             $procedencia=$_GET['seleccionado']=="procedencia" ? intval($_GET['procedencia']) : "%%";
-            $proveido=$_GET['seleccionado']=="proveido" ? intval($_GET['proveido']) : "%%";
+            $proveido=$_GET['seleccionado']=="proveido" ? "AND hd.destino_id=".intval($_GET['proveido']) : "";
             $tipo=$_GET['seleccionado']=="tipo" ? intval($_GET['tipo']) : "%%";
             $adjunto=$_GET['seleccionado']=="adjunto" ? intval($_GET['adjunto']):"%%";
             $cite=$_GET['seleccionado']=="cite" ? $_GET['cite']="" ? "":strtoupper($_GET['cite']):"";
             $remitente=$_GET['seleccionado']=="remitente" ? $_GET['remitente']=="" ? "" :strtoupper($_GET['remitente']):"";
          }else{
-            $seleccionado="cite";$id="%%";$procedencia="%%";$proveido="%%";$tipo="%%";$adjunto="%%";$cite="";$remitente="";
+            $seleccionado="cite";$id="%%";$procedencia="%%";$proveido="";$tipo="%%";$adjunto="%%";$cite="";$remitente="";
          }
 
          $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
@@ -41,14 +41,13 @@ class ListPOO{
          CONCAT(u.nombres, ' ',u.apellidos) as  usuario
          FROM hojas as h
          JOIN procedencia as p ON p.id = h.procedencia_id
-         JOIN hoja_destino as hd ON hd.hoja_id = h.id
+         LEFT JOIN hoja_destino as hd ON hd.hoja_id = h.id
          JOIN adjuntos as a ON a.id = h.adjunto_id
          JOIN tipos as t ON t.id = h.tipo_id
          JOIN usuarios as u ON u.id = h.usuario_id
          WHERE CAST(h.id AS TEXT) LIKE '{$id}' AND CAST(h.procedencia_id AS TEXT) LIKE '{$procedencia}' AND
          CAST(h.tipo_id AS TEXT) LIKE '{$tipo}' AND CAST(h.adjunto_id AS TEXT) LIKE '{$adjunto}' AND
-         CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%' AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%' AND 
-         CAST(hd.destino_id AS TEXT) LIKE '{$proveido}' {$cadena} GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos ORDER BY h.id ASC");
+         CAST(UPPER(h.cite) AS TEXT) LIKE '%{$cite}%' AND CAST(UPPER(h.remitente) AS TEXT) LIKE '%{$remitente}%'  {$cadena} {$proveido} GROUP BY h.id,p.nombre,a.nombre,t.nombre,u.nombres,u.apellidos ORDER BY h.id ASC");
          $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
          $hojastotal = array();
          $hojastotal=$this->get_hoja($all,"");
@@ -91,7 +90,7 @@ class ListPOO{
 
          $all = array();while ($rows =  pg_fetch_assoc($sql)) {$all[] = $rows;}
          $hojastotal = array();
-         $hojastotal=$this->get_hoja($all,"AND destino_id=".$this->USER_DESTINO);
+         $hojastotal=$this->get_hoja($all,"AND destino_id=".$this->USER_DESTINO." AND estado_pendiente IS NULL");
          return ["hoja"=>$hojastotal,"inicio"=>isset($_GET['inicio'])?$_GET['inicio']:"","fin"=>isset($_GET['fin'])?$_GET['fin']:"",
             "id"=>$_GET['id'] ?? "","procedencia"=>$_GET['procedencia']??"","tipo"=>$_GET['tipo']??"","adjunto"=>$_GET['adjunto']??"",
             "remitente"=>$_GET['remitente']??"","cite"=>$cite,"seleccionado"=>$seleccionado,"proveido"=>$_GET['proveido']??""];
@@ -121,7 +120,7 @@ class ListPOO{
       $FECHA_ACTUAL=date('Y-m-d')." 23:59:59";
       $sql=pg_query("SELECT (h.plazo - DATE_PART('day', '{$FECHA_ACTUAL}' - h.fecha)) as total FROM hojas as h
          JOIN hoja_destino as hd ON hd.hoja_id=h.id
-         WHERE hd.destino_id=".$this->USER_DESTINO." AND hd.estado='en proceso' AND (hd.usuario_id IS NULL OR hd.respuesta IS NOT NULL)");
+         WHERE hd.destino_id=".$this->USER_DESTINO." AND ((hd.estado='en proceso' AND hd.respuesta IS NOT NULL) OR hd.estado_pendiente IS NOT NULL OR (hd.estado='en proceso' AND hd.usuario_id IS NULL))");
       $total = 0;
       while ($rows =  pg_fetch_assoc($sql)) {
          if ($rows['total']>=0) {
@@ -137,7 +136,9 @@ class ListPOO{
       if(intval($sql['diferencia'])>=0){
          $fecha=date('Y-m-d h:i:s');$usuario=$this->USER_ID;$destino=$this->USER_DESTINO;
          if($archivo['error'] == 0) {
-            $name="RESP".date("Ymdhis").".pdf";
+            $exploded = explode('.',$_FILES['archivo']['name']);
+            $ext = $exploded[count($exploded) - 1]; 
+            $name="FILE".date("Ymdhis").".".$ext;
             $sql=pg_query("UPDATE hoja_destino SET archivo='{$name}' WHERE hoja_id={$id} AND destino_id={$destino} AND usuario_id IS NULL");
             $PGSTAT = pg_result_status($sql);
             if($PGSTAT == 1){
@@ -159,11 +160,11 @@ class ListPOO{
             $sql=pg_query("UPDATE hoja_destino SET fecha='{$fecha}',usuario_id={$usuario},observacion='{$observacion}' WHERE hoja_id={$id} AND destino_id={$destino} AND usuario_id IS NULL");
             $PGSTAT = pg_result_status($sql);
             if($PGSTAT == 1){
+               $sql=pg_query("UPDATE hoja_destino SET estado_pendiente=1 WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$id} AND estado='revisado' ORDER BY id DESC LIMIT  1)");
                return "ok";
             }else{
                return false;
             }
-            
          }
       }else{
          return false;
@@ -175,7 +176,9 @@ class ListPOO{
       if(intval($sql['diferencia'])>=0){
          $fecha=date('Y-m-d h:i:s');$usuario=$this->USER_ID;$destino=$this->USER_DESTINO;
          if($archivo['error'] == 0) {
-            $name="RESP".date("Ymdhis").".pdf";
+            $exploded = explode('.',$_FILES['archivo']['name']);
+            $ext = $exploded[count($exploded) - 1]; 
+            $name="FILE".date("Ymdhis").".".$ext;
             $sql=pg_query("UPDATE hoja_destino SET archivo='{$name}' WHERE hoja_id={$id} AND destino_id={$destino}");
             $PGSTAT = pg_result_status($sql);
             if($PGSTAT == 1){
@@ -186,6 +189,7 @@ class ListPOO{
          $sql=pg_query("UPDATE hoja_destino SET usuario_id={$usuario},observacion='{$observacion}',respuesta=null WHERE hoja_id={$id} AND destino_id={$destino}");
          $PGSTAT = pg_result_status($sql);
          if($PGSTAT == 1){
+            $sql=pg_query("UPDATE hoja_destino SET estado_pendiente=1 WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$id} AND estado='revisado' ORDER BY id DESC LIMIT  1)");
             return "ok";
          }else{
             return false;
@@ -196,23 +200,30 @@ class ListPOO{
    }
    function revisar_hoja($id){
       $fecha=date('Y-m-d h:i:s');
+      $sacarhoja_id=pg_fetch_assoc(pg_query("SELECT hoja_id FROM hoja_destino WHERE id={$id} LIMIT 1"));
+      $hoja_id=$sacarhoja_id['hoja_id'];
       if (isset($_POST['observacion'])){
          $observacion=$_POST['observacion'];
          $sql=pg_query("UPDATE hoja_destino SET respuesta='{$observacion}' WHERE id={$id}");
          $PGSTAT = pg_result_status($sql);
          if($PGSTAT == 1){
+            $sql=pg_query("UPDATE hoja_destino SET estado_pendiente=null WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$hoja_id} AND estado='revisado' ORDER BY id DESC LIMIT 1)");
             return "ok";
          }else{
             return false;
          }
       }else{
-         $sql=pg_query("UPDATE hoja_destino SET estado='revisado',fecha='{$fecha}' WHERE id={$id}");
-         $sacarhoja_id=pg_fetch_assoc(pg_query("SELECT hoja_id FROM hoja_destino WHERE id={$id} LIMIT 1"));
-         $hoja_id=$sacarhoja_id['hoja_id'];
+         $sql=pg_query("UPDATE hoja_destino SET estado_pendiente=null WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$hoja_id} AND estado='revisado' ORDER BY id DESC LIMIT 1)");
          $PGSTAT = pg_result_status($sql);
          if($PGSTAT == 1){
-            $sql=pg_query("UPDATE hoja_destino SET estado='en proceso' WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$hoja_id} AND estado='espera' ORDER BY id ASC LIMIT  1)");
-            return "ok";
+            $sql=pg_query("UPDATE hoja_destino SET estado='revisado',fecha='{$fecha}' WHERE id={$id}");
+            $PGSTAT = pg_result_status($sql);
+            if($PGSTAT == 1){
+               $sql=pg_query("UPDATE hoja_destino SET estado='en proceso' WHERE id IN (SELECT id FROM hoja_destino WHERE hoja_id={$hoja_id} AND estado='espera' ORDER BY id ASC LIMIT  1)");
+               return "ok";
+            }else{
+               return false;
+            }
          }else{
             return false;
          }
@@ -277,10 +288,9 @@ class ListPOO{
          if (intval($all[$count]["diferencia"]) >= 0) {$RESTANTE=1;}
          $rowactividad=$all[$count]["id"];
          $row=pg_fetch_assoc(pg_query("SELECT COUNT(*) as total FROM hoja_destino WHERE hoja_id='{$rowactividad}' {$query}"));
-         $row1=pg_fetch_assoc(pg_query("SELECT COUNT(*) as faltantes from hoja_destino where hoja_id='{$rowactividad}'{$query} AND estado<>'revisado'"));
-
+         $row1=pg_fetch_assoc(pg_query("SELECT COUNT(*) as faltantes from hoja_destino where hoja_id='{$rowactividad}' {$query} AND estado<>'revisado'"));
          //echo " plazo_activo-> ".$RESTANTE." total->".$row['total']." faltante->".$row1['faltantes']." access->".$revisado."<br>";
-         if ($RESTANTE==1 && $row['total']>0 && $row['total']>=$row1['faltantes'] && $proceso && $row1['faltantes']!=0) {
+         if ($RESTANTE==1 && $proceso && $row['total']>=$row1['faltantes'] && (($row['total']>0 && $row1['faltantes']!=0) || ($row['total']==0 && $row1['faltantes']==0))) {
             $all[$count]['color']="bgcolor='#e2f971'";$all[$count]['mensaje']="Nuevo";
             $all[$count]['total']=$row['total'];$all[$count]['faltantes']=$row1['faltantes'];$all[$count]['estado_plazo']=$RESTANTE;
             $acciones = array();$destinos = array();
@@ -294,7 +304,7 @@ class ListPOO{
                $destinos=$this->get_destino($rowactividad);$acciones=$this->get_accion($rowactividad);
                $all[$count]['destinos']=$destinos;$all[$count]['acciones']=$acciones;array_push($hojastotal,$all[$count]);
             }else{
-               if ($RESTANTE==0 && $row['total']>0 && $row1['faltantes']>0 && $norevisado) {
+               if ($RESTANTE==0 && $norevisado && (($row['total']>0 && $row1['faltantes']>0) || ($row['total']==0 && $row1['faltantes']==0))) {
                   $all[$count]['color']="bgcolor='#f59a9a'";$all[$count]['mensaje']="No Atendido";
                   $all[$count]['total']=$row['total'];$all[$count]['faltantes']=$row1['faltantes'];$all[$count]['estado_plazo']=$RESTANTE;
                   $acciones = array();$destinos = array();

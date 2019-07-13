@@ -1,16 +1,12 @@
-<?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>
-<?php include("../crud/ListPOO.php");
-$listPOO = new ListPOO;
-$data = $listPOO->listmiHojaRuta();
-$datos = $data['hoja']; ?>
-<!--Control de mensajes-->
-<?php if (isset($_SESSION['mensaje'])) { ?>
-	<script type="text/javascript">
-		alert("<?php echo $_SESSION['mensaje'] ?>")
-	</script>
-	<?php unset($_SESSION["mensaje"]);
-} ?>
+<?php include("includes/header.php");$permiso=0;
+	foreach($funciones as $key => $value){
+		if ($value==4) {$permiso=1;}
+	}
+	if($permiso==0){?><script>window.location.href = "404.php";</script><?php } include("includes/aside.php");include("../crud/ListPOO.php");
+	$listPOO = new ListPOO;
+	$data = $listPOO->listmiHojaRuta();
+	$datos = $data['hoja'];
+?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -299,6 +295,7 @@ include 'modal_validarhoja.php'; ?>
 				//MOSTRAR INFORMACION GENERAL
 				if (hoja.permiso == "") {$('#row_admin').show();$('.vcir').text(hoja.fecha);$('.vnombrer').text(hoja.usuario.toLowerCase() + " (" + hoja.cedula + ")");$('.vnombreu').text(hoja.modificado == " " ? ("Hoja de Ruta no modificada") : (hoja.modificado.toLowerCase()));$('.vfechau').text(hoja.fecha_update == null ? ("sin fecha") : (hoja.fecha_update));} else {$('#row_admin').hide();}
 				$('.vnombre').text(hoja.remitente.toLowerCase());$('.vcite').text(hoja.cite);
+				$('.vproveido').html("<br>"+hoja.proveido.toLowerCase());
 				$('.vtramite').text(hoja.tramite);$('.vprocedencia').text(hoja.procedencia.toLowerCase());
 				$('.vplazo').text(hoja.plazo + " Dias");$('.vprioridad').text(hoja.prioridad);
 				$('.vfecha').text(hoja.fecha_cite);$('.vestado').text(hoja.estado == 1 ? ('Activo') : ('Dado de Baja'));
@@ -416,9 +413,8 @@ include 'modal_validarhoja.php'; ?>
 	}
 	function validateAjax(id) {
 		$('#verhojarutaModal').modal('toggle');
-		console.log('vamos a rechazar'+id);
 		swal({
-			title: "Recharar Respuesta",
+			title: "Rechazar Respuesta",
 			text: "Detalle el motivo para poder subsanar los errores ",
 			type: "input",
 			input: 'text',
@@ -462,7 +458,6 @@ include 'modal_validarhoja.php'; ?>
 	}
 	function validateaprobadoAjax(id) {
 		$('#verhojarutaModal').modal('toggle');
-		console.log("vamos a aprovar"+id);
 		$.ajax({
 			url: '../crud/ViewData.php/revisar_hoja/'+id,
 			type: 'GET',
@@ -500,7 +495,7 @@ include 'modal_validarhoja.php'; ?>
 		var filename = $("#chooseFile"+etiqueta).val();
 		if (files.length > 0) {
 			fileSize = Math.round(files[0].size / 1024);
-			if (fileSize > 0 && fileSize < 2048 && files[0].type == "application/pdf") {
+			if (fileSize > 0 && fileSize < 2048) {
 				$(".file-upload").addClass('active');
 				$("#noFile"+etiqueta).text(filename.replace("C:\\fakepath\\", ""));
 			} else {

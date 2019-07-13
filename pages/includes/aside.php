@@ -1,21 +1,3 @@
-<?php
-//obtenemos las funciones ue tiene el usuario
-$ejecute=pg_query("SELECT fu.numero as num_funcion FROM funciones fu,
- funcion_cargo fc, cargos ca, usuarios us WHERE fu.id=fc.funcion_id and fc.cargo_id=ca.id AND ca.id=us.id_cargo AND us.id=$_SESSION[id_usu]");
-
-while ($datos=pg_fetch_assoc($ejecute)) {
-    //lo almaceno en un vector
-    $funciones[]=$datos['num_funcion'];
-}
-//hacemos que no se repitan las funciones
-$funciones=array_unique($funciones);
-$con_funciones=0;
-foreach ($funciones as $key => $value){
-  if ($value==13) {
-    $con_funciones=1;
-  }
-}
- ?>
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">

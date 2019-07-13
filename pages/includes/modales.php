@@ -1,5 +1,5 @@
 <!--registro de usuarios-->
-<div class="modal fade" id="modal_usuario">
+<div class="modal fade" id="modal_usuario"> WHERE estado=1
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form name="cargo" onsubmit="return false" action="return false" id="frmusuario">
@@ -43,7 +43,7 @@
                 <label style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">CARGO</label>
                 <div class='input-group'>
                   <select id="selectcargo" name="id_cargo" class="form-control selectpicker show-tick" data-live-search="true">
-                    <?php $ejecute=pg_query("SELECT * FROM cargos");
+                    <?php $ejecute=pg_query("SELECT * FROM cargos WHERE estado=1");
                       while ($datos=pg_fetch_array($ejecute)) { ?>
                         <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
                       <?php
@@ -58,7 +58,7 @@
                 <div class='input-group'>
                   <select id="selectdestino" name="id_destino" class="form-control selectpicker show-tick" data-live-search="true">
                     <?php
-                      $ejecute=pg_query("SELECT * FROM destinos");
+                      $ejecute=pg_query("SELECT * FROM destinos WHERE estado=1");
                       while ($datos=pg_fetch_array($ejecute)) {
                         ?>
                         <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
@@ -146,7 +146,7 @@
                   <div class='input-group'>
                   <select id="selectcargo_u" class="form-control selectpicker show-tick" data-live-search="true">
                   <?php
-                    $ejecute=pg_query("SELECT * FROM cargos");
+                    $ejecute=pg_query("SELECT * FROM cargos WHERE estado=1");
                     while ($datos=pg_fetch_array($ejecute)) { ?>
                       <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
                     <?php
@@ -161,7 +161,7 @@
                 <div class='input-group'>
                   <select id="selectdestino_u" class="form-control selectpicker show-tick" data-live-search="true">
                     <?php
-                      $ejecute=pg_query("SELECT * FROM destinos");
+                      $ejecute=pg_query("SELECT * FROM destinos WHERE estado=1");
                       while ($datos=pg_fetch_array($ejecute)) {
                         ?>
                         <option value="<?php echo $datos['id'] ?>" data-subtext="<?php echo $datos['descripcion'];?>"><?php echo strtoupper($datos['nombre'])?></option>
@@ -200,26 +200,20 @@
               <div class="form-group" id="ok_cargo">
                 <label for="exampleInputEmail1">Nombre</label>
                 <input type="text" class="form-control" autofocus="" name="nombre">
+                <em style="color:#cf6666;display:none" class="error_registro_u">El nombre del cargo ya esta en uso!</em>
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword1">Descripcion</label>
                 <textarea class="form-control" rows="5" name="descrip"></textarea>
-                </div>
+              </div>
               <div class="col-md-6" id="ok_funcion">
-                <label for="exampleInputPassword1" >Privilegios</label><br>
+                <label for="exampleInputPassword1">Privilegios</label><br>
                 <label>
-                  <?php
-                  $ejecute=pg_query("SELECT * FROM funciones");
-                  $pos=0;
-                  while ($datos=pg_fetch_array($ejecute)) {
-                    ?>
-                      <input type="checkbox"  name="funcion[]" value="<?php echo $datos['id'] ?>" >
-                      <i><?php echo $datos['nombre'] ?></i><br>
-                    <?php
-                    $pos++;
-                  }
-                   ?>
-
+                  <?php $ejecute=pg_query("SELECT * FROM funciones ORDER BY id DESC");$pos=0;
+                    while($datos=pg_fetch_array($ejecute)){ ?>
+                    <input type="checkbox"  name="funcion[]" value="<?php echo $datos['id']?>">
+                    <i><?php echo $datos['nombre']?></i><br>
+                  <?php $pos++;}?>
                 </label>
               </div>
             </div>
@@ -383,7 +377,7 @@
   </div>
 </div>
 <!--hoja registro-->
-<div class="modal fade" id="modal_hoja">
+<div class="modal fade" id="modal_hoja" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <form id="form_createhoja" name="form_createhoja" method="POST" class="form-horizontal" enctype="multipart/form-data">
@@ -397,8 +391,8 @@
         <div class="modal-body" style="background:#fff;padding:0">
           <ul role="tablist" style="padding:0px;background:#e0e0e0" class="nav nav-tabs nav-justified" id="myTab">
             <li  role="presentation" class="active"><a style="padding:0 15px 0 15px;color:#803b7f" href="#general_modal" aria-controls="general_modal" role="tab" data-toggle="tab">GENERAL<h5 id="idgeneral" class="badge" style="background:red;margin-left:10px">4</h5></a></li>
-            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#documento_modal" aria-controls="documento_modal" role="tab" data-toggle="tab">DOCUMENTO<h5 id="iddocumento" class="badge" style="background:red;margin-left:10px">3</h5></a></li>
-            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal" aria-controls="destino_modal" role="tab" data-toggle="tab">DESTINOS<h5 id="iddestinos" class="badge" style="background:red;margin-left:10px">3</h5></a></li>
+            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#documento_modal" aria-controls="documento_modal" role="tab" data-toggle="tab">DOCUMENTO<h5 id="iddocumento" class="badge" style="background:red;margin-left:10px">2</h5></a></li>
+            <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal" aria-controls="destino_modal" role="tab" data-toggle="tab">DESTINOS<h5 id="iddestinos" class="badge" style="background:red;margin-left:10px">2</h5></a></li>
           </ul>
           <div class="row">
             <div class="tab-content" style="margin:20px 30px 10px 30px">
@@ -431,7 +425,7 @@
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">PROCEDENCIA</label>
                     <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
                       <select id="selectprocedencia" name="procedencia" class="form-control selectpicker show-tick" data-live-search="true">
-                        <?php $ejecute=pg_query("SELECT * FROM procedencia");
+                        <?php $ejecute=pg_query("SELECT * FROM procedencia WHERE estado=1");
                           while ($datos=pg_fetch_array($ejecute)) {
                             ?>
                             <option value="<?php echo $datos['id'] ?>"><?php echo strtoupper($datos['nombre'])?></option>
@@ -478,7 +472,7 @@
                   <div class="form-group" style="padding:5px">
                     <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO (<2MB)</label>
                     <div class="col-sm-9">
-                      <input name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'#file_error',true);" class="form-control">
+                      <input name="archivo" type="file" accept=".xls, .xlsx, .doc, .docx, application/pdf" onchange="displayPreview(this.files,'#file_error',true);" class="form-control">
                       <small class="text-red hidden" id="file_error">Peso Maximo admitido 2MB</small>
                     </div>
                   </div>
@@ -500,7 +494,7 @@
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">TIPO DE DOCUMENTO</label>
                     <div class='input-group col-sm-9' style="padding:0 15px 0 15px">
                       <select id="selecttipo" name="tipo" class="form-control selectpicker show-tick" data-live-search="true">
-                        <?php $ejecute=pg_query("SELECT * FROM tipos");
+                        <?php $ejecute=pg_query("SELECT * FROM tipos WHERE estado=1");
                           while ($datos=pg_fetch_assoc($ejecute)) {
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -515,7 +509,7 @@
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">TIPO DE ADJUNTO</label>
                     <div class='input-group col-sm-9' style="padding:0 15px 0 15px">
                       <select id="selectadjunto" name="adjunto" class="form-control selectpicker show-tick" data-live-search="true">
-                        <?php $ejecute=pg_query("SELECT * FROM adjuntos");
+                        <?php $ejecute=pg_query("SELECT * FROM adjuntos WHERE estado=1");
                           while ($datos=pg_fetch_assoc($ejecute)) {
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -530,7 +524,7 @@
               </div>
               <div id="destino_modal" role="tabpanel" class="tab-pane">
                 <div class="box-body">
-                  <div class="form-group has-feedback  has-error fila8" style="padding:5px">
+                  <div class="form-group has-feedback has-error fila8" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">DIAS DE PLAZO</label>
                     <div class="col-sm-9">
                       <input type="number" name="plazo" id="inputplazo" class="form-control" validate="true" toggle=".fila8" placeholder="Ejemplo: 5 dias">
@@ -539,9 +533,9 @@
                   </div>
                   <div class="form-group" style="padding:5px">
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LAS ACCIONES</label>
-                    <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
+                    <div class='input-group col-sm-9 has-feedback has-error' id="rowaccionerror" style="padding:0 15px 0 15px" >
                       <select id="selectaccion" name="accion[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="15" data-selected-text-format="count > 2">
-                        <?php $ejecute=pg_query("SELECT * FROM acciones");
+                        <?php $ejecute=pg_query("SELECT * FROM acciones WHERE estado=1");
                           while ($datos=pg_fetch_array($ejecute)) {
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -559,7 +553,7 @@
                     <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LOS DESTINOS</label>
                     <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
                       <select id="selectdestinos" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
-                        <?php $ejecute=pg_query("SELECT * FROM destinos");
+                        <?php $ejecute=pg_query("SELECT * FROM destinos WHERE estado=1");
                           while ($datos=pg_fetch_array($ejecute)) {
                             ?>
                             <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -571,10 +565,10 @@
                     </div>
                   </div>
                   <div class="row">
-                     <table class="table table-hover table-bordered" style="width:80%;margin:0 auto">
+                     <table class="table table-hover table-bordered" style="width:95%;margin:0 auto">
                         <thead>
                            <tr style="background:#08c">
-                              <th width="80%" style="border: 1px solid black;text-align:center;color:#fff">DESTINOS</th><th width="20%" style="border: 1px solid black;text-align:center;color:#fff">OPCIONES</th>
+                              <th width="45%" style="border: 1px solid black;text-align:center;color:#fff">DESTINOS</th><th width="45%" style="border: 1px solid black;text-align:center;color:#fff">PROVEIDOS</th><th width="10%" style="border: 1px solid black;text-align:center;color:#fff">OPCIONES</th>
                            </tr>
                         </thead>
                         <tbody id="tabledestino_registro">
@@ -595,7 +589,7 @@
   </div>
 </div>
 <!--hoja update-->
-<div class="modal fade" id="updatehoja_modal">
+<div class="modal fade" id="updatehoja_modal" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <form id="form_updatehoja" name="form_updatehoja" method="POST" class="form-horizontal" enctype="multipart/form-data">
@@ -608,9 +602,9 @@
         <div class="box box-primary" style="border-top-width: 0px;margin-bottom: 0px;">
           <div class="modal-body" style="background:#fff;padding:0">
             <ul role="tablist" style="padding:0px;background:#e0e0e0" class="nav nav-tabs nav-justified" id="myTab">
-              <li  role="presentation" class="active"><a style="padding:0 15px 0 15px;color:#803b7f" href="#general_modal_u" aria-controls="general_modal_u" role="tab" data-toggle="tab">GENERAL<h5 class="badge" style="background:red#313131;margin-left:10px">3</h5></a></li>
-              <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#documento_modal_u" aria-controls="documento_modal_u" role="tab" data-toggle="tab">DOCUMENTO<h5 class="badge" style="background:red#313131;margin-left:10px">2</h5></a></li>
-              <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal_u" aria-controls="destino_modal_u" role="tab" data-toggle="tab">DESTINOS<h5 class="badge" style="background:red#313131;margin-left:10px">2</h5></a></li>
+              <li  role="presentation" class="active"><a style="padding:0 15px 0 15px;color:#803b7f" href="#general_modal_u" aria-controls="general_modal_u" role="tab" data-toggle="tab">GENERAL<h5 class="badge" id="idgeneral_u" style="background:#00a65a;margin-left:10px"><span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span></h5></a></li>
+              <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#documento_modal_u" aria-controls="documento_modal_u" role="tab" data-toggle="tab">DOCUMENTO<h5 class="badge" id="iddocumento_u" style="background:#00a65a;margin-left:10px"><span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span></h5></a></li>
+              <li role="presentation"><a style="padding:0 15px 0 15px;color:#803b7f" href="#destino_modal_u" aria-controls="destino_modal_u" role="tab" data-toggle="tab">DESTINOS<h5 class="badge" id="iddestinos_u" style="background:#00a65a;margin-left:10px"><span style="font-size:.8em;" class="glyphicon glyphicon-ok"></span></h5></a></li>
             </ul>
             <div class="row">
                <div class="tab-content" style="margin:20px 30px 10px 30px">
@@ -689,7 +683,7 @@
                     <div class="form-group" style="padding:5px">
                       <label  class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE ARCHIVO (<2MB)</label>
                       <div class="col-sm-9">
-                        <input id="inputfile_u" name="archivo" type="file" accept="application/pdf" onchange="displayPreview(this.files,'#file_error_respuesta',false);" class="form-control">
+                        <input id="inputfile_u" name="archivo" type="file" accept=".xls, .xlsx, .doc, .docx, application/pdf" onchange="displayPreview(this.files,'#file_error_respuesta',false);" class="form-control">
                         <small class="text-red hidden" id="file_error_respuesta">Peso Maximo admitido 2MB</small>
                       </div>
                     </div>
@@ -711,7 +705,7 @@
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">TIPO DE DOCUMENTO</label>
                       <div class='input-group col-sm-9' style="padding:0 15px 0 15px">
                         <select id="selecttipo_u" name="tipo" class="form-control selectpicker show-tick" data-live-search="true">
-                          <?php $ejecute=pg_query("SELECT * FROM tipos");
+                          <?php $ejecute=pg_query("SELECT * FROM tipos WHERE estado=1");
                             while ($datos=pg_fetch_assoc($ejecute)) {
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -726,7 +720,7 @@
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">TIPO DE ADJUNTO</label>
                       <div class='input-group col-sm-9' style="padding:0 15px 0 15px">
                         <select id="selectadjunto_u" name="adjunto" class="form-control selectpicker show-tick" data-live-search="true">
-                          <?php $ejecute=pg_query("SELECT * FROM adjuntos");
+                          <?php $ejecute=pg_query("SELECT * FROM adjuntos WHERE estado=1");
                             while ($datos=pg_fetch_assoc($ejecute)) {
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -750,9 +744,9 @@
                      </div>
                      <div class="form-group" style="padding:5px">
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LAS ACCIONES</label>
-                      <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
+                      <div class='input-group col-sm-9 has-feedback has-success' id="rowaccionerror_u" style="padding:0 15px 0 15px" >
                         <select id="selectaccion_u" name="accion[]" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="15" data-selected-text-format="count > 2">
-                          <?php $ejecute=pg_query("SELECT * FROM acciones");
+                          <?php $ejecute=pg_query("SELECT * FROM acciones WHERE estado=1");
                             while ($datos=pg_fetch_array($ejecute)) {
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -770,7 +764,7 @@
                       <label class="col-sm-3 control-label" style="color:#313131;font-weight:400;font-family:arial;font-size:.8em;margin-bottom:2px">SELECCIONE LOS DESTINOS</label>
                       <div class='input-group col-sm-9' style="padding:0 15px 0 15px" >
                         <select id="selectdestinos_u" class="form-control selectpicker show-tick" multiple data-live-search="true" data-max-options="10" data-selected-text-format="count > 3">
-                          <?php $ejecute=pg_query("SELECT * FROM destinos");
+                          <?php $ejecute=pg_query("SELECT * FROM destinos WHERE estado=1");
                             while ($datos=pg_fetch_array($ejecute)) {
                               ?>
                               <option value="<?php echo $datos['id'] ?>"?><?php echo strtoupper($datos['nombre'])?></option>
@@ -783,10 +777,10 @@
                      </div>
                      </div>
                      <div class="row">
-                        <table class="table table-hover table-bordered" style="width:80%;margin:0 auto">
+                        <table class="table table-hover table-bordered" style="width:95%;margin:0 auto">
                            <thead>
                               <tr style="background:#08c">
-                                 <th width="80%" style="border: 1px solid black;text-align:center;color:#fff">DESTINOS</th><th width="20%" style="border: 1px solid black;text-align:center;color:#fff">OPCIONES</th>
+                                  <th width="45%" style="border: 1px solid black;text-align:center;color:#fff">DESTINOS</th><th width="45%" style="border: 1px solid black;text-align:center;color:#fff">PROVEIDOS</th><th width="10%" style="border: 1px solid black;text-align:center;color:#fff">OPCIONES</th>
                               </tr>
                            </thead>
                            <tbody id="tabledestino_update">
@@ -799,7 +793,68 @@
           </div>
         </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="btnupdate_hoja" disabled>Modificar Hoja de Ruta</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cancelar</button>
+        <button type="button" class="btn btn-success" id="btnupdate_hoja">Modificar Hoja de Ruta</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal_update_objeto">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="form_update_objeto" name="form_update_objeto" method="POST">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">MODIFICAR INFORMACIÓN</h4>
+        </div>
+      <div class="box box-primary">
+        <div class="modal-body">
+            <div class="box-body">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input name="nombre" id="nombre_objeto_u" placeholder="escriba un nombre" class="form-control" pattern=".{5,}" required title="minimo 5 caracteres">
+                <small class="text-red hidden error_update_objeto">El nombre ya esta en uso!</small>
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="btn_update_objeto">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal_update_destino">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="form_update_destino" name="form_update_objeto" method="POST">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">MODIFICAR INFORMACIÓN</h4>
+        </div>
+      <div class="box box-primary">
+        <div class="modal-body">
+            <div class="box-body">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input name="nombre" id="nombre_destino_u" placeholder="escriba un nombre" class="form-control" pattern=".{5,}" required title="minimo 5 caracteres">
+                <small class="text-red hidden error_update_objeto">El nombre ya esta en uso!</small>
+              </div>
+              <div class="form-group">
+                <label>Descripcion</label>
+                <input name="descripcion" id="descripcion_destino_u" placeholder="escriba una descripción" class="form-control" pattern=".{5,}" required title="minimo 5 caracteres">
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="btn_update_destino">Guardar Cambios</button>
       </div>
       </form>
     </div>

@@ -1,6 +1,9 @@
-<?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>
-
+<?php include("includes/header.php");$permiso=0;
+  foreach($funciones as $key => $value){
+    if ($value==2) {$permiso=1;}
+  }
+  if($permiso==0){?><script>window.location.href = "404.php";</script><?php } include("includes/aside.php");
+?>
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <?php if(isset($_GET['registrar'])){?>
@@ -95,19 +98,20 @@
       <section class="content">
         <div class="row">
           <div class="col-xs-12">
-
             <div class="box">
               <!-- /.box-header -->
               <div class="box-body">
                 <table style="font-style: oblique;" id="example1" class="table table-bordered table-striped">
                   <thead>
                     <tr style="background:#a5a5a5">
+                      <th>Id</th>
                       <th>Nombres</th>
                       <th>Apellidos</th>
                       <th>Cedula</th>
                       <th>Destino</th>
                       <th>Cargos</th>
-                      <th width="3%">Acciones</th>
+                      <th>estado</th>
+                      <th width="10%">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -116,14 +120,21 @@
                   while ($datos=pg_fetch_assoc($ejecute)) {
                     ?>
                     <tr>
+                      <td><?=$datos['id'] ?></td>
                       <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['nombres'] ?></td>
                       <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['apellidos'] ?></td>
                       <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['cedula'] ?></td>
                       <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['destino'] ?></td>
                       <td style="padding: 2px 5px 2px 10px;}"><?php echo $datos['cargo'] ?></td>
+                      <td><?=$datos['estado']==1?"Activo":"Inactivo"?></td>
                       <td style="padding: 2px 5px 2px 10px;}">
                         <center>
                           <button class="btn btn-info btn-xs" onclick="verUsuario(<?php echo $datos['id'];?>)" data-toggle="modal" data-target="#updateusuarioModal">Ver</button>
+                          <?php if($datos['estado']==1):?>
+                            <button class="btn btn-danger btn-xs" onclick="EliminarObjeto(<?=$datos['id']?>,'usuarios')">Eliminar</button>
+                          <?php else:?>
+                            <button class="btn btn-success btn-xs" onclick="AltaObjeto(<?=$datos['id']?>,'usuarios')">Alta</button>
+                          <?php endif;?>
                         </center>
                       </td>
                     </tr>
@@ -165,11 +176,11 @@
                     input.attr("type", "password");
           }
       });
-      $('#inputnombre,#inputnombre_u').keypress(function(e){not_number(e);}).keyup(function(){if($(this).val().trim().length>3){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
-      $('#inputapellido,#inputapellido_u').keypress(function(e){not_number(e);}).keyup(function(){if($(this).val().trim().length>3){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
-      $('#inputusuario,#inputusuario_u').keypress(function(e){not_number(e);}).keyup(function(){if($(this).val().trim().length>2){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
-		  $('#inputci,#inputci_u').keypress(function(e){yes_number(e);}).keyup(function(){if($(this).val().trim().length>6){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
-		  $('#inputpassword,#inputpassword_u').keyup(function(){if($(this).val().trim().length>4){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
+      $('#inputnombre,#inputnombre_u').keyup(function(){if($(this).val().trim().length>1){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
+      $('#inputapellido,#inputapellido_u').keyup(function(){if($(this).val().trim().length>1){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
+      $('#inputusuario,#inputusuario_u').keyup(function(){if($(this).val().trim().length>1){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
+		  $('#inputci,#inputci_u').keyup(function(){if($(this).val().trim().length>6 && $(this).val().trim().length<12){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
+      $('#inputpassword,#inputpassword_u').keyup(function(){if($(this).val().trim().length>4){small_error($(this).attr('toggle'),true);}else{small_error($(this).attr('toggle'),false);}function_validate($(this).attr('validate'));});
       $("#selectcargo_u,#selectdestino_u").change(function(){function_validate('false');});
       $("#selectcargo,#selectdestino").change(function(){function_validate('true');});
 
@@ -253,16 +264,13 @@
 			}
 		}
   </script>
-
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.4.0
     </div>
     <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
     reserved.
-
-<!-- Control de configuracion de pie de de js pagina -->
-<?php include('includes/pie.php'); ?>
+    <?php include('includes/pie.php'); ?>
   </footer>
 
   <!-- Control de configuracion de pagina -->

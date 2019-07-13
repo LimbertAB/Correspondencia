@@ -24,13 +24,13 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">Descripción</label>
             <div class="col-sm-9">
-              <input name="descripcion" placeholder="Ejemplo: Solicito la informacion de los salarios del mes de mayo" class="form-control" pattern=".{0}|.{4,400}.*\S+.*" required title="5 caracteres como minimo">
+              <input name="descripcion" placeholder="Ejemplo: Solicito la informacion de los salarios del mes de mayo" class="form-control" pattern=".{5,}" required title="5 caracteres como minimo">
             </div>
           </div>
           <div class="form-group" style="margin:0">
             <label  class="col-sm-3 control-label">Archivo (<2MB) </label>
             <div class="col-sm-9">
-              <input name="archivo" type="file" data-max-file-size="2MB" accept="application/pdf" onchange="displayPreview(this.files,'#file_error',true);" class="form-control">
+              <input name="archivo" type="file" data-max-file-size="2MB" accept=".xls, .xlsx, .doc, .docx, application/pdf" onchange="displayPreview(this.files,'#file_error',true);" class="form-control">
               <small class="text-red hidden" id="file_error">Peso Maximo admitido 2MB</small>
             </div>
           </div>

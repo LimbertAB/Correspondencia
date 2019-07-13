@@ -1,5 +1,9 @@
-<?php include("includes/header.php"); ?>
-<?php include("includes/aside.php"); ?>  
+<?php include("includes/header.php");$permiso=0;
+  foreach($funciones as $key => $value){
+    if ($value==3) {$permiso=1;}
+  }
+  if($permiso==0){?><script>window.location.href = "404.php";</script><?php } include("includes/aside.php");
+?> 
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">

@@ -224,13 +224,12 @@ $recibido = $data['recibido']; ?>
 		});
 	});
 	function verAjax(val) {
-		console.log(val);
 		Get_ID = val;
 	}
 	function displayPreview(files,etiqueta,estado) {
 		if (files.length > 0) {
 			fileSize = Math.round(files[0].size / 1024);
-			if (fileSize > 0 && fileSize < 2048 && files[0].type == "application/pdf") {
+			if (fileSize > 0 && fileSize < 2048) {
 				$(etiqueta).addClass('hidden');
 				if(estado){
 					FILE_STATUS = true;
